@@ -517,11 +517,26 @@ function todayKey() {
   return new Date().toISOString().split("T")[0];
 }
 
-function calcTDEE(weight, height, age, sex, activity) {
-  const bmr = sex === "H"
-    ? 10 * weight + 6.25 * height - 5 * age + 5
-    : 10 * weight + 6.25 * height - 5 * age - 161;
-  const factors = { sedentary: 1.2, light: 1.375, moderate: 1.55, active: 1.725, very_active: 1.9 };
+function calcTDEE(weight, height, age, sex, activity, bodyfat) {
+  let bmr;
+  if (bodyfat && +bodyfat > 0 && +bodyfat < 50) {
+    // Katch-McArdle: more accurate when body fat is known
+    const lbm = weight * (1 - +bodyfat / 100);
+    bmr = Math.round(370 + 21.6 * lbm);
+  } else {
+    // Mifflin-St Jeor: best general-purpose formula
+    bmr = sex === "H"
+      ? Math.round(10 * weight + 6.25 * height - 5 * age + 5)
+      : Math.round(10 * weight + 6.25 * height - 5 * age - 161);
+  }
+  // Activity multipliers — tuned for fuerza + running combo
+  const factors = {
+    sedentary: 1.2,          // desk job, no exercise
+    light: 1.375,             // 1-2 gym sessions/week
+    moderate: 1.55,           // 3-4 sessions/week
+    active: 1.725,            // daily training or fuerza+running combo
+    very_active: 1.9,         // twice/day or heavy manual work
+  };
   return Math.round(bmr * (factors[activity] || 1.55));
 }
 
@@ -716,7 +731,7 @@ function findFullMeal(name) {
 
 function MiPlanTab({ onUpdate, userTarget }) {
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState({ weight: "", height: "", age: "", sex: "H", activity: "moderate", goal: "cut_aggressive" });
+  const [form, setForm] = useState({ weight: "", height: "", age: "", sex: "H", activity: "moderate", goal: "cut_aggressive", bodyfat: "" });
   const [saved, setSaved] = useState(null);
   // Planner state
   const [plan, setPlan] = useState({});
@@ -752,12 +767,12 @@ function MiPlanTab({ onUpdate, userTarget }) {
   }
 
   function compute() {
-    const tdee = calcTDEE(+form.weight, +form.height, +form.age, form.sex, form.activity);
+    const tdee = calcTDEE(+form.weight, +form.height, +form.age, form.sex, form.activity, form.bodyfat);
     const deficits = { cut_aggressive: 700, cut_moderate: 400 };
     const deficit = deficits[form.goal] || 700;
     const target = tdee - deficit;
     const protein = Math.round(form.weight * 2.2);
-    const result = { ...form, tdee, target, protein, deficit, weightLoss: (deficit * 7 / 7700).toFixed(2) };
+    const result = { ...form, tdee, target, protein, deficit, weightLoss: (deficit * 7 / 7700).toFixed(2), formula: (form.bodyfat && +form.bodyfat > 0) ? 'Katch-McArdle' : 'Mifflin-St Jeor' };
     saveMeta(result);
     setStep(0);
   }
@@ -855,8 +870,8 @@ function MiPlanTab({ onUpdate, userTarget }) {
   const calcSection = saved && step === 0 ? (
     <div style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 12, padding: "14px 16px", marginBottom: 16 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
-        <div style={{ fontSize: 9, color: COLORS.green, letterSpacing: 2 }}>TU PLAN ACTIVO</div>
-        <button onClick={() => setStep(1)} style={{ fontSize: 10, background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 20, padding: "3px 10px", color: COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>Recalcular</button>
+        <div style={{ fontSize: 9, color: COLORS.green, letterSpacing: 2 }}>TU PLAN ACTIVO · {saved.formula || 'Mifflin-St Jeor'}</div>
+        <button onClick={() => { setForm(f => ({ ...f, weight: saved.weight||"", height: saved.height||"", age: saved.age||"", sex: saved.sex||"H", activity: saved.activity||"moderate", goal: saved.goal||"cut_aggressive", bodyfat: saved.bodyfat||"" })); setSaved(null); setStep(0); }} style={{ fontSize: 10, background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 20, padding: "3px 10px", color: COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>Recalcular</button>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 12 }}>
         {[
@@ -902,13 +917,28 @@ function MiPlanTab({ onUpdate, userTarget }) {
           </div>
         </div>
       </div>
-      <button style={btnStyle} onClick={() => form.weight && form.height && form.age && setStep(1)}>Siguiente →</button>
+      <div style={{ marginTop: 12, background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "12px 14px" }}>
+        <div style={{ fontSize: 10, color: COLORS.muted, marginBottom: 6 }}>% Grasa corporal <span style={{ color: COLORS.accent }}>(opcional)</span></div>
+        <input style={inputStyle} type="number" min="5" max="45" value={form.bodyfat} onChange={e => setF("bodyfat", e.target.value)} placeholder="ej. 18 (si lo sabes)" />
+        <div style={{ fontSize: 10, color: COLORS.muted, fontStyle: "italic", marginTop: 6 }}>
+          Si lo introduces se usa la fórmula <strong>Katch-McArdle</strong> (más precisa para atletas). Si no, se usa <strong>Mifflin-St Jeor</strong>.
+        </div>
+      </div>
+      <div style={{ marginTop: 14 }}>
+        <button style={btnStyle} onClick={() => form.weight && form.height && form.age && setStep(1)}>Siguiente →</button>
+      </div>
     </Card>
   ) : (
     <Card>
       <Label>Nivel de actividad y objetivo</Label>
       <div style={{ marginBottom: 12 }}>
-        {[["sedentary","Sedentario","Sin ejercicio"],["light","Ligero","1-2 días/semana"],["moderate","Moderado","3-4 días (tu caso)"],["active","Activo","Entrenamiento diario"],["very_active","Muy activo","Dobles sesiones"]].map(([v,l,d]) => (
+        {[
+          ["sedentary","Sedentario","Escritorio, sin ejercicio regular"],
+          ["light","Ligero","1-2 sesiones suaves por semana"],
+          ["moderate","Moderado","3-4 sesiones: gym o running alternados"],
+          ["active","Activo","Fuerza 3x + running 3-4x semanal ← tu caso"],
+          ["very_active","Muy activo","Dobles sesiones o trabajo físico intenso"]
+        ].map(([v,l,d]) => (
           <button key={v} onClick={() => setF("activity", v)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", marginBottom: 6, borderRadius: 6, border: `1px solid ${form.activity===v?COLORS.accent:COLORS.cardBorder}`, background: form.activity===v?"#fff5f2":COLORS.bg, cursor: "pointer", fontFamily: "inherit", textAlign: "left" }}>
             <div style={{ width: 12, height: 12, borderRadius: "50%", border: `2px solid ${form.activity===v?COLORS.accent:COLORS.cardBorder}`, background: form.activity===v?COLORS.accent:"transparent", flexShrink: 0 }} />
             <div><div style={{ fontSize: 12, color: COLORS.text, fontWeight: form.activity===v?700:400 }}>{l}</div><div style={{ fontSize: 10, color: COLORS.muted, fontStyle: "italic" }}>{d}</div></div>
