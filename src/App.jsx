@@ -1690,9 +1690,9 @@ export default function CutPlan() {
   const TAB_LABELS = ["Hábitos","Mi Plan","Compra","Semana","Normas","Recetas"];
 
   return (
-    <div style={{ background: COLORS.bg, minHeight: "100vh", fontFamily: "'Playfair Display', Georgia, serif", color: COLORS.text, paddingBottom: 90 }}>
-      {/* ── COMPACT TOP HEADER ── */}
-      <div style={{ position: "sticky", top: 0, zIndex: 50, background: COLORS.card, borderBottom: `1px solid ${COLORS.cardBorder}`, padding: "10px 16px", display: "flex", alignItems: "center", gap: 10 }}>
+    <div style={{ background: COLORS.bg, minHeight: "100vh", fontFamily: "'Playfair Display', Georgia, serif", color: COLORS.text, paddingBottom: 110 }}>
+      {/* ── TOP HEADER ── */}
+      <div style={{ background: COLORS.card, borderBottom: `1px solid ${COLORS.cardBorder}`, padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
         <div style={{ width: 32, height: 32, borderRadius: 8, background: COLORS.accent, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 2px 6px rgba(200,68,10,0.25)" }}>
           <svg width="19" height="19" viewBox="0 0 28 28" fill="none">
             <text x="4" y="22" fontSize="22" fontWeight="900" fill="white" fontFamily="Georgia, serif">F</text>
@@ -1713,11 +1713,11 @@ export default function CutPlan() {
       </div>
 
       {/* ── BOTTOM NAV ── */}
-      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: COLORS.card, borderTop: `1px solid ${COLORS.cardBorder}`, display: "flex", paddingBottom: "env(safe-area-inset-bottom, 12px)" }}>
+      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: COLORS.card, borderTop: `1px solid ${COLORS.cardBorder}`, display: "flex", paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 16px)" }}>
         {TAB_ICONS.map((icon, i) => (
           <button key={i} onClick={() => setActiveTab(i)}
             style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-              gap: 4, padding: "10px 4px 14px", background: "none", border: "none", cursor: "pointer",
+              gap: 4, padding: "10px 4px 10px", background: "none", border: "none", cursor: "pointer",
               fontFamily: "inherit", borderTop: `2px solid ${activeTab === i ? COLORS.accent : "transparent"}`,
               transition: "border-color 0.15s" }}>
             <span style={{ fontSize: 20, lineHeight: 1 }}>{icon}</span>
