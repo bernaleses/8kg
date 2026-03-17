@@ -1692,7 +1692,7 @@ export default function CutPlan() {
   return (
     <div style={{ background: COLORS.bg, minHeight: "100vh", fontFamily: "'Playfair Display', Georgia, serif", color: COLORS.text, paddingBottom: 110 }}>
       {/* ── TOP HEADER ── */}
-      <div style={{ position: "sticky", top: 0, zIndex: 50, background: COLORS.card, borderBottom: `1px solid ${COLORS.cardBorder}`, padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
+      <div style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, background: COLORS.card, borderBottom: `1px solid ${COLORS.cardBorder}`, paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)", paddingBottom: "10px", paddingLeft: 16, paddingRight: 16, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
         <div style={{ width: 32, height: 32, borderRadius: 8, background: COLORS.accent, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 2px 6px rgba(200,68,10,0.25)" }}>
           <svg width="19" height="19" viewBox="0 0 28 28" fill="none">
             <text x="4" y="22" fontSize="22" fontWeight="900" fill="white" fontFamily="Georgia, serif">F</text>
@@ -1703,7 +1703,7 @@ export default function CutPlan() {
       </div>
 
       {/* ── CONTENT ── */}
-      <div style={{ maxWidth: 720, margin: "0 auto", padding: "20px 16px" }}>
+      <div style={{ maxWidth: 720, margin: "0 auto", padding: "20px 16px", paddingTop: "calc(env(safe-area-inset-top, 0px) + 62px)" }}>
         {activeTab === 0 && <HabitsTracker />}
         {activeTab === 1 && <MiPlanTab onUpdate={(d) => setUserTarget(d.target || null)} userTarget={userTarget} />}
         {activeTab === 2 && <ShoppingTab />}
