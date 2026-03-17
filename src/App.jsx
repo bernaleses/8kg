@@ -1686,48 +1686,48 @@ export default function CutPlan() {
     } catch {}
   }, []);
 
+  const TAB_ICONS  = ["📋","📆","🛒","📅","✅","🍽️"];
+  const TAB_LABELS = ["Hábitos","Mi Plan","Compra","Semana","Normas","Recetas"];
+
   return (
-    <div style={{ background: COLORS.bg, minHeight: "100vh", fontFamily: "'Playfair Display', Georgia, serif", color: COLORS.text }}>
-      <div style={{ borderBottom: `1px solid ${COLORS.cardBorder}`, padding: "24px 20px 0", background: COLORS.card }}>
-        <div style={{ maxWidth: 720, margin: "0 auto" }}>
-          {/* FORMA Logo + Brand */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              {/* Logo mark */}
-              <div style={{ width: 48, height: 48, borderRadius: 12, background: COLORS.accent, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 2px 8px rgba(200,68,10,0.3)" }}>
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                  {/* F letterform + pulse line */}
-                  <text x="4" y="22" fontSize="22" fontWeight="900" fill="white" fontFamily="Georgia, serif">F</text>
-                  <path d="M16 18 L19 12 L22 16 L25 10" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.85"/>
-                </svg>
-              </div>
-              <div>
-                <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: -1, color: COLORS.text, lineHeight: 1 }}>FORMA</div>
-              </div>
-            </div>
-
-          </div>
-
-          <div style={{ display: "flex", gap: 0, overflowX: "auto" }}>
-            {TABS.map((tab, i) => (
-              <button key={i} onClick={() => setActiveTab(i)}
-                style={{ background: "none", border: "none", borderBottom: activeTab === i ? `2px solid ${COLORS.accent}` : "2px solid transparent",
-                  color: activeTab === i ? COLORS.accent : COLORS.muted, padding: "10px 14px", fontSize: 12,
-                  cursor: "pointer", fontFamily: "inherit", letterSpacing: 0.3, transition: "all 0.15s", whiteSpace: "nowrap" }}>
-                {tab}
-              </button>
-            ))}
-          </div>
+    <div style={{ background: COLORS.bg, minHeight: "100vh", fontFamily: "'Playfair Display', Georgia, serif", color: COLORS.text, paddingBottom: 70 }}>
+      {/* ── COMPACT TOP HEADER ── */}
+      <div style={{ position: "sticky", top: 0, zIndex: 50, background: COLORS.card, borderBottom: `1px solid ${COLORS.cardBorder}`, padding: "10px 16px", display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ width: 32, height: 32, borderRadius: 8, background: COLORS.accent, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 2px 6px rgba(200,68,10,0.25)" }}>
+          <svg width="19" height="19" viewBox="0 0 28 28" fill="none">
+            <text x="4" y="22" fontSize="22" fontWeight="900" fill="white" fontFamily="Georgia, serif">F</text>
+            <path d="M16 18 L19 12 L22 16 L25 10" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.85"/>
+          </svg>
         </div>
+        <span style={{ fontSize: 17, fontWeight: 900, letterSpacing: -0.5, color: COLORS.text, lineHeight: 1 }}>FORMA</span>
       </div>
 
-      <div style={{ maxWidth: 720, margin: "0 auto", padding: "24px 20px" }}>
+      {/* ── CONTENT ── */}
+      <div style={{ maxWidth: 720, margin: "0 auto", padding: "20px 16px" }}>
         {activeTab === 0 && <HabitsTracker />}
         {activeTab === 1 && <MiPlanTab onUpdate={(d) => setUserTarget(d.target || null)} userTarget={userTarget} />}
         {activeTab === 2 && <ShoppingTab />}
         {activeTab === 3 && <WeekTab />}
         {activeTab === 4 && <DosDonts />}
         {activeTab === 5 && <RecetasTab />}
+      </div>
+
+      {/* ── BOTTOM NAV ── */}
+      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: COLORS.card, borderTop: `1px solid ${COLORS.cardBorder}`, display: "flex", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
+        {TAB_ICONS.map((icon, i) => (
+          <button key={i} onClick={() => setActiveTab(i)}
+            style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+              gap: 3, padding: "10px 4px 8px", background: "none", border: "none", cursor: "pointer",
+              fontFamily: "inherit", borderTop: `2px solid ${activeTab === i ? COLORS.accent : "transparent"}`,
+              transition: "border-color 0.15s" }}>
+            <span style={{ fontSize: 20, lineHeight: 1 }}>{icon}</span>
+            <span style={{ fontSize: 9, fontWeight: activeTab === i ? 700 : 400,
+              color: activeTab === i ? COLORS.accent : COLORS.muted,
+              letterSpacing: 0.3, lineHeight: 1 }}>
+              {TAB_LABELS[i]}
+            </span>
+          </button>
+        ))}
       </div>
     </div>
   );
