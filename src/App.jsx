@@ -752,7 +752,7 @@ function MiPlanTab({ onUpdate, userTarget }) {
   }
 
   function selectMeal(day, slotKey, meal) {
-    const next = { ...plan, [day]: { ...(plan[day] || {}), [slotKey]: { name: meal.name, emoji: meal.emoji, kcal: meal.macros.kcal, prot: meal.macros.prot, carb: meal.macros.carb, fat: meal.macros.fat, ingredients: meal.ingredients } } };
+    const next = { ...plan, [day]: { ...(plan[day] || {}), [slotKey]: { name: meal.name, emoji: meal.emoji, kcal: meal.macros.kcal, prot: meal.macros.prot, carb: meal.macros.carb, fat: meal.macros.fat, ingredients: meal.ingredients, prep: meal.prep } } };
     savePlan(next);
     setPicker(null);
   }
@@ -984,10 +984,14 @@ function MiPlanTab({ onUpdate, userTarget }) {
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1, marginBottom: 2 }}>{slot.label.toUpperCase()}</div>
                     {meal ? (
-                      <div>
+                      <button onClick={() => setMealDetail(meal)}
+                        style={{ background: "none", border: "none", padding: 0, textAlign: "left", cursor: "pointer", fontFamily: "inherit", width: "100%" }}>
                         <div style={{ fontSize: 13, color: COLORS.text, fontWeight: 600 }}>{meal.emoji} {meal.name}</div>
-                        <div style={{ fontSize: 10, color: COLORS.muted, marginTop: 2 }}>{meal.kcal} kcal · {meal.prot}g P · {meal.carb}g C · {meal.fat}g G</div>
-                      </div>
+                        <div style={{ fontSize: 10, color: COLORS.muted, marginTop: 2 }}>
+                          {meal.kcal} kcal · {meal.prot}g P · {meal.carb}g C · {meal.fat}g G
+                          <span style={{ marginLeft: 8, color: COLORS.accent }}>ver receta ›</span>
+                        </div>
+                      </button>
                     ) : (
                       <div style={{ fontSize: 12, color: COLORS.muted, fontStyle: "italic" }}>Sin planificar</div>
                     )}
@@ -1008,32 +1012,54 @@ function MiPlanTab({ onUpdate, userTarget }) {
 
       {/* MEAL DETAIL MODAL */}
       {mealDetail && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 100, display: "flex", alignItems: "flex-end", justifyContent: "center" }}
-          onClick={(e) => e.target === e.currentTarget && setMealDetail(null)}>
-          <div style={{ background: COLORS.bg, borderRadius: "16px 16px 0 0", width: "100%", maxWidth: 720, maxHeight: "80vh", overflow: "hidden", display: "flex", flexDirection: "column" }}>
-            <div style={{ padding: "16px 20px 12px", background: COLORS.card, borderBottom: `1px solid ${COLORS.cardBorder}`, display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <span style={{ fontSize: 26 }}>{mealDetail.emoji}</span>
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.6)", zIndex: 9999, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}
+          onClick={() => setMealDetail(null)}>
+          <div style={{ background: COLORS.bg, borderRadius: "18px 18px 0 0", width: "100%", maxHeight: "82vh", display: "flex", flexDirection: "column" }}
+            onClick={e => e.stopPropagation()}>
+            {/* Handle bar */}
+            <div style={{ display: "flex", justifyContent: "center", padding: "10px 0 4px" }}>
+              <div style={{ width: 40, height: 4, borderRadius: 2, background: COLORS.cardBorder }} />
+            </div>
+            {/* Header */}
+            <div style={{ padding: "8px 20px 14px", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span style={{ fontSize: 30 }}>{mealDetail.emoji}</span>
                 <div>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: COLORS.text }}>{mealDetail.name}</div>
-                  <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 2 }}>{mealDetail.kcal} kcal · {mealDetail.prot}g P · {mealDetail.carb}g C · {mealDetail.fat}g G</div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: COLORS.text, lineHeight: 1.2 }}>{mealDetail.name}</div>
+                  <div style={{ fontSize: 12, color: COLORS.muted, marginTop: 4, display: "flex", gap: 10 }}>
+                    <span style={{ fontWeight: 700, color: COLORS.accent }}>{mealDetail.kcal} kcal</span>
+                    <span>{mealDetail.prot}g P</span>
+                    <span>{mealDetail.carb}g C</span>
+                    <span>{mealDetail.fat}g G</span>
+                  </div>
                 </div>
               </div>
-              <button onClick={() => setMealDetail(null)} style={{ background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "6px 12px", fontSize: 13, cursor: "pointer", color: COLORS.muted, fontFamily: "inherit" }}>✕</button>
+              <button onClick={() => setMealDetail(null)}
+                style={{ width: 32, height: 32, borderRadius: "50%", background: COLORS.cardBorder, border: "none", cursor: "pointer", fontSize: 16, color: COLORS.muted, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>✕</button>
             </div>
-            <div style={{ overflowY: "auto", flex: 1, padding: "16px 20px" }}>
-              <div style={{ marginBottom: 14 }}>
-                <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 8 }}>INGREDIENTES</div>
-                {(mealDetail.ingredients || []).map((ing, i) => (
-                  <div key={i} style={{ fontSize: 13, color: COLORS.text, padding: "6px 0", borderBottom: `1px solid ${COLORS.cardBorder}`, display: "flex", gap: 8 }}>
-                    <span style={{ color: COLORS.accent, fontSize: 10, marginTop: 3 }}>▸</span>{ing}
+            {/* Scrollable body */}
+            <div style={{ overflowY: "auto", flex: 1, padding: "0 20px 32px", WebkitOverflowScrolling: "touch" }}>
+              {(mealDetail.ingredients || []).length > 0 && (
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 8 }}>INGREDIENTES</div>
+                  <div style={{ background: COLORS.card, borderRadius: 10, overflow: "hidden" }}>
+                    {(mealDetail.ingredients || []).map((ing, i, arr) => (
+                      <div key={i} style={{ fontSize: 13, color: COLORS.text, padding: "9px 14px", borderBottom: i < arr.length - 1 ? `1px solid ${COLORS.cardBorder}` : "none", display: "flex", gap: 10, alignItems: "flex-start" }}>
+                        <span style={{ color: COLORS.accent, fontSize: 10, marginTop: 3, flexShrink: 0 }}>▸</span>{ing}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
               {mealDetail.prep && (
-                <div style={{ background: COLORS.card, borderRadius: 8, padding: "12px 14px" }}>
-                  <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 6 }}>PREPARACIÓN</div>
-                  <div style={{ fontSize: 13, color: COLORS.text, lineHeight: 1.7, fontStyle: "italic" }}>{mealDetail.prep}</div>
+                <div style={{ background: COLORS.card, borderRadius: 10, padding: "14px 16px" }}>
+                  <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 8 }}>PREPARACIÓN</div>
+                  <div style={{ fontSize: 13, color: COLORS.text, lineHeight: 1.8, fontStyle: "italic" }}>{mealDetail.prep}</div>
+                </div>
+              )}
+              {!mealDetail.prep && !mealDetail.ingredients?.length && (
+                <div style={{ textAlign: "center", padding: 30, color: COLORS.muted, fontStyle: "italic", fontSize: 13 }}>
+                  Planifica esta comida de nuevo para ver los detalles completos
                 </div>
               )}
             </div>
