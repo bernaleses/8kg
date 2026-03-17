@@ -707,6 +707,7 @@ function MiPlanTab({ onUpdate, userTarget }) {
   const [activeDay, setActiveDay] = useState("LUN");
   const [picker, setPicker] = useState(null);
   const [exported, setExported] = useState(false);
+  const [mealDetail, setMealDetail] = useState(null); // { meal object }
   const [planLoaded, setPlanLoaded] = useState(false);
   const sundayKey = getSundayKey();
 
@@ -762,20 +763,45 @@ function MiPlanTab({ onUpdate, userTarget }) {
   function totalKcalWeek() { return DAYS.reduce((s, d) => s + dayKcal(d), 0); }
 
   function exportToShop() {
-    // Match planned meal ingredients to clean SHOP_ITEMS names
     const plannedIngredients = new Set();
+    // Clean an ingredient string down to its core noun(s)
+    function cleanIng(raw) {
+      return raw.toLowerCase()
+        .replace(/→.*$/g, '')
+        .replace(/\d+[gml]+/g, '')
+        .replace(/\(.*?\)/g, '')
+        .replace(/^\d+\s*/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
     DAYS.forEach(day => {
       Object.values(plan[day] || {}).forEach(meal => {
         if (!meal?.ingredients) return;
         meal.ingredients.forEach(rawIng => {
-          // Try to find a matching SHOP_ITEM
-          const rawLow = rawIng.toLowerCase().replace(/\d+[gml]+\s*/g, '').replace(/\d+\s*/g, '').replace(/\(.*?\)/g, '').trim();
-          const match = SHOP_ITEMS.find(si => {
-            const siLow = si.name.toLowerCase();
-            return rawLow.includes(siLow) || siLow.includes(rawLow) ||
-              rawLow.split(' ').some(word => word.length > 4 && siLow.includes(word));
+          const cleaned = cleanIng(rawIng);
+          // Split comma-separated combos ("ajo, jengibre, soja")
+          const parts = cleaned.split(/[,+·]/).map(p => p.trim()).filter(p => p.length > 2);
+          parts.forEach(part => {
+            // 1. Exact match
+            let match = SHOP_ITEMS.find(si => si.name.toLowerCase() === part);
+            // 2. Shop item name is contained in the ingredient
+            if (!match) match = SHOP_ITEMS.find(si => {
+              const sn = si.name.toLowerCase();
+              return part.includes(sn) && sn.length > 4;
+            });
+            // 3. Ingredient is contained in shop item name
+            if (!match) match = SHOP_ITEMS.find(si => {
+              const sn = si.name.toLowerCase();
+              return sn.includes(part) && part.length > 5;
+            });
+            // 4. First meaningful word match (min 5 chars, skip generic words)
+            if (!match) {
+              const stopWords = new Set(['spray', 'light', 'fresco', 'natural', 'seco', 'cocido', 'entero', 'cruda', 'puro', 'molido', 'desnatada']);
+              const words = part.split(' ').filter(w => w.length >= 5 && !stopWords.has(w));
+              match = SHOP_ITEMS.find(si => words.some(w => si.name.toLowerCase().includes(w)));
+            }
+            if (match) plannedIngredients.add(match.name);
           });
-          if (match) plannedIngredients.add(match.name);
         });
       });
     });
@@ -980,6 +1006,41 @@ function MiPlanTab({ onUpdate, userTarget }) {
         })}
       </div>
 
+      {/* MEAL DETAIL MODAL */}
+      {mealDetail && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 100, display: "flex", alignItems: "flex-end", justifyContent: "center" }}
+          onClick={(e) => e.target === e.currentTarget && setMealDetail(null)}>
+          <div style={{ background: COLORS.bg, borderRadius: "16px 16px 0 0", width: "100%", maxWidth: 720, maxHeight: "80vh", overflow: "hidden", display: "flex", flexDirection: "column" }}>
+            <div style={{ padding: "16px 20px 12px", background: COLORS.card, borderBottom: `1px solid ${COLORS.cardBorder}`, display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span style={{ fontSize: 26 }}>{mealDetail.emoji}</span>
+                <div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: COLORS.text }}>{mealDetail.name}</div>
+                  <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 2 }}>{mealDetail.kcal} kcal · {mealDetail.prot}g P · {mealDetail.carb}g C · {mealDetail.fat}g G</div>
+                </div>
+              </div>
+              <button onClick={() => setMealDetail(null)} style={{ background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "6px 12px", fontSize: 13, cursor: "pointer", color: COLORS.muted, fontFamily: "inherit" }}>✕</button>
+            </div>
+            <div style={{ overflowY: "auto", flex: 1, padding: "16px 20px" }}>
+              <div style={{ marginBottom: 14 }}>
+                <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 8 }}>INGREDIENTES</div>
+                {(mealDetail.ingredients || []).map((ing, i) => (
+                  <div key={i} style={{ fontSize: 13, color: COLORS.text, padding: "6px 0", borderBottom: `1px solid ${COLORS.cardBorder}`, display: "flex", gap: 8 }}>
+                    <span style={{ color: COLORS.accent, fontSize: 10, marginTop: 3 }}>▸</span>{ing}
+                  </div>
+                ))}
+              </div>
+              {mealDetail.prep && (
+                <div style={{ background: COLORS.card, borderRadius: 8, padding: "12px 14px" }}>
+                  <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 6 }}>PREPARACIÓN</div>
+                  <div style={{ fontSize: 13, color: COLORS.text, lineHeight: 1.7, fontStyle: "italic" }}>{mealDetail.prep}</div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* PICKER MODAL */}
       {picker && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 100, display: "flex", alignItems: "flex-end", justifyContent: "center" }}
@@ -993,7 +1054,7 @@ function MiPlanTab({ onUpdate, userTarget }) {
               <button onClick={() => setPicker(null)} style={{ background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "6px 12px", fontSize: 13, cursor: "pointer", color: COLORS.muted, fontFamily: "inherit" }}>Cerrar</button>
             </div>
             <div style={{ overflowY: "auto", flex: 1, padding: "12px 16px" }}>
-              {meals[picker.mealKey]?.map((meal, i) => (
+              {[...(meals[picker.mealKey] || []), ...(JSON.parse(localStorage.getItem("custom_meals") || "{}")[picker.mealKey] || [])].map((meal, i) => (
                 <button key={i} onClick={() => selectMeal(picker.day, picker.slotKey, meal)}
                   style={{ width: "100%", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, padding: "12px 14px", marginBottom: 8, cursor: "pointer", fontFamily: "inherit", textAlign: "left", display: "flex", alignItems: "center", gap: 12 }}>
                   <span style={{ fontSize: 20, flexShrink: 0 }}>{meal.emoji}</span>
@@ -1634,15 +1695,56 @@ function RecetasTab() {
   const [activeMeal, setActiveMeal] = useState("desayunos");
   const [expanded, setExpanded] = useState({});
   const [search, setSearch] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [customMeals, setCustomMeals] = useState({});
+  const [form, setForm] = useState({ name: "", emoji: "🍽️", kcal: "", prot: "", carb: "", fat: "", prep: "", ing: "" });
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("custom_meals");
+      if (raw) setCustomMeals(JSON.parse(raw));
+    } catch {}
+  }, []);
+
+  function saveCustom(next) {
+    setCustomMeals(next);
+    try { localStorage.setItem("custom_meals", JSON.stringify(next)); } catch {}
+  }
+
+  function addRecipe() {
+    if (!form.name || !form.kcal) return;
+    const newRecipe = {
+      name: form.name,
+      emoji: form.emoji || "🍽️",
+      ingredients: form.ing.split("\n").map(s => s.trim()).filter(Boolean),
+      prep: form.prep,
+      macros: { kcal: +form.kcal, prot: +form.prot || 0, carb: +form.carb || 0, fat: +form.fat || 0 },
+      tupper: false,
+      custom: true,
+    };
+    const next = { ...customMeals, [activeMeal]: [...(customMeals[activeMeal] || []), newRecipe] };
+    saveCustom(next);
+    setForm({ name: "", emoji: "🍽️", kcal: "", prot: "", carb: "", fat: "", prep: "", ing: "" });
+    setShowForm(false);
+  }
+
+  function deleteCustom(cat, idx) {
+    const arr = [...(customMeals[cat] || [])];
+    arr.splice(idx, 0); arr.splice(idx, 1);
+    const next = { ...customMeals, [cat]: arr };
+    saveCustom(next);
+  }
   const labels = { desayunos: "Desayunos", almuerzos: "Almuerzos", cenas: "Cenas", media_manana: "Media Mañana", pre_entreno: "Pre-Entreno" };
   const mealCatColors = { desayunos: "#c47a1a", almuerzos: COLORS.blue, cenas: "#7c5cbf", media_manana: COLORS.green, pre_entreno: COLORS.accent };
 
   function toggleExpand(key) { setExpanded(p => ({ ...p, [key]: !p[key] })); }
 
   const catColor = mealCatColors[activeMeal];
-  const currentMeals = meals[activeMeal] || [];
+  const builtinMeals = meals[activeMeal] || [];
+  const myMeals = customMeals[activeMeal] || [];
+  const currentMeals = [...builtinMeals, ...myMeals];
   const filtered = search
-    ? currentMeals.filter(m => m.name.toLowerCase().includes(search.toLowerCase()) || m.ingredients.some(i => i.toLowerCase().includes(search.toLowerCase())))
+    ? currentMeals.filter(m => m.name.toLowerCase().includes(search.toLowerCase()) || (m.ingredients || []).some(i => i.toLowerCase().includes(search.toLowerCase())))
     : currentMeals;
 
   return (
@@ -1667,10 +1769,58 @@ function RecetasTab() {
         ))}
       </div>
 
-      {/* Count */}
-      <div style={{ fontSize: 11, color: COLORS.muted, fontStyle: "italic", marginBottom: 12 }}>
-        {filtered.length} receta{filtered.length !== 1 ? "s" : ""}{search ? ` para "${search}"` : ""}
+      {/* Count + Add button */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+        <div style={{ fontSize: 11, color: COLORS.muted, fontStyle: "italic" }}>
+          {filtered.length} receta{filtered.length !== 1 ? "s" : ""}{search ? ` para "${search}"` : ""}
+        </div>
+        <button onClick={() => setShowForm(!showForm)}
+          style={{ background: showForm ? COLORS.bg : COLORS.accent, color: showForm ? COLORS.muted : "#fff", border: `1px solid ${showForm ? COLORS.cardBorder : COLORS.accent}`, borderRadius: 6, padding: "6px 12px", fontSize: 11, cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", fontWeight: 700 }}>
+          {showForm ? "× Cancelar" : "+ Nueva receta"}
+        </button>
       </div>
+
+      {/* New recipe form */}
+      {showForm && (
+        <div style={{ background: COLORS.card, border: `2px solid ${COLORS.accent}`, borderRadius: 12, padding: 16, marginBottom: 16 }}>
+          <div style={{ fontSize: 9, color: COLORS.accent, letterSpacing: 2, marginBottom: 14 }}>NUEVA RECETA — {Object.keys({desayunos:"Desayunos",almuerzos:"Almuerzos",cenas:"Cenas",media_manana:"Media Mañana",pre_entreno:"Pre-Entreno"})[Object.keys({desayunos:"Desayunos",almuerzos:"Almuerzos",cenas:"Cenas",media_manana:"Media Mañana",pre_entreno:"Pre-Entreno"}).indexOf(activeMeal)]?.toUpperCase() || activeMeal.toUpperCase()}</div>
+          <div style={{ display: "grid", gridTemplateColumns: "50px 1fr", gap: 8, marginBottom: 10 }}>
+            <div>
+              <div style={{ fontSize: 10, color: COLORS.muted, marginBottom: 4 }}>Emoji</div>
+              <input value={form.emoji} onChange={e => setForm(f => ({...f, emoji: e.target.value}))}
+                style={{ width: "100%", background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6, padding: "8px 6px", fontSize: 20, textAlign: "center", boxSizing: "border-box" }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 10, color: COLORS.muted, marginBottom: 4 }}>Nombre *</div>
+              <input value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} placeholder="ej. Pollo con mango y arroz"
+                style={{ width: "100%", background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6, padding: "9px 12px", fontSize: 13, fontFamily: "inherit", color: COLORS.text, boxSizing: "border-box" }} />
+            </div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 8, marginBottom: 10 }}>
+            {[["kcal","Kcal *",""], ["prot","Prot (g)",""], ["carb","Carb (g)",""], ["fat","Grasas (g)",""]].map(([k,l]) => (
+              <div key={k}>
+                <div style={{ fontSize: 10, color: COLORS.muted, marginBottom: 4 }}>{l}</div>
+                <input type="number" value={form[k]} onChange={e => setForm(f => ({...f, [k]: e.target.value}))} placeholder="0"
+                  style={{ width: "100%", background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6, padding: "8px 8px", fontSize: 13, fontFamily: "inherit", color: COLORS.text, boxSizing: "border-box" }} />
+              </div>
+            ))}
+          </div>
+          <div style={{ marginBottom: 10 }}>
+            <div style={{ fontSize: 10, color: COLORS.muted, marginBottom: 4 }}>Ingredientes (uno por línea)</div>
+            <textarea value={form.ing} onChange={e => setForm(f => ({...f, ing: e.target.value}))} placeholder={"200g pechuga de pollo\n60g arroz basmati\n100g mango"}
+              rows={4} style={{ width: "100%", background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6, padding: "9px 12px", fontSize: 13, fontFamily: "inherit", color: COLORS.text, resize: "vertical", boxSizing: "border-box" }} />
+          </div>
+          <div style={{ marginBottom: 14 }}>
+            <div style={{ fontSize: 10, color: COLORS.muted, marginBottom: 4 }}>Preparación</div>
+            <textarea value={form.prep} onChange={e => setForm(f => ({...f, prep: e.target.value}))} placeholder="Cómo se prepara..."
+              rows={3} style={{ width: "100%", background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6, padding: "9px 12px", fontSize: 13, fontFamily: "inherit", color: COLORS.text, resize: "vertical", boxSizing: "border-box" }} />
+          </div>
+          <button onClick={addRecipe} disabled={!form.name || !form.kcal}
+            style={{ background: form.name && form.kcal ? COLORS.accent : COLORS.cardBorder, color: "#fff", border: "none", borderRadius: 6, padding: "10px 20px", fontSize: 13, cursor: form.name && form.kcal ? "pointer" : "default", fontFamily: "inherit", fontWeight: 700, fontStyle: "italic" }}>
+            Guardar receta ✓
+          </button>
+        </div>
+      )}
 
       {/* Recipe cards */}
       {filtered.map((meal, i) => {
@@ -1681,14 +1831,23 @@ function RecetasTab() {
             <div style={{ display: "flex", alignItems: "center", padding: "13px 16px", gap: 12, cursor: "pointer" }} onClick={() => toggleExpand(key)}>
               <span style={{ fontSize: 22 }}>{meal.emoji}</span>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: COLORS.text }}>{meal.name}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: COLORS.text }}>{meal.name}</div>
+                  {meal.custom && <span style={{ fontSize: 9, background: COLORS.accent + "18", color: COLORS.accent, padding: "1px 6px", borderRadius: 4 }}>mía</span>}
+                </div>
                 <div style={{ display: "flex", gap: 8, marginTop: 4, flexWrap: "wrap" }}>
                   <span style={{ fontSize: 11, fontWeight: 700, color: catColor }}>{meal.macros.kcal} kcal</span>
                   <span style={{ fontSize: 10, color: COLORS.muted }}>{meal.macros.prot}g P · {meal.macros.carb}g C · {meal.macros.fat}g G</span>
                   {meal.tupper && <span style={{ fontSize: 9, background: "#f0f7f2", color: COLORS.green, padding: "1px 6px", borderRadius: 4, fontStyle: "italic" }}>📦 tupper</span>}
                 </div>
               </div>
-              <span style={{ color: COLORS.muted, fontSize: 11 }}>{isExpanded ? "▲" : "▼"}</span>
+              <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                {meal.custom && (
+                  <button onClick={e => { e.stopPropagation(); const custIdx = (customMeals[activeMeal]||[]).findIndex(m => m.name === meal.name); deleteCustom(activeMeal, custIdx); }}
+                    style={{ background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6, padding: "3px 7px", fontSize: 11, color: COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>×</button>
+                )}
+                <span style={{ color: COLORS.muted, fontSize: 11 }}>{isExpanded ? "▲" : "▼"}</span>
+              </div>
             </div>
             {isExpanded && (
               <div style={{ padding: "0 16px 14px", borderTop: `1px solid ${COLORS.cardBorder}` }}>
