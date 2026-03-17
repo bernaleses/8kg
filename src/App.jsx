@@ -510,7 +510,7 @@ const DONTS = [
   { icon: "🚫", text: "No compensar un mal día comiendo menos al día siguiente. Vuelve al plan sin drama." },
 ];
 
-const TABS = ["📋 Hábitos", "🔢 Mi Plan", "🍽️ Comidas", "🛒 Compra", "📅 Semana", "✅ Do & Don't"];
+const TABS = ["📋 Hábitos", "🔢 Mi Plan", "🍽️ Comidas", "🛒 Compra", "📆 Planificador", "📅 Semana", "✅ Do & Don't"];
 
 // ─── HELPERS ──────────────────────────────────────────────────
 function todayKey() {
@@ -1380,6 +1380,283 @@ function WeekTab() {
 }
 
 
+
+// ─── MEAL PLANNER ─────────────────────────────────────────────
+const DAYS = ["LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB", "DOM"];
+const DAY_NAMES = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+const SLOTS = [
+  { key: "desayuno", label: "Desayuno", mealKey: "desayunos", emoji: "☀️" },
+  { key: "media_m", label: "Media Mañana", mealKey: "media_manana", emoji: "🍎" },
+  { key: "almuerzo", label: "Almuerzo", mealKey: "almuerzos", emoji: "🍗" },
+  { key: "pre", label: "Pre-Entreno", mealKey: "pre_entreno", emoji: "💪" },
+  { key: "cena", label: "Cena", mealKey: "cenas", emoji: "🌙" },
+];
+
+function getSundayKey() {
+  const d = new Date();
+  const day = d.getDay(); // 0=Sun
+  const diff = day === 0 ? 0 : 7 - day; // days until next sunday
+  const sunday = new Date(d);
+  sunday.setDate(d.getDate() + diff);
+  return sunday.toISOString().split("T")[0];
+}
+
+function getPlannerWeekLabel() {
+  const d = new Date();
+  const day = d.getDay();
+  // Monday of current week
+  const mon = new Date(d);
+  mon.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
+  const sun = new Date(mon);
+  sun.setDate(mon.getDate() + 6);
+  const fmt = (dt) => dt.toLocaleDateString("es-ES", { day: "numeric", month: "short" });
+  return `${fmt(mon)} – ${fmt(sun)}`;
+}
+
+function PlannerTab() {
+  const [plan, setPlan] = useState({}); // { "LUN": { desayuno: {name, kcal, prot, carb, fat, ingredients}, ... }, ... }
+  const [activeDay, setActiveDay] = useState("LUN");
+  const [picker, setPicker] = useState(null); // { day, slotKey, mealKey }
+  const [loaded, setLoaded] = useState(false);
+  const [exported, setExported] = useState(false);
+  const sundayKey = getSundayKey();
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("meal_plan");
+      if (raw) {
+        const d = JSON.parse(raw);
+        if (d.sunday === sundayKey) setPlan(d.plan || {});
+        else localStorage.setItem("meal_plan", JSON.stringify({ sunday: sundayKey, plan: {} }));
+      }
+    } catch {}
+    setLoaded(true);
+  }, []);
+
+  function savePlan(next) {
+    setPlan(next);
+    try { localStorage.setItem("meal_plan", JSON.stringify({ sunday: sundayKey, plan: next })); } catch {}
+  }
+
+  function selectMeal(day, slotKey, meal) {
+    const next = {
+      ...plan,
+      [day]: {
+        ...(plan[day] || {}),
+        [slotKey]: { name: meal.name, emoji: meal.emoji, kcal: meal.macros.kcal, prot: meal.macros.prot, carb: meal.macros.carb, fat: meal.macros.fat, ingredients: meal.ingredients }
+      }
+    };
+    savePlan(next);
+    setPicker(null);
+  }
+
+  function clearSlot(day, slotKey) {
+    const next = { ...plan, [day]: { ...(plan[day] || {}), [slotKey]: null } };
+    savePlan(next);
+  }
+
+  function clearDay(day) {
+    const next = { ...plan, [day]: {} };
+    savePlan(next);
+  }
+
+  function dayKcal(day) {
+    if (!plan[day]) return 0;
+    return Object.values(plan[day]).reduce((s, m) => s + (m?.kcal || 0), 0);
+  }
+
+  function totalKcalWeek() {
+    return DAYS.reduce((s, d) => s + dayKcal(d), 0);
+  }
+
+  function exportToShop() {
+    // Collect all ingredients from planned meals, add as custom items in shop list
+    const allIngredients = [];
+    DAYS.forEach(day => {
+      if (!plan[day]) return;
+      Object.values(plan[day]).forEach(meal => {
+        if (!meal?.ingredients) return;
+        meal.ingredients.forEach(ing => allIngredients.push(ing));
+      });
+    });
+    // Dedupe
+    const unique = [...new Set(allIngredients)];
+    try {
+      const raw = localStorage.getItem("shop_list");
+      const d = raw ? JSON.parse(raw) : { checked: {}, custom: [] };
+      const existingNames = new Set((d.custom || []).map(i => i.name));
+      const toAdd = unique.filter(n => !existingNames.has(n));
+      d.custom = [...(d.custom || []), ...toAdd.map(n => ({ name: n, cat: "Mis añadidos" }))];
+      localStorage.setItem("shop_list", JSON.stringify(d));
+      setExported(true);
+      setTimeout(() => setExported(false), 2500);
+    } catch {}
+  }
+
+  const dayKcalVal = dayKcal(activeDay);
+  const TARGET = 1700;
+
+  if (!loaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>Cargando...</div>;
+
+  return (
+    <div>
+      {/* Header */}
+      <div style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, padding: "14px 16px", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div>
+          <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 4 }}>SEMANA ACTUAL</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: COLORS.text }}>{getPlannerWeekLabel()}</div>
+          <div style={{ fontSize: 11, color: COLORS.muted, fontStyle: "italic", marginTop: 2 }}>
+            {totalKcalWeek() > 0 ? `${totalKcalWeek().toLocaleString("es-ES")} kcal planificadas` : "Sin planificar aún"}
+          </div>
+        </div>
+        <button onClick={exportToShop}
+          style={{ background: exported ? COLORS.green : COLORS.accent, color: "#fff", border: "none", borderRadius: 8, padding: "10px 14px", fontSize: 12, cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", fontWeight: 700, transition: "background 0.3s", textAlign: "center" }}>
+          {exported ? "✓ Añadido!" : "🛒 Exportar a compra"}
+        </button>
+      </div>
+
+      {/* Weekly kcal overview */}
+      <div style={{ display: "flex", gap: 4, marginBottom: 16, overflowX: "auto" }}>
+        {DAYS.map((day, i) => {
+          const kcal = dayKcal(day);
+          const pct = Math.min(100, (kcal / TARGET) * 100);
+          const isActive = activeDay === day;
+          const col = kcal === 0 ? COLORS.cardBorder : kcal > TARGET * 1.1 ? COLORS.red : kcal >= TARGET * 0.85 ? COLORS.green : COLORS.orange;
+          return (
+            <button key={day} onClick={() => setActiveDay(day)}
+              style={{ flex: 1, minWidth: 44, background: isActive ? COLORS.accent : COLORS.card,
+                border: `1px solid ${isActive ? COLORS.accent : COLORS.cardBorder}`, borderRadius: 8,
+                padding: "8px 4px", cursor: "pointer", fontFamily: "inherit", transition: "all 0.15s" }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: isActive ? "#fff" : COLORS.muted, marginBottom: 4 }}>{day}</div>
+              <div style={{ background: isActive ? "rgba(255,255,255,0.2)" : COLORS.bg, borderRadius: 4, height: 32, display: "flex", alignItems: "flex-end", overflow: "hidden", margin: "0 4px" }}>
+                <div style={{ width: "100%", background: isActive ? "rgba(255,255,255,0.6)" : col, height: `${Math.max(4, pct)}%`, borderRadius: 2, transition: "height 0.4s" }} />
+              </div>
+              <div style={{ fontSize: 9, color: isActive ? "rgba(255,255,255,0.85)" : COLORS.muted, marginTop: 4 }}>
+                {kcal > 0 ? `${kcal}` : "—"}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Day detail */}
+      <div style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 12, overflow: "hidden", marginBottom: 16 }}>
+        {/* Day header */}
+        <div style={{ background: COLORS.accent, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <span style={{ fontSize: 16, fontWeight: 900, color: "#fff" }}>{DAY_NAMES[DAYS.indexOf(activeDay)]}</span>
+            {dayKcalVal > 0 && (
+              <span style={{ marginLeft: 10, fontSize: 12, color: "rgba(255,255,255,0.8)" }}>
+                {dayKcalVal} kcal · {Math.round(Object.values(plan[activeDay] || {}).reduce((s, m) => s + (m?.prot || 0), 0))}g prot
+              </span>
+            )}
+          </div>
+          {dayKcalVal > 0 && (
+            <button onClick={() => clearDay(activeDay)}
+              style={{ fontSize: 10, background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.3)", borderRadius: 20, padding: "4px 10px", color: "#fff", cursor: "pointer", fontFamily: "inherit" }}>
+              Borrar día ×
+            </button>
+          )}
+        </div>
+
+        {/* Calorie bar */}
+        {dayKcalVal > 0 && (
+          <div style={{ padding: "8px 16px 0" }}>
+            <div style={{ background: COLORS.bg, borderRadius: 4, height: 6, overflow: "hidden" }}>
+              <div style={{ width: `${Math.min(100, (dayKcalVal / TARGET) * 100)}%`, height: 6,
+                background: dayKcalVal > TARGET * 1.1 ? COLORS.red : dayKcalVal >= TARGET * 0.85 ? COLORS.green : COLORS.orange,
+                borderRadius: 4, transition: "width 0.5s" }} />
+            </div>
+            <div style={{ fontSize: 9, color: COLORS.muted, marginTop: 4, marginBottom: 8, textAlign: "right" }}>
+              {dayKcalVal > TARGET ? `+${dayKcalVal - TARGET} kcal sobre objetivo` : `${TARGET - dayKcalVal} kcal restantes`}
+            </div>
+          </div>
+        )}
+
+        {/* Meal slots */}
+        {SLOTS.map((slot, si) => {
+          const meal = plan[activeDay]?.[slot.key];
+          return (
+            <div key={slot.key} style={{ borderTop: si > 0 ? `1px solid ${COLORS.cardBorder}` : "none" }}>
+              <div style={{ padding: "12px 16px" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
+                    <span style={{ fontSize: 18, flexShrink: 0 }}>{slot.emoji}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1, marginBottom: 2 }}>{slot.label.toUpperCase()}</div>
+                      {meal ? (
+                        <div>
+                          <div style={{ fontSize: 13, color: COLORS.text, fontWeight: 600 }}>{meal.emoji} {meal.name}</div>
+                          <div style={{ fontSize: 10, color: COLORS.muted, marginTop: 2 }}>
+                            {meal.kcal} kcal · {meal.prot}g P · {meal.carb}g C · {meal.fat}g G
+                          </div>
+                        </div>
+                      ) : (
+                        <div style={{ fontSize: 12, color: COLORS.muted, fontStyle: "italic" }}>Sin planificar</div>
+                      )}
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                    {meal && (
+                      <button onClick={() => clearSlot(activeDay, slot.key)}
+                        style={{ background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6, padding: "5px 8px", fontSize: 11, color: COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>
+                        ×
+                      </button>
+                    )}
+                    <button onClick={() => setPicker({ day: activeDay, slotKey: slot.key, mealKey: slot.mealKey, label: slot.label })}
+                      style={{ background: COLORS.accent, border: "none", borderRadius: 6, padding: "6px 12px", fontSize: 11, color: "#fff", cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", fontWeight: 700 }}>
+                      {meal ? "Cambiar" : "+ Elegir"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* PICKER MODAL */}
+      {picker && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 100, display: "flex", alignItems: "flex-end", justifyContent: "center" }}
+          onClick={(e) => e.target === e.currentTarget && setPicker(null)}>
+          <div style={{ background: COLORS.bg, borderRadius: "16px 16px 0 0", width: "100%", maxWidth: 720, maxHeight: "75vh", overflow: "hidden", display: "flex", flexDirection: "column" }}>
+            {/* Picker header */}
+            <div style={{ padding: "16px 20px 12px", background: COLORS.card, borderBottom: `1px solid ${COLORS.cardBorder}`, display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
+              <div>
+                <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2 }}>ELEGIR PARA</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: COLORS.text, marginTop: 2 }}>{picker.label} · {DAY_NAMES[DAYS.indexOf(picker.day)]}</div>
+              </div>
+              <button onClick={() => setPicker(null)}
+                style={{ background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "6px 12px", fontSize: 13, cursor: "pointer", color: COLORS.muted, fontFamily: "inherit" }}>
+                Cerrar
+              </button>
+            </div>
+            {/* Meal options */}
+            <div style={{ overflowY: "auto", flex: 1, padding: "12px 16px" }}>
+              {meals[picker.mealKey]?.map((meal, i) => (
+                <button key={i} onClick={() => selectMeal(picker.day, picker.slotKey, meal)}
+                  style={{ width: "100%", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10,
+                    padding: "12px 14px", marginBottom: 8, cursor: "pointer", fontFamily: "inherit", textAlign: "left", display: "flex", alignItems: "center", gap: 12 }}>
+                  <span style={{ fontSize: 22, flexShrink: 0 }}>{meal.emoji}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: COLORS.text }}>{meal.name}</div>
+                    <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 3 }}>
+                      {meal.macros.kcal} kcal · {meal.macros.prot}g prot · {meal.macros.carb}g carb
+                      {meal.tupper && <span style={{ marginLeft: 6, color: COLORS.green }}>📦</span>}
+                    </div>
+                  </div>
+                  <span style={{ fontSize: 18, color: COLORS.accent, flexShrink: 0 }}>›</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
 // ─── SHOPPING LIST ────────────────────────────────────────────
 const SHOP_ITEMS = [
   { name: "Pechuga de pollo", cat: "Proteínas" },
@@ -1609,7 +1886,7 @@ function ShoppingTab() {
                     <div style={{ width: 20, height: 20, borderRadius: 5, background: color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                       <span style={{ color: "#fff", fontSize: 11, fontWeight: 900 }}>✓</span>
                     </div>
-                    <span style={{ fontSize: 13, color: COLORS.muted, flex: 1, textDecoration: "line-through" }}>{it.name}</span>
+                    <span style={{ fontSize: 13, color: COLORS.text, flex: 1 }}>{it.name}</span>
                     <span style={{ fontSize: 11, color: COLORS.muted }}>quitar ×</span>
                   </div>
                 ))}
@@ -1810,8 +2087,9 @@ export default function CutPlan() {
         {activeTab === 1 && <CalcPlan onUpdate={(d) => setUserTarget(d.target || null)} />}
         {activeTab === 2 && <MealsTab targetKcal={userTarget} />}
         {activeTab === 3 && <ShoppingTab />}
-        {activeTab === 4 && <WeekTab />}
-        {activeTab === 5 && <DosDonts />}
+        {activeTab === 4 && <PlannerTab />}
+        {activeTab === 5 && <WeekTab />}
+        {activeTab === 6 && <DosDonts />}
       </div>
     </div>
   );
