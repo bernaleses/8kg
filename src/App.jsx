@@ -1360,6 +1360,187 @@ function ShoppingTab() {
   );
 }
 
+
+// ─── WEEK TAB (Horario + Entrenamientos) ─────────────────────
+function WeekTab() {
+  const [expandedDay, setExpandedDay] = useState(null);
+  const [expandedEx, setExpandedEx] = useState({});
+  const [done, setDone] = useState({});
+  const [activeBlock, setActiveBlock] = useState("push");
+  const currentMonday = getCurrentMonday();
+
+  const weekPlan = [
+    { day: "LUN", name: "Push 💪 + Running (entrenador)", color: COLORS.blue,
+      blocks: [{ time: "7:00", a: "Desayuno con proteína y carbos" }, { time: "9:00", a: "Sesión PUSH — ver bloques abajo" }, { time: "14:00", a: "Almuerzo — comida más grande del día" }, { time: "19:00", a: "Cena ligera + snack proteico" }],
+      notes: "Día de carbos: arroz o patata en el almuerzo." },
+    { day: "MAR", name: "Running (entrenador)", color: COLORS.muted,
+      blocks: [{ time: "7:00", a: "Desayuno con carbos" }, { time: "Según entrena.", a: "Running según plan de tu entrenador" }, { time: "14:00", a: "Almuerzo tupper" }, { time: "19:00", a: "Cena ligera" }],
+      notes: "Come antes del running. Snack proteico post-entreno." },
+    { day: "MIÉ", name: "Pull 🏋️ + Running (entrenador)", color: COLORS.blue,
+      blocks: [{ time: "9:00", a: "Sesión PULL — ver bloques abajo" }, { time: "14:00", a: "Almuerzo con carbos (quinoa/arroz)" }, { time: "19:00", a: "Cena proteica ligera" }],
+      notes: "Día de carga: +150-200 kcal extras en carbos." },
+    { day: "JUE", name: "Running (entrenador)", color: COLORS.muted,
+      blocks: [{ time: "7:00", a: "Desayuno con carbos" }, { time: "Según entrena.", a: "Running según plan de tu entrenador" }, { time: "14:00", a: "Almuerzo tupper" }, { time: "19:00", a: "Cena" }],
+      notes: "Descansa bien esta noche — mañana Full Body." },
+    { day: "VIE", name: "Full Body 🔥", color: COLORS.green,
+      blocks: [{ time: "9:00", a: "Sesión FULL BODY — ver bloques abajo" }, { time: "14:00", a: "Almuerzo tupper" }, { time: "19:00", a: "Cena" }],
+      notes: "Sin running hoy — fuerza pura." },
+    { day: "SÁB", name: "Running largo (entrenador)", color: COLORS.orange,
+      blocks: [{ time: "7:30", a: "Desayuno rico en carbos: avena + plátano + yogurt" }, { time: "Según entrena.", a: "Long run según plan de tu entrenador" }, { time: "Post-run", a: "Batido proteico + plátano inmediato" }, { time: "14:00", a: "Almuerzo +200 kcal carbos extra (boniato/arroz)" }, { time: "19:00", a: "Cena normal del plan" }],
+      notes: "⚠️ Añade 200-300 kcal en carbos al almuerzo. No recortes." },
+    { day: "DOM", name: "Descanso Total", color: COLORS.muted,
+      blocks: [{ time: "Mañana", a: "Batch cooking: prepara tuppers de 3-4 días" }, { time: "Todo el día", a: "Sin entrenamiento estructurado" }, { time: "Todo el día", a: "Come según el plan, sin saltarte comidas" }],
+      notes: "Cocinar en batch ahorra tiempo y elimina decisiones en la semana." },
+  ];
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const r = await (async () => { const v = localStorage.getItem("training_done"); return v ? {value: v} : null; })();
+        if (r) {
+          const stored = JSON.parse(r.value);
+          if (stored.monday === currentMonday) setDone(stored.exercises || {});
+          else localStorage.setItem("training_done", JSON.stringify({ monday: currentMonday, exercises: {} }));
+        }
+      } catch {}
+    })();
+  }, []);
+
+  async function toggleEx(blockId, exId) {
+    const key = `${blockId}_${exId}`;
+    const next = { ...done, [key]: !done[key] };
+    setDone(next);
+    try { localStorage.setItem("training_done", JSON.stringify({ monday: currentMonday, exercises: next })); } catch {}
+  }
+
+  function toggleExpandEx(key) { setExpandedEx(prev => ({ ...prev, [key]: !prev[key] })); }
+
+  const equipColors = { "Barra": "#1a5c8a", "Mancuerna": "#c47a1a", "Máquina": "#7c5cbf", "Peso corporal": "#2d7a45", "Barra / Mancuerna": "#1a5c8a" };
+  const block = TRAINING_BLOCKS.find(b => b.id === activeBlock);
+  const blockDone = block ? block.exercises.filter(e => done[`${block.id}_${e.id}`]).length : 0;
+  const blockTotal = block ? block.exercises.length : 0;
+
+  return (
+    <div>
+      <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 10 }}>HORARIO SEMANAL</div>
+      {weekPlan.map((day, i) => (
+        <div key={i} style={{ background: COLORS.card, border: `1px solid ${expandedDay === i ? day.color : COLORS.cardBorder}`, borderRadius: 10, marginBottom: 8, overflow: "hidden", transition: "border 0.2s" }}>
+          <button onClick={() => setExpandedDay(expandedDay === i ? null : i)}
+            style={{ width: "100%", background: "none", border: "none", padding: "13px 16px", display: "flex", alignItems: "center", gap: 14, cursor: "pointer", textAlign: "left", fontFamily: "inherit" }}>
+            <span style={{ fontSize: 13, fontWeight: 900, color: day.color, minWidth: 36 }}>{day.day}</span>
+            <span style={{ fontSize: 12, color: COLORS.text, flex: 1 }}>{day.name}</span>
+            <span style={{ color: COLORS.muted, fontSize: 11 }}>{expandedDay === i ? "▲" : "▼"}</span>
+          </button>
+          {expandedDay === i && (
+            <div style={{ padding: "0 16px 14px", borderTop: `1px solid ${COLORS.cardBorder}` }}>
+              <div style={{ marginTop: 10 }}>
+                {day.blocks.map((b, j) => (
+                  <div key={j} style={{ display: "flex", gap: 12, marginBottom: 8 }}>
+                    <span style={{ fontSize: 10, color: day.color, minWidth: 58, fontStyle: "italic" }}>{b.time}</span>
+                    <span style={{ fontSize: 12, color: COLORS.text, lineHeight: 1.5 }}>{b.a}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background: COLORS.bg, borderRadius: 6, padding: "8px 12px", marginTop: 6 }}>
+                <span style={{ fontSize: 10, color: day.color, fontStyle: "italic" }}>nota → </span>
+                <span style={{ fontSize: 11, color: COLORS.muted, fontStyle: "italic" }}>{day.notes}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+
+      {/* Training blocks */}
+      <div style={{ marginTop: 24, marginBottom: 10 }}>
+        <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 10 }}>BLOQUES DE ENTRENAMIENTO</div>
+        <div style={{ background: "#fff8f0", border: "1px solid #f0e0d0", borderRadius: 8, padding: "9px 14px", marginBottom: 14, fontSize: 11, color: COLORS.muted, fontStyle: "italic" }}>
+          🔄 Reset automático cada lunes · Semana: <strong style={{ color: COLORS.accent }}>{currentMonday}</strong>
+        </div>
+        <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
+          {TRAINING_BLOCKS.map(b => {
+            const bDone = b.exercises.filter(e => done[`${b.id}_${e.id}`]).length;
+            const isActive = activeBlock === b.id;
+            return (
+              <button key={b.id} onClick={() => setActiveBlock(b.id)}
+                style={{ flex: 1, padding: "12px 6px", borderRadius: 10, border: `2px solid ${isActive ? b.color : COLORS.cardBorder}`, background: isActive ? b.color : COLORS.card, cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s" }}>
+                <div style={{ fontSize: 18 }}>{b.icon}</div>
+                <div style={{ fontSize: 11, fontWeight: 900, color: isActive ? "#fff" : COLORS.text, marginTop: 3 }}>{b.label}</div>
+                <div style={{ fontSize: 9, color: isActive ? "rgba(255,255,255,0.75)" : COLORS.muted, marginTop: 1 }}>{b.day}</div>
+                <div style={{ marginTop: 5, background: isActive ? "rgba(255,255,255,0.3)" : COLORS.cardBorder, borderRadius: 4, height: 4 }}>
+                  <div style={{ width: `${(bDone / b.exercises.length) * 100}%`, background: isActive ? "#fff" : b.color, height: 4, borderRadius: 4, transition: "width 0.4s" }} />
+                </div>
+                <div style={{ fontSize: 9, color: isActive ? "rgba(255,255,255,0.85)" : COLORS.muted, marginTop: 2 }}>{bDone}/{b.exercises.length}</div>
+              </button>
+            );
+          })}
+        </div>
+
+        {block && (
+          <div>
+            <div style={{ background: block.color, borderRadius: 10, padding: "14px 16px", marginBottom: 12, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <div style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>{block.icon} {block.label}</div>
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.8)", marginTop: 2, fontStyle: "italic" }}>{block.subtitle}</div>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontSize: 26, fontWeight: 900, color: "#fff" }}>{blockDone}/{blockTotal}</div>
+                <div style={{ fontSize: 9, color: "rgba(255,255,255,0.7)", letterSpacing: 1 }}>HECHOS</div>
+              </div>
+            </div>
+
+            {block.exercises.map((ex) => {
+              const key = `${block.id}_${ex.id}`;
+              const isDone = !!done[key];
+              const isExpanded = !!expandedEx[key];
+              return (
+                <div key={ex.id} style={{ background: COLORS.card, border: `1px solid ${isDone ? block.color : COLORS.cardBorder}`, borderRadius: 10, marginBottom: 10, overflow: "hidden", opacity: isDone ? 0.85 : 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", padding: "13px 16px", gap: 12 }}>
+                    <button onClick={() => toggleEx(block.id, ex.id)}
+                      style={{ width: 28, height: 28, borderRadius: 8, border: `2px solid ${isDone ? block.color : COLORS.cardBorder}`, background: isDone ? block.color : "transparent", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0, transition: "all 0.15s" }}>
+                      {isDone && <span style={{ color: "#fff", fontSize: 14, fontWeight: 900 }}>✓</span>}
+                    </button>
+                    <div style={{ flex: 1, cursor: "pointer" }} onClick={() => toggleExpandEx(key)}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: isDone ? COLORS.muted : COLORS.text, textDecoration: isDone ? "line-through" : "none" }}>{ex.name}</div>
+                      <div style={{ display: "flex", gap: 6, marginTop: 4, flexWrap: "wrap" }}>
+                        <span style={{ fontSize: 10, background: block.color + "18", color: block.color, padding: "2px 7px", borderRadius: 4, fontWeight: 700 }}>{ex.sets} × {ex.reps}</span>
+                        <span style={{ fontSize: 10, background: COLORS.bg, color: COLORS.muted, padding: "2px 7px", borderRadius: 4 }}>⏱ {ex.rest}</span>
+                        <span style={{ fontSize: 10, background: (equipColors[ex.equipment] || COLORS.muted) + "18", color: equipColors[ex.equipment] || COLORS.muted, padding: "2px 7px", borderRadius: 4 }}>{ex.equipment}</span>
+                      </div>
+                    </div>
+                    <button onClick={() => toggleExpandEx(key)} style={{ background: "none", border: "none", color: COLORS.muted, cursor: "pointer", fontSize: 12, padding: "4px 8px" }}>
+                      {isExpanded ? "▲" : "▼"}
+                    </button>
+                  </div>
+                  {isExpanded && (
+                    <div style={{ padding: "0 16px 14px", borderTop: `1px solid ${COLORS.cardBorder}` }}>
+                      <div style={{ display: "flex", gap: 6, marginTop: 10, flexWrap: "wrap", marginBottom: 10 }}>
+                        <span style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1, alignSelf: "center" }}>MÚSCULOS →</span>
+                        {ex.muscles.map(m => (
+                          <span key={m} style={{ fontSize: 10, background: block.color + "15", color: block.color, padding: "3px 9px", borderRadius: 20, border: `1px solid ${block.color}30` }}>{m}</span>
+                        ))}
+                      </div>
+                      <div style={{ background: COLORS.bg, borderRadius: 8, padding: "10px 14px", marginBottom: 8 }}>
+                        <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 6 }}>EJECUCIÓN</div>
+                        {ex.tips.map((tip, j) => (
+                          <div key={j} style={{ display: "flex", gap: 8, marginBottom: j < ex.tips.length - 1 ? 6 : 0 }}>
+                            <span style={{ color: block.color, fontSize: 10, marginTop: 2, flexShrink: 0 }}>▸</span>
+                            <span style={{ fontSize: 12, color: COLORS.text, lineHeight: 1.5 }}>{tip}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{ fontSize: 11, color: COLORS.muted, fontStyle: "italic", paddingLeft: 4 }}>💡 {ex.note}</div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── DO & DONT TAB ───────────────────────────────────────────
 function DosDonts() {
   return (
