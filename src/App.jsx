@@ -1703,21 +1703,11 @@ export default function CutPlan() {
               </div>
               <div>
                 <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: -1, color: COLORS.text, lineHeight: 1 }}>FORMA</div>
-                <div style={{ fontSize: 10, color: COLORS.muted, letterSpacing: 2, marginTop: 2 }}>PLAN DE CORTE · 8 SEMANAS</div>
               </div>
             </div>
-            {/* Mini stats */}
-            <div style={{ textAlign: "right", display: "flex", flexDirection: "column", gap: 2 }}>
-              <span style={{ fontSize: 18, fontWeight: 900, color: COLORS.accent, lineHeight: 1 }}>−8 kg</span>
-              <span style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1 }}>OBJETIVO</span>
-            </div>
+
           </div>
-          {/* Brief */}
-          <div style={{ background: COLORS.bg, borderRadius: 8, padding: "10px 14px", marginBottom: 16, borderLeft: `3px solid ${COLORS.accent}` }}>
-            <p style={{ margin: 0, fontSize: 12, color: COLORS.muted, lineHeight: 1.7, fontStyle: "italic" }}>
-              Tu compañero de entrenamiento para los días en que todo cuenta. Déficit agresivo · Alta proteína · Fuerza 3× semana · Media maratón. Sin apps de terceros, sin suscripciones.
-            </p>
-          </div>
+
           <div style={{ display: "flex", gap: 0, overflowX: "auto" }}>
             {TABS.map((tab, i) => (
               <button key={i} onClick={() => setActiveTab(i)}
