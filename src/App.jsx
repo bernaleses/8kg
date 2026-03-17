@@ -1692,7 +1692,7 @@ export default function CutPlan() {
   return (
     <div style={{ background: COLORS.bg, minHeight: "100vh", fontFamily: "'Playfair Display', Georgia, serif", color: COLORS.text, paddingBottom: 110 }}>
       {/* ── TOP HEADER ── */}
-      <div style={{ background: COLORS.card, borderBottom: `1px solid ${COLORS.cardBorder}`, padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
+      <div style={{ position: "sticky", top: 0, zIndex: 50, background: COLORS.card, borderBottom: `1px solid ${COLORS.cardBorder}`, padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
         <div style={{ width: 32, height: 32, borderRadius: 8, background: COLORS.accent, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 2px 6px rgba(200,68,10,0.25)" }}>
           <svg width="19" height="19" viewBox="0 0 28 28" fill="none">
             <text x="4" y="22" fontSize="22" fontWeight="900" fill="white" fontFamily="Georgia, serif">F</text>
