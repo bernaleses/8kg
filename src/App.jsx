@@ -556,14 +556,6 @@ const TRAINING_BLOCKS = [
 ];
 
 // ─── HABITS CONFIG ────────────────────────────────────────────
-const HABITS = [
-  { id: "steps", label: "10.000 pasos", icon: "👟", color: COLORS.orange },
-  { id: "water", label: "3–4L de agua", icon: "💧", color: COLORS.blue },
-  { id: "sleep", label: "8h de sueño", icon: "😴", color: "#7c5cbf" },
-  { id: "protein", label: "Proteína en cada comida", icon: "🥩", color: COLORS.green },
-  { id: "noalcohol", label: "Sin alcohol", icon: "🚫", color: COLORS.red },
-  { id: "training", label: "Entreno completado", icon: "💪", color: COLORS.accent },
-];
 
 const DOS = [
   { icon: "⚖️", text: "Pesa toda la comida los primeros 14 días hasta calibrar las raciones visualmente." },
@@ -586,267 +578,6 @@ const DONTS = [
   { icon: "🚫", text: "No te saltes el snack post-entreno. La ventana anabólica existe, aprovéchala." },
   { icon: "🚫", text: "No compensar un mal día comiendo menos al día siguiente. Vuelve al plan sin drama." },
 ];
-
-
-// ─── I18N ────────────────────────────────────────────────────────────────────
-const T = {
-  es: {
-    appSubtitle: "PLAN DE CORTE",
-    appWeeks: "8 SEMANAS",
-    appObjective: "OBJETIVO",
-    appBrief: "Tu compañero de entrenamiento para los días en que todo cuenta. Déficit agresivo · Alta proteína · Fuerza 3× semana · Media maratón.",
-    tags: ["Fuerza 3×", "Media maratón", "Alta proteína", "Déficit agresivo"],
-    tabs: ["📋 Hábitos", "📆 Mi Plan", "🛒 Compra", "📅 Semana", "✅ Do & Don't", "🍽️ Recetas"],
-    habitsToday: "Hábitos de hoy",
-    habitsLast7: "Últimos 7 días",
-    habitsPerfect: "🎉 Día perfecto. Así se construyen resultados.",
-    habitsGood: "Buen día, sigue así.",
-    habitsRemain: "Quedan hábitos por marcar.",
-    habitsReset: "↺ reset a las 00:00",
-    habitsList: [
-      { id: "steps",     label: "10.000 pasos",             icon: "👟" },
-      { id: "water",     label: "3–4L de agua",             icon: "💧" },
-      { id: "sleep",     label: "8h de sueño",              icon: "😴" },
-      { id: "protein",   label: "Proteína en cada comida",  icon: "🥩" },
-      { id: "noalcohol", label: "Sin alcohol",              icon: "🚫" },
-      { id: "training",  label: "Entreno completado",       icon: "💪" },
-    ],
-    legendPerfect: "Día perfecto", legendGood: "≥70%", legendSomething: "Algo hecho", legendNone: "Sin datos",
-    activePlan: "TU PLAN ACTIVO",
-    recalculate: "Recalcular",
-    tdee: "TDEE", target: "OBJETIVO", protein: "PROTEÍNA", loss: "PÉRDIDA",
-    rest: "Descanso", training: "Entreno", load: "Carga",
-    calcTitle: "Calcula tu plan personalizado",
-    weightLabel: "Peso (kg)", heightLabel: "Altura (cm)", ageLabel: "Edad", sexLabel: "Sexo",
-    male: "Hombre", female: "Mujer",
-    bodyfatLabel: "% Grasa corporal", bodyfatOptional: "(opcional)",
-    bodyfatNote: "Si lo introduces se usa la fórmula Katch-McArdle (más precisa para atletas). Si no, se usa Mifflin-St Jeor.",
-    next: "Siguiente →", back: "← Atrás", calculate: "Calcular →",
-    activityTitle: "Nivel de actividad y objetivo",
-    activityLevels: [
-      ["sedentary","Sedentario","Escritorio, sin ejercicio regular"],
-      ["light","Ligero","1-2 sesiones suaves por semana"],
-      ["moderate","Moderado","3-4 sesiones: gym o running alternados"],
-      ["active","Activo","Fuerza 3x + running 3-4x semanal ← tu caso"],
-      ["very_active","Muy activo","Dobles sesiones o trabajo físico intenso"],
-    ],
-    goalLevels: [
-      ["cut_aggressive","Corte agresivo −700 kcal","~0.8-1 kg/sem"],
-      ["cut_moderate","Corte moderado −400 kcal","~0.4-0.5 kg/sem"],
-    ],
-    weekLabel: "SEMANA ACTUAL",
-    weeklyPlanned: "kcal planificadas",
-    notPlannedYet: "Sin planificar aún",
-    exportShop: "🛒 Exportar a compra",
-    exportDone: "✓ Añadido!",
-    noMeal: "Sin planificar",
-    seeRecipe: "ver receta ›",
-    changeBtn: "Cambiar", chooseBtn: "+ Elegir",
-    clearDay: "Borrar día ×",
-    overTarget: "sobre objetivo",
-    remaining: "kcal restantes",
-    chooseMealFor: "ELEGIR PARA",
-    closeBtn: "Cerrar",
-    slotLabels: { desayuno: "Desayuno", media_m: "Media Mañana", almuerzo: "Almuerzo", pre: "Pre-Entreno", cena: "Cena" },
-    inCart: "EN EL CARRITO",
-    products: "productos", product: "producto",
-    clearCart: "Vaciar ×",
-    searchPlaceholder: "Buscar ingrediente...",
-    addProduct: "AÑADIR PRODUCTO",
-    addProductPlaceholder: "ej. Leche de avena, proteína vegana...",
-    addBtn: "+ Añadir",
-    resultsFor: "resultado", resultsForPlural: "resultados",
-    allInCart: "✅ Todo en el carrito",
-    noResults: "Sin resultados para",
-    catFilter: ["Todos","Proteínas","Lácteos","Carbohidratos","Frutas y Verduras","Frutos Secos","Condimentos y Extras","Mis añadidos"],
-    weekSchedule: "HORARIO SEMANAL",
-    trainingBlocks: "BLOQUES DE ENTRENAMIENTO",
-    trainingReset: "🔄 Reset automático cada lunes · Semana:",
-    weekNote: "nota →",
-    doneLbl: "HECHOS",
-    execution: "EJECUCIÓN",
-    muscles: "MÚSCULOS →",
-    doTitle: "✅ Do — hábitos clave",
-    dontTitle: "❌ Don't — evita esto",
-    dos: [
-      { icon: "⚖️", text: "Pesa toda la comida los primeros 14 días hasta calibrar las raciones visualmente." },
-      { icon: "🥡", text: "Batch cooking dominical: prepara 4-5 tuppers de almuerzo y cena de golpe." },
-      { icon: "💧", text: "Bebe 3-3.5L de agua al día. Añade 500ml extra cada hora de carrera." },
-      { icon: "🥩", text: "Proteína en cada comida. Sin excepción. Mínimo 30g por toma." },
-      { icon: "😴", text: "8 horas de sueño. Crucial para recuperación y control de cortisol en déficit." },
-      { icon: "🍚", text: "Los días de carrera larga (sábado) añade 200-300 kcal en carbos al almuerzo." },
-      { icon: "📊", text: "Pésate cada mañana en ayunas, registra la media semanal — no el dato diario." },
-      { icon: "🧂", text: "Sal extra post-carrera larga: el sodio perdido en el sudor hay que reponerlo." },
-    ],
-    donts: [
-      { icon: "🚫", text: "No bajes de 1.600 kcal los días de entrenamiento de running intenso." },
-      { icon: "🚫", text: "No hagas ayuno antes de la carrera larga del sábado. Come siempre 90 min antes." },
-      { icon: "🚫", text: "No elimines los carbos del todo. Tu cerebro y músculos los necesitan para correr." },
-      { icon: "🚫", text: "No hagas más de 3 sesiones de alta intensidad a la semana — aumentas el cortisol." },
-      { icon: "🚫", text: "Alcohol fuera. Bloquea la síntesis proteica y añade calorías vacías." },
-      { icon: "🚫", text: "No añadas cardio extra si el cuerpo pide descanso. Contraproducente en déficit." },
-      { icon: "🚫", text: "No te saltes el snack post-entreno. La ventana anabólica existe, aprovéchala." },
-      { icon: "🚫", text: "No compensar un mal día comiendo menos al día siguiente. Vuelve al plan sin drama." },
-    ],
-    searchRecipe: "Buscar receta o ingrediente...",
-    recipeCount1: "receta", recipeCountN: "recetas",
-    newRecipe: "+ Nueva receta",
-    cancelBtn: "× Cancelar",
-    newRecipeTitle: "NUEVA RECETA",
-    emojiLabel: "Emoji", nameLabel: "Nombre *", kcalLabel: "Kcal *",
-    protLabel: "Prot (g)", carbLabel: "Carb (g)", fatLabel: "Grasas (g)",
-    ingredientsLabel: "Ingredientes (uno por línea)",
-    ingredientsPlaceholder: "200g pechuga de pollo\n60g arroz basmati\n100g mango",
-    prepLabel: "Preparación",
-    prepPlaceholder: "Cómo se prepara...",
-    saveRecipe: "Guardar receta ✓",
-    myRecipeBadge: "mía",
-    tupperBadge: "tupper",
-    noResultsRecipe: "Sin resultados",
-    mealCatLabels: { desayunos: "Desayunos", almuerzos: "Almuerzos", cenas: "Cenas", media_manana: "Media Mañana", pre_entreno: "Pre-Entreno" },
-    ingredientsSect: "INGREDIENTES",
-    prepSect: "PREPARACIÓN",
-    noDetailMsg: "Planifica esta comida de nuevo para ver los detalles completos",
-    kcalToday: "CALORÍAS HOY",
-    mealsMarked1: "comida marcada", mealsMarkedN: "comidas marcadas",
-    macroLabels: { prot: "Proteína", carb: "Carbos", fat: "Grasas" },
-    aboveTarget: "kcal por encima del objetivo",
-    kcalRemaining: "kcal restantes",
-    targetReached: "¡Objetivo alcanzado!",
-    resetBtn: "Resetear",
-    addManual: "AÑADIR ENTRADA MANUAL",
-    addKcalPlaceholder: "ej. 250 kcal",
-    tierLight: "light", tierMid: "medio", tierHigh: "alto",
-  },
-  en: {
-    appSubtitle: "CUT PLAN",
-    appWeeks: "8 WEEKS",
-    appObjective: "GOAL",
-    appBrief: "Your training companion for the days when everything counts. Aggressive deficit · High protein · Strength 3× week · Half marathon.",
-    tags: ["Strength 3×", "Half marathon", "High protein", "Aggressive deficit"],
-    tabs: ["📋 Habits", "📆 My Plan", "🛒 Shopping", "📅 Schedule", "✅ Do & Don't", "🍽️ Recipes"],
-    habitsToday: "Today's habits",
-    habitsLast7: "Last 7 days",
-    habitsPerfect: "🎉 Perfect day. This is how results are built.",
-    habitsGood: "Good day, keep it up.",
-    habitsRemain: "Some habits still to check.",
-    habitsReset: "↺ resets at midnight",
-    habitsList: [
-      { id: "steps",     label: "10,000 steps",           icon: "👟" },
-      { id: "water",     label: "3–4L of water",          icon: "💧" },
-      { id: "sleep",     label: "8h of sleep",            icon: "😴" },
-      { id: "protein",   label: "Protein in every meal",  icon: "🥩" },
-      { id: "noalcohol", label: "No alcohol",             icon: "🚫" },
-      { id: "training",  label: "Training completed",     icon: "💪" },
-    ],
-    legendPerfect: "Perfect day", legendGood: "≥70%", legendSomething: "Something done", legendNone: "No data",
-    activePlan: "YOUR ACTIVE PLAN",
-    recalculate: "Recalculate",
-    tdee: "TDEE", target: "TARGET", protein: "PROTEIN", loss: "LOSS",
-    rest: "Rest", training: "Training", load: "Load day",
-    calcTitle: "Calculate your personalised plan",
-    weightLabel: "Weight (kg)", heightLabel: "Height (cm)", ageLabel: "Age", sexLabel: "Sex",
-    male: "Male", female: "Female",
-    bodyfatLabel: "Body fat %", bodyfatOptional: "(optional)",
-    bodyfatNote: "If provided, Katch-McArdle formula is used (more accurate for athletes). Otherwise Mifflin-St Jeor.",
-    next: "Next →", back: "← Back", calculate: "Calculate →",
-    activityTitle: "Activity level and goal",
-    activityLevels: [
-      ["sedentary","Sedentary","Desk job, no regular exercise"],
-      ["light","Light","1-2 easy sessions per week"],
-      ["moderate","Moderate","3-4 sessions: gym or running alternated"],
-      ["active","Active","Strength 3x + running 3-4x/week ← your case"],
-      ["very_active","Very active","Double sessions or intense physical work"],
-    ],
-    goalLevels: [
-      ["cut_aggressive","Aggressive cut −700 kcal","~0.8-1 kg/week"],
-      ["cut_moderate","Moderate cut −400 kcal","~0.4-0.5 kg/week"],
-    ],
-    weekLabel: "CURRENT WEEK",
-    weeklyPlanned: "kcal planned",
-    notPlannedYet: "Nothing planned yet",
-    exportShop: "🛒 Export to shopping",
-    exportDone: "✓ Added!",
-    noMeal: "Not planned",
-    seeRecipe: "see recipe ›",
-    changeBtn: "Change", chooseBtn: "+ Choose",
-    clearDay: "Clear day ×",
-    overTarget: "above target",
-    remaining: "kcal remaining",
-    chooseMealFor: "CHOOSE FOR",
-    closeBtn: "Close",
-    slotLabels: { desayuno: "Breakfast", media_m: "Mid-morning", almuerzo: "Lunch", pre: "Pre-workout", cena: "Dinner" },
-    inCart: "IN CART",
-    products: "products", product: "product",
-    clearCart: "Clear ×",
-    searchPlaceholder: "Search ingredient...",
-    addProduct: "ADD PRODUCT",
-    addProductPlaceholder: "e.g. Oat milk, vegan protein...",
-    addBtn: "+ Add",
-    resultsFor: "result", resultsForPlural: "results",
-    allInCart: "✅ All in cart",
-    noResults: "No results for",
-    catFilter: ["All","Proteins","Dairy","Carbs","Fruit & Veg","Nuts & Seeds","Condiments & Extras","My additions"],
-    weekSchedule: "WEEKLY SCHEDULE",
-    trainingBlocks: "TRAINING BLOCKS",
-    trainingReset: "🔄 Auto-reset every Monday · Week:",
-    weekNote: "note →",
-    doneLbl: "DONE",
-    execution: "EXECUTION",
-    muscles: "MUSCLES →",
-    doTitle: "✅ Do — key habits",
-    dontTitle: "❌ Don't — avoid this",
-    dos: [
-      { icon: "⚖️", text: "Weigh all food for the first 14 days until you can eyeball portions accurately." },
-      { icon: "🥡", text: "Sunday batch cooking: prep 4-5 tupperware lunches and dinners in one go." },
-      { icon: "💧", text: "Drink 3-3.5L of water daily. Add 500ml extra per hour of running." },
-      { icon: "🥩", text: "Protein in every meal. No exceptions. Minimum 30g per serving." },
-      { icon: "😴", text: "8 hours of sleep. Critical for recovery and cortisol control during deficit." },
-      { icon: "🍚", text: "On long run days (Saturday) add 200-300 extra kcal in carbs at lunch." },
-      { icon: "📊", text: "Weigh yourself every morning fasted, track the weekly average — not the daily number." },
-      { icon: "🧂", text: "Extra salt after long runs: replenish the sodium lost through sweat." },
-    ],
-    donts: [
-      { icon: "🚫", text: "Don't drop below 1,600 kcal on intense running training days." },
-      { icon: "🚫", text: "Don't fast before the Saturday long run. Always eat 90 min beforehand." },
-      { icon: "🚫", text: "Don't cut out carbs entirely. Your brain and muscles need them to run." },
-      { icon: "🚫", text: "No more than 3 high-intensity sessions per week — cortisol will spike." },
-      { icon: "🚫", text: "Alcohol out. It blocks protein synthesis and adds empty calories." },
-      { icon: "🚫", text: "Don't add extra cardio if your body needs rest. Counterproductive in deficit." },
-      { icon: "🚫", text: "Don't skip the post-workout snack. The anabolic window is real, use it." },
-      { icon: "🚫", text: "Don't compensate a bad day by eating less the next. Just get back on plan." },
-    ],
-    searchRecipe: "Search recipe or ingredient...",
-    recipeCount1: "recipe", recipeCountN: "recipes",
-    newRecipe: "+ New recipe",
-    cancelBtn: "× Cancel",
-    newRecipeTitle: "NEW RECIPE",
-    emojiLabel: "Emoji", nameLabel: "Name *", kcalLabel: "Kcal *",
-    protLabel: "Prot (g)", carbLabel: "Carb (g)", fatLabel: "Fat (g)",
-    ingredientsLabel: "Ingredients (one per line)",
-    ingredientsPlaceholder: "200g chicken breast\n60g basmati rice\n100g mango",
-    prepLabel: "Preparation",
-    prepPlaceholder: "How to prepare...",
-    saveRecipe: "Save recipe ✓",
-    myRecipeBadge: "mine",
-    tupperBadge: "meal prep",
-    noResultsRecipe: "No results",
-    mealCatLabels: { desayunos: "Breakfast", almuerzos: "Lunch", cenas: "Dinner", media_manana: "Mid-morning", pre_entreno: "Pre-workout" },
-    ingredientsSect: "INGREDIENTS",
-    prepSect: "PREPARATION",
-    noDetailMsg: "Re-plan this meal to see full details",
-    kcalToday: "TODAY'S CALORIES",
-    mealsMarked1: "meal logged", mealsMarkedN: "meals logged",
-    macroLabels: { prot: "Protein", carb: "Carbs", fat: "Fat" },
-    aboveTarget: "kcal above target",
-    kcalRemaining: "kcal remaining",
-    targetReached: "Target reached!",
-    resetBtn: "Reset",
-    addManual: "ADD MANUAL ENTRY",
-    addKcalPlaceholder: "e.g. 250 kcal",
-    tierLight: "light", tierMid: "medium", tierHigh: "high",
-  }
-};
 
 const TABS = ["📋 Hábitos", "📆 Mi Plan", "🛒 Compra", "📅 Semana", "✅ Do & Don't", "🍽️ Recetas"];
 
@@ -892,131 +623,6 @@ function Label({ children, color }) {
 }
 
 // ─── HABITS TRACKER ───────────────────────────────────────────
-function HabitsTracker({ t }) {
-  const [checked, setChecked] = useState({});
-  const [history, setHistory] = useState({});
-  const [loaded, setLoaded] = useState(false);
-  const today = todayKey();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const r = await (async () => { const v = localStorage.getItem("habits_history"); return v ? {value: v} : null; })();
-        const all = r ? JSON.parse(r.value) : {};
-        setHistory(all);
-        setChecked(all[today] || {});
-      } catch { setChecked({}); }
-      setLoaded(true);
-    })();
-  }, []);
-
-  async function toggle(id) {
-    const next = { ...checked, [id]: !checked[id] };
-    setChecked(next);
-    const nextHistory = { ...history, [today]: next };
-    setHistory(nextHistory);
-    try { await (async () => { localStorage.setItem("habits_history", JSON.stringify(nextHistory)); })(); } catch {}
-  }
-
-  const done = Object.values(checked).filter(Boolean).length;
-  const total = t.habitsList.length;
-  const pct = Math.round((done / total) * 100);
-
-  // Last 7 days streak
-  const last7 = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(); d.setDate(d.getDate() - (6 - i));
-    const key = d.toISOString().split("T")[0];
-    const dayData = history[key] || {};
-    const cnt = Object.values(dayData).filter(Boolean).length;
-    const label = d.toLocaleDateString("es-ES", { weekday: "short" }).slice(0, 3).toUpperCase();
-    return { key, label, cnt, isToday: key === today };
-  });
-
-  if (!loaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>{lang === "en" ? "Loading..." : "Cargando..."}</div>;
-
-  return (
-    <div>
-      {/* Progress ring */}
-      <Card style={{ display: "flex", alignItems: "center", gap: 20 }}>
-        <div style={{ position: "relative", width: 80, height: 80, flexShrink: 0 }}>
-          <svg viewBox="0 0 80 80" style={{ transform: "rotate(-90deg)", width: 80, height: 80 }}>
-            <circle cx="40" cy="40" r="32" fill="none" stroke={COLORS.cardBorder} strokeWidth="8" />
-            <circle cx="40" cy="40" r="32" fill="none" stroke={pct === 100 ? COLORS.green : COLORS.accent}
-              strokeWidth="8" strokeLinecap="round"
-              strokeDasharray={`${2 * Math.PI * 32}`}
-              strokeDashoffset={`${2 * Math.PI * 32 * (1 - pct / 100)}`}
-              style={{ transition: "stroke-dashoffset 0.5s" }} />
-          </svg>
-          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
-            <span style={{ fontSize: 18, fontWeight: 900, color: pct === 100 ? COLORS.green : COLORS.accent }}>{pct}%</span>
-          </div>
-        </div>
-        <div>
-          <div style={{ fontSize: 20, fontWeight: 900 }}>{done}/{total} hábitos</div>
-          <div style={{ fontSize: 12, color: COLORS.muted, fontStyle: "italic", marginTop: 4 }}>
-            {pct === 100 ? t.habitsPerfect : pct >= 70 ? t.habitsGood : t.habitsRemain}
-          </div>
-          <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 6 }}>{new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" })}</div>
-        </div>
-      </Card>
-
-      {/* Habit checkboxes */}
-      <Card>
-        <Label>Hábitos de hoy</Label>
-        {t.habitsList.map(h => (
-          <button key={h.id} onClick={() => toggle(h.id)}
-            style={{ width: "100%", display: "flex", alignItems: "center", gap: 14, padding: "11px 0",
-              borderBottom: `1px solid ${COLORS.cardBorder}`, background: "none", border: "none",
-              cursor: "pointer", textAlign: "left", fontFamily: "inherit",
-              }}>
-            <span style={{ fontSize: 20 }}>{h.icon}</span>
-            <span style={{ flex: 1, fontSize: 14, color: checked[h.id] ? COLORS.text : COLORS.muted,
-              textDecoration: checked[h.id] ? "none" : "none", fontStyle: checked[h.id] ? "normal" : "italic" }}>
-              {h.label}
-            </span>
-            <span style={{
-              width: 24, height: 24, borderRadius: 6, border: `2px solid ${checked[h.id] ? h.color : COLORS.cardBorder}`,
-              background: checked[h.id] ? h.color : "transparent", display: "flex", alignItems: "center",
-              justifyContent: "center", transition: "all 0.15s", flexShrink: 0
-            }}>
-              {checked[h.id] && <span style={{ color: "#fff", fontSize: 14, fontWeight: 900 }}>✓</span>}
-            </span>
-          </button>
-        ))}
-      </Card>
-
-      {/* Last 7 days */}
-      <Card>
-        <Label>Últimos 7 días</Label>
-        <div style={{ display: "flex", gap: 8 }}>
-          {last7.map(d => {
-            const filledPct = d.cnt / t.habitsList.length;
-            const col = filledPct === 1 ? COLORS.green : filledPct >= 0.7 ? COLORS.orange : filledPct > 0 ? COLORS.blue : COLORS.cardBorder;
-            return (
-              <div key={d.key} style={{ flex: 1, textAlign: "center" }}>
-                <div style={{ background: col, borderRadius: 6, height: 40, marginBottom: 6, transition: "background 0.3s",
-                  border: d.isToday ? `2px solid ${COLORS.accent}` : "none",
-                  display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  {d.cnt > 0 && <span style={{ fontSize: 11, color: "#fff", fontWeight: 700 }}>{d.cnt}</span>}
-                </div>
-                <div style={{ fontSize: 9, color: d.isToday ? COLORS.accent : COLORS.muted, fontWeight: d.isToday ? 700 : 400 }}>{d.label}</div>
-              </div>
-            );
-          })}
-        </div>
-        <div style={{ display: "flex", gap: 16, marginTop: 12, flexWrap: "wrap" }}>
-          {[{ col: COLORS.green, label: t.legendPerfect }, { col: COLORS.orange, label: t.legendGood }, { col: COLORS.blue, label: t.legendSomething }, { col: COLORS.cardBorder, label: t.legendNone }].map(l => (
-            <div key={l.label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <div style={{ width: 10, height: 10, borderRadius: 2, background: l.col, border: `1px solid ${COLORS.cardBorder}` }} />
-              <span style={{ fontSize: 10, color: COLORS.muted }}>{l.label}</span>
-            </div>
-          ))}
-        </div>
-      </Card>
-    </div>
-  );
-}
-
 // ─── CALORIE CALCULATOR ───────────────────────────────────────
 const STEPS = ["datos", "actividad", "resultado"];
 
@@ -1081,7 +687,7 @@ function findFullMeal(name) {
   return null;
 }
 
-function MiPlanTab({ onUpdate, userTarget, t }) {
+function MiPlanTab({ onUpdate, userTarget }) {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({ weight: "", height: "", age: "", sex: "H", activity: "moderate", goal: "cut_aggressive", bodyfat: "" });
   const [saved, setSaved] = useState(null);
@@ -1227,10 +833,10 @@ function MiPlanTab({ onUpdate, userTarget, t }) {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 12 }}>
         {[
-          { l: t.tdee, v: `${saved.tdee}`, unit: "kcal", c: COLORS.muted },
-          { l: t.target, v: `${saved.target}`, unit: "kcal", c: COLORS.accent },
-          { l: t.protein, v: `${saved.protein}g`, unit: "mín.", c: COLORS.green },
-          { l: t.loss, v: `~${saved.weightLoss}`, unit: "kg/sem", c: COLORS.orange },
+          { l: "TDEE", v: `${saved.tdee}`, unit: "kcal", c: COLORS.muted },
+          { l: "OBJETIVO", v: `${saved.target}`, unit: "kcal", c: COLORS.accent },
+          { l: "PROTEÍNA", v: `${saved.protein}g`, unit: "mín.", c: COLORS.green },
+          { l: "PÉRDIDA", v: `~${saved.weightLoss}`, unit: "kg/sem", c: COLORS.orange },
         ].map(x => (
           <div key={x.l} style={{ background: COLORS.bg, borderRadius: 8, padding: "10px 8px", textAlign: "center" }}>
             <div style={{ fontSize: 8, color: COLORS.muted, letterSpacing: 1.5 }}>{x.l}</div>
@@ -1241,9 +847,9 @@ function MiPlanTab({ onUpdate, userTarget, t }) {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
         {[
-          { l: t.rest, kcal: Math.round(saved.target - 150), d: "Vie, Dom", c: COLORS.muted },
-          { l: t.training, kcal: saved.target, d: "Lun, Mar, Jue", c: COLORS.blue },
-          { l: t.load, kcal: Math.round(saved.target + 200), d: "Mié, Sáb", c: COLORS.accent },
+          { l: "Descanso", kcal: Math.round(saved.target - 150), d: "Vie, Dom", c: COLORS.muted },
+          { l: "Entreno", kcal: saved.target, d: "Lun, Mar, Jue", c: COLORS.blue },
+          { l: "Carga", kcal: Math.round(saved.target + 200), d: "Mié, Sáb", c: COLORS.accent },
         ].map(x => (
           <div key={x.l} style={{ borderLeft: `3px solid ${x.c}`, paddingLeft: 10 }}>
             <div style={{ fontSize: 16, fontWeight: 900, color: x.c }}>{x.kcal}</div>
@@ -1263,7 +869,7 @@ function MiPlanTab({ onUpdate, userTarget, t }) {
         <div><div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 6 }}>Edad</div><input style={inputStyle} type="number" value={form.age} onChange={e => setF("age", e.target.value)} placeholder="ej. 30" /></div>
         <div><div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 6 }}>Sexo</div>
           <div style={{ display: "flex", gap: 8 }}>
-            {[["H",t.male],["M",t.female]].map(([v,l]) => (
+            {[["H","Hombre"],["M","Mujer"]].map(([v,l]) => (
               <button key={v} onClick={() => setF("sex", v)} style={{ flex: 1, padding: "10px 0", borderRadius: 6, border: `1px solid ${form.sex===v?COLORS.accent:COLORS.cardBorder}`, background: form.sex===v?COLORS.accent:COLORS.bg, color: form.sex===v?"#fff":COLORS.muted, cursor: "pointer", fontFamily: "inherit", fontSize: 13, fontStyle: "italic" }}>{l}</button>
             ))}
           </div>
@@ -1284,7 +890,13 @@ function MiPlanTab({ onUpdate, userTarget, t }) {
     <Card>
       <Label>Nivel de actividad y objetivo</Label>
       <div style={{ marginBottom: 12 }}>
-        {t.activityLevels.map(([v,l,d]) => (
+        {[
+          ["sedentary","Sedentario","Escritorio, sin ejercicio regular"],
+          ["light","Ligero","1-2 sesiones suaves por semana"],
+          ["moderate","Moderado","3-4 sesiones: gym o running alternados"],
+          ["active","Activo","Fuerza 3x + running 3-4x semanal ← tu caso"],
+          ["very_active","Muy activo","Dobles sesiones o trabajo físico intenso"]
+        ].map(([v,l,d]) => (
           <button key={v} onClick={() => setF("activity", v)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", marginBottom: 6, borderRadius: 6, border: `1px solid ${form.activity===v?COLORS.accent:COLORS.cardBorder}`, background: form.activity===v?"#fff5f2":COLORS.bg, cursor: "pointer", fontFamily: "inherit", textAlign: "left" }}>
             <div style={{ width: 12, height: 12, borderRadius: "50%", border: `2px solid ${form.activity===v?COLORS.accent:COLORS.cardBorder}`, background: form.activity===v?COLORS.accent:"transparent", flexShrink: 0 }} />
             <div><div style={{ fontSize: 12, color: COLORS.text, fontWeight: form.activity===v?700:400 }}>{l}</div><div style={{ fontSize: 10, color: COLORS.muted, fontStyle: "italic" }}>{d}</div></div>
@@ -1292,7 +904,7 @@ function MiPlanTab({ onUpdate, userTarget, t }) {
         ))}
       </div>
       <div style={{ marginBottom: 14 }}>
-        {t.goalLevels.map(([v,l,d]) => (
+        {[["cut_aggressive","Corte agresivo −700 kcal","~0.8-1 kg/sem"],["cut_moderate","Corte moderado −400 kcal","~0.4-0.5 kg/sem"]].map(([v,l,d]) => (
           <button key={v} onClick={() => setF("goal", v)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", marginBottom: 6, borderRadius: 6, border: `1px solid ${form.goal===v?COLORS.accent:COLORS.cardBorder}`, background: form.goal===v?"#fff5f2":COLORS.bg, cursor: "pointer", fontFamily: "inherit", textAlign: "left" }}>
             <div style={{ width: 12, height: 12, borderRadius: "50%", border: `2px solid ${form.goal===v?COLORS.accent:COLORS.cardBorder}`, background: form.goal===v?COLORS.accent:"transparent", flexShrink: 0 }} />
             <div><div style={{ fontSize: 12, color: COLORS.text, fontWeight: form.goal===v?700:400 }}>{l}</div><div style={{ fontSize: 10, color: COLORS.muted, fontStyle: "italic" }}>{d}</div></div>
@@ -1306,7 +918,7 @@ function MiPlanTab({ onUpdate, userTarget, t }) {
     </Card>
   );
 
-  if (!planLoaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>{lang === "en" ? "Loading..." : "Cargando..."}</div>;
+  if (!planLoaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>Cargando...</div>;
 
   return (
     <div>
@@ -1321,7 +933,7 @@ function MiPlanTab({ onUpdate, userTarget, t }) {
         </div>
         <button onClick={exportToShop}
           style={{ background: exported ? COLORS.green : COLORS.accent, color: "#fff", border: "none", borderRadius: 8, padding: "9px 14px", fontSize: 12, cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", fontWeight: 700, transition: "background 0.3s" }}>
-          {exported ? t.exportDone : t.exportShop}
+          {exported ? "✓ Añadido!" : "🛒 Exportar a compra"}
         </button>
       </div>
 
@@ -1374,7 +986,7 @@ function MiPlanTab({ onUpdate, userTarget, t }) {
                 <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
                   <span style={{ fontSize: 16, flexShrink: 0 }}>{slot.emoji}</span>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1, marginBottom: 2 }}>{(t.slotLabels[slot.key] || slot.label).toUpperCase()}</div>
+                    <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1, marginBottom: 2 }}>{slot.label.toUpperCase()}</div>
                     {meal ? (
                       <button onClick={() => {
                           const full = findFullMeal(meal.name);
@@ -1396,7 +1008,7 @@ function MiPlanTab({ onUpdate, userTarget, t }) {
                   {meal && <button onClick={() => clearSlot(activeDay, slot.key)} style={{ background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6, padding: "5px 8px", fontSize: 11, color: COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>×</button>}
                   <button onClick={() => setPicker({ day: activeDay, slotKey: slot.key, mealKey: slot.mealKey, label: slot.label })}
                     style={{ background: COLORS.accent, border: "none", borderRadius: 6, padding: "6px 12px", fontSize: 11, color: "#fff", cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", fontWeight: 700 }}>
-                    {meal ? t.changeBtn : t.chooseBtn}
+                    {meal ? "Cambiar" : "+ Elegir"}
                   </button>
                 </div>
               </div>
@@ -1616,7 +1228,7 @@ const CAT_COLORS = {
   "Condimentos y Extras": "#8a7f72",
 };
 
-function ShoppingTab({ t }) {
+function ShoppingTab() {
   const [checked, setChecked] = useState({});
   const [search, setSearch] = useState("");
   const [customItems, setCustomItems] = useState([]);
@@ -1684,7 +1296,7 @@ function ShoppingTab({ t }) {
     checkedGrouped[it.cat].push(it);
   });
 
-  const cats = t.catFilter;
+  const cats = ["Todos", "Proteínas", "Lácteos", "Carbohidratos", "Frutas y Verduras", "Frutos Secos", "Condimentos y Extras", "Mis añadidos"];
   const catOrder = ["Mis añadidos", "Proteínas", "Lácteos", "Carbohidratos", "Frutas y Verduras", "Frutos Secos", "Condimentos y Extras"];
 
   const filtered = allItems.filter(it => {
@@ -1699,7 +1311,7 @@ function ShoppingTab({ t }) {
     grouped[it.cat].push(it);
   });
 
-  if (!loaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>{lang === "en" ? "Loading..." : "Cargando..."}</div>;
+  if (!loaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>Cargando...</div>;
 
   return (
     <div>
@@ -1751,7 +1363,7 @@ function ShoppingTab({ t }) {
         <span style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", fontSize: 14, color: COLORS.muted, pointerEvents: "none" }}>🔍</span>
         <input
           type="text"
-            placeholder={t.searchPlaceholder}
+          placeholder="Buscar ingrediente..."
           value={search}
           onChange={e => setSearch(e.target.value)}
           style={{ width: "100%", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`,
@@ -1787,7 +1399,7 @@ function ShoppingTab({ t }) {
         <div style={{ display: "flex", gap: 8 }}>
           <input
             type="text"
-            placeholder={t.addProductPlaceholder}
+            placeholder="ej. Leche de avena, proteína vegana..."
             value={customInput}
             onChange={e => setCustomInput(e.target.value)}
             onKeyDown={e => e.key === "Enter" && addCustom()}
@@ -1804,7 +1416,7 @@ function ShoppingTab({ t }) {
 
       {search && (
         <div style={{ fontSize: 11, color: COLORS.muted, fontStyle: "italic", marginBottom: 12 }}>
-          {filtered.length} {filtered.length !== 1 ? t.resultsForPlural : t.resultsFor} {t.noResults.replace("Sin resultados para","").trim()} "{search}"
+          {filtered.length} resultado{filtered.length !== 1 ? "s" : ""} para "{search}"
         </div>
       )}
 
@@ -1842,12 +1454,12 @@ function ShoppingTab({ t }) {
 
       {filtered.length === 0 && checkedItems.length > 0 && !search && (
         <div style={{ textAlign: "center", padding: 32, color: COLORS.muted, fontStyle: "italic" }}>
-          {t.allInCart}
+          ✅ Todo en el carrito
         </div>
       )}
       {filtered.length === 0 && search && (
         <div style={{ textAlign: "center", padding: 32, color: COLORS.muted, fontStyle: "italic" }}>
-          {t.noResults} "{search}"
+          Sin resultados para "{search}"
         </div>
       )}
     </div>
@@ -1856,7 +1468,7 @@ function ShoppingTab({ t }) {
 
 
 // ─── WEEK TAB (Horario + Entrenamientos) ─────────────────────
-function WeekTab({ t }) {
+function WeekTab() {
   const [expandedDay, setExpandedDay] = useState(null);
   const [expandedEx, setExpandedEx] = useState({});
   const [done, setDone] = useState({});
@@ -1948,7 +1560,7 @@ function WeekTab({ t }) {
       <div style={{ marginTop: 24, marginBottom: 10 }}>
         <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 10 }}>BLOQUES DE ENTRENAMIENTO</div>
         <div style={{ background: "#fff8f0", border: "1px solid #f0e0d0", borderRadius: 8, padding: "9px 14px", marginBottom: 14, fontSize: 11, color: COLORS.muted, fontStyle: "italic" }}>
-          {t.trainingReset} <strong style={{ color: COLORS.accent }}>{currentMonday}</strong>
+          🔄 Reset automático cada lunes · Semana: <strong style={{ color: COLORS.accent }}>{currentMonday}</strong>
         </div>
         <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
           {TRAINING_BLOCKS.map(b => {
@@ -2036,12 +1648,12 @@ function WeekTab({ t }) {
 }
 
 // ─── DO & DONT TAB ───────────────────────────────────────────
-function DosDonts({ t }) {
+function DosDonts() {
   return (
     <div>
       <div style={{ marginBottom: 20 }}>
         <Label color={COLORS.green}>✅ Do — hábitos clave</Label>
-        {t.dos.map((item, i) => (
+        {DOS.map((item, i) => (
           <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderLeft: `3px solid ${COLORS.green}`, borderRadius: 8, padding: "12px 16px", marginBottom: 8 }}>
             <span style={{ fontSize: 18, flexShrink: 0 }}>{item.icon}</span>
             <span style={{ fontSize: 13, color: COLORS.text, lineHeight: 1.6 }}>{item.text}</span>
@@ -2050,7 +1662,7 @@ function DosDonts({ t }) {
       </div>
       <div style={{ marginBottom: 20 }}>
         <Label color={COLORS.red}>❌ Don't — evita esto</Label>
-        {t.donts.map((item, i) => (
+        {DONTS.map((item, i) => (
           <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderLeft: `3px solid ${COLORS.red}`, borderRadius: 8, padding: "12px 16px", marginBottom: 8 }}>
             <span style={{ fontSize: 18, flexShrink: 0 }}>{item.icon}</span>
             <span style={{ fontSize: 13, color: COLORS.text, lineHeight: 1.6 }}>{item.text}</span>
@@ -2065,14 +1677,6 @@ function DosDonts({ t }) {
 // ─── APP ──────────────────────────────────────────────────────
 export default function CutPlan() {
   const [activeTab, setActiveTab] = useState(0);
-  const [lang, setLang] = useState(() => {
-    try { return localStorage.getItem("forma_lang") || "es"; } catch { return "es"; }
-  });
-  const t = T[lang] || T.es;
-  function toggleLang(l) {
-    setLang(l);
-    try { localStorage.setItem("forma_lang", l); } catch {}
-  }
   const [userTarget, setUserTarget] = useState(null);
 
   useEffect(() => {
@@ -2099,7 +1703,7 @@ export default function CutPlan() {
               </div>
               <div>
                 <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: -1, color: COLORS.text, lineHeight: 1 }}>FORMA</div>
-                <div style={{ fontSize: 10, color: COLORS.muted, letterSpacing: 2, marginTop: 2 }}>{t.appSubtitle} · {t.appWeeks}</div>
+                <div style={{ fontSize: 10, color: COLORS.muted, letterSpacing: 2, marginTop: 2 }}>PLAN DE CORTE · 8 SEMANAS</div>
               </div>
             </div>
             {/* Mini stats */}
@@ -2108,29 +1712,14 @@ export default function CutPlan() {
               <span style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1 }}>OBJETIVO</span>
             </div>
           </div>
-          {/* Brief + Language switcher */}
-          <div style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 16 }}>
-            <div style={{ background: COLORS.bg, borderRadius: 8, padding: "10px 14px", flex: 1, borderLeft: `3px solid ${COLORS.accent}` }}>
-              <p style={{ margin: 0, fontSize: 12, color: COLORS.muted, lineHeight: 1.7, fontStyle: "italic" }}>
-                {t.appBrief}
-              </p>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 2, flexShrink: 0 }}>
-              {["es", "en"].map(l => (
-                <button key={l} onClick={() => toggleLang(l)}
-                  style={{ background: lang === l ? COLORS.accent : COLORS.card,
-                    color: lang === l ? "#fff" : COLORS.muted,
-                    border: `1px solid ${lang === l ? COLORS.accent : COLORS.cardBorder}`,
-                    borderRadius: 6, padding: "6px 10px", fontSize: 11, fontWeight: 700,
-                    cursor: "pointer", fontFamily: "inherit", letterSpacing: 1,
-                    transition: "all 0.15s", textAlign: "center" }}>
-                  {l === "es" ? "🇪🇸 ES" : "🇬🇧 EN"}
-                </button>
-              ))}
-            </div>
+          {/* Brief */}
+          <div style={{ background: COLORS.bg, borderRadius: 8, padding: "10px 14px", marginBottom: 16, borderLeft: `3px solid ${COLORS.accent}` }}>
+            <p style={{ margin: 0, fontSize: 12, color: COLORS.muted, lineHeight: 1.7, fontStyle: "italic" }}>
+              Tu compañero de entrenamiento para los días en que todo cuenta. Déficit agresivo · Alta proteína · Fuerza 3× semana · Media maratón. Sin apps de terceros, sin suscripciones.
+            </p>
           </div>
           <div style={{ display: "flex", gap: 0, overflowX: "auto" }}>
-            {t.tabs.map((tab, i) => (
+            {TABS.map((tab, i) => (
               <button key={i} onClick={() => setActiveTab(i)}
                 style={{ background: "none", border: "none", borderBottom: activeTab === i ? `2px solid ${COLORS.accent}` : "2px solid transparent",
                   color: activeTab === i ? COLORS.accent : COLORS.muted, padding: "10px 14px", fontSize: 12,
@@ -2143,17 +1732,17 @@ export default function CutPlan() {
       </div>
 
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "24px 20px" }}>
-        {activeTab === 0 && <HabitsTracker t={t} />}
-        {activeTab === 1 && <MiPlanTab onUpdate={(d) => setUserTarget(d.target || null)} userTarget={userTarget} t={t} />}
-        {activeTab === 2 && <ShoppingTab t={t} />}
-        {activeTab === 3 && <WeekTab t={t} />}
-        {activeTab === 4 && <DosDonts t={t} />}
-        {activeTab === 5 && <RecetasTab t={t} />}
+        {activeTab === 0 && <HabitsTracker />}
+        {activeTab === 1 && <MiPlanTab onUpdate={(d) => setUserTarget(d.target || null)} userTarget={userTarget} />}
+        {activeTab === 2 && <ShoppingTab />}
+        {activeTab === 3 && <WeekTab />}
+        {activeTab === 4 && <DosDonts />}
+        {activeTab === 5 && <RecetasTab />}
       </div>
     </div>
   );
 }// ─── RECETAS TAB (simple browser, no tracker) ────────────────
-function RecetasTab({ t }) {
+function RecetasTab() {
   const [activeMeal, setActiveMeal] = useState("desayunos");
   const [expanded, setExpanded] = useState({});
   const [search, setSearch] = useState("");
@@ -2196,7 +1785,7 @@ function RecetasTab({ t }) {
     const next = { ...customMeals, [cat]: arr };
     saveCustom(next);
   }
-  const labels = t.mealCatLabels;
+  const labels = { desayunos: "Desayunos", almuerzos: "Almuerzos", cenas: "Cenas", media_manana: "Media Mañana", pre_entreno: "Pre-Entreno" };
   const mealCatColors = { desayunos: "#c47a1a", almuerzos: COLORS.blue, cenas: "#7c5cbf", media_manana: COLORS.green, pre_entreno: COLORS.accent };
 
   function toggleExpand(key) { setExpanded(p => ({ ...p, [key]: !p[key] })); }
@@ -2214,7 +1803,7 @@ function RecetasTab({ t }) {
       {/* Search */}
       <div style={{ position: "relative", marginBottom: 12 }}>
         <span style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", fontSize: 14, color: COLORS.muted, pointerEvents: "none" }}>🔍</span>
-        <input type="text" placeholder={t.searchRecipe} value={search} onChange={e => setSearch(e.target.value)}
+        <input type="text" placeholder="Buscar receta o ingrediente..." value={search} onChange={e => setSearch(e.target.value)}
           style={{ width: "100%", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "10px 12px 10px 36px", fontSize: 13, fontFamily: "inherit", color: COLORS.text, boxSizing: "border-box" }} />
         {search && <button onClick={() => setSearch("")} style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: COLORS.muted, fontSize: 18 }}>×</button>}
       </div>
@@ -2238,7 +1827,7 @@ function RecetasTab({ t }) {
         </div>
         <button onClick={() => setShowForm(!showForm)}
           style={{ background: showForm ? COLORS.bg : COLORS.accent, color: showForm ? COLORS.muted : "#fff", border: `1px solid ${showForm ? COLORS.cardBorder : COLORS.accent}`, borderRadius: 6, padding: "6px 12px", fontSize: 11, cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", fontWeight: 700 }}>
-          {showForm ? t.cancelBtn : t.newRecipe}
+          {showForm ? "× Cancelar" : "+ Nueva receta"}
         </button>
       </div>
 
@@ -2259,7 +1848,7 @@ function RecetasTab({ t }) {
             </div>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 8, marginBottom: 10 }}>
-            {[["kcal",t.kcalLabel,""], ["prot",t.protLabel,""], ["carb",t.carbLabel,""], ["fat",t.fatLabel,""]].map(([k,l]) => (
+            {[["kcal","Kcal *",""], ["prot","Prot (g)",""], ["carb","Carb (g)",""], ["fat","Grasas (g)",""]].map(([k,l]) => (
               <div key={k}>
                 <div style={{ fontSize: 10, color: COLORS.muted, marginBottom: 4 }}>{l}</div>
                 <input type="number" value={form[k]} onChange={e => setForm(f => ({...f, [k]: e.target.value}))} placeholder="0"
@@ -2274,7 +1863,7 @@ function RecetasTab({ t }) {
           </div>
           <div style={{ marginBottom: 14 }}>
             <div style={{ fontSize: 10, color: COLORS.muted, marginBottom: 4 }}>Preparación</div>
-            <textarea value={form.prep} onChange={e => setForm(f => ({...f, prep: e.target.value}))} placeholder={t.prepPlaceholder}
+            <textarea value={form.prep} onChange={e => setForm(f => ({...f, prep: e.target.value}))} placeholder="Cómo se prepara..."
               rows={3} style={{ width: "100%", background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6, padding: "9px 12px", fontSize: 13, fontFamily: "inherit", color: COLORS.text, resize: "vertical", boxSizing: "border-box" }} />
           </div>
           <button onClick={addRecipe} disabled={!form.name || !form.kcal}
@@ -2336,4 +1925,270 @@ function RecetasTab({ t }) {
   );
 }
 
+// ─── HABITS TRACKER ───────────────────────────────────────
+const DEFAULT_HABITS = [
+  { id: "steps",     label: "10.000 pasos",            icon: "👟", color: COLORS.orange },
+  { id: "water",     label: "3–4L de agua",            icon: "💧", color: COLORS.blue },
+  { id: "sleep",     label: "8h de sueño",             icon: "😴", color: "#7c5cbf" },
+  { id: "protein",   label: "Proteína en cada comida", icon: "🥩", color: COLORS.green },
+  { id: "noalcohol", label: "Sin alcohol",             icon: "🚫", color: COLORS.red },
+  { id: "training",  label: "Entreno completado",      icon: "💪", color: COLORS.accent },
+];
+
+const EMOJI_OPTIONS = ["👟","💧","😴","🥩","🚫","💪","⚖️","🧘","🏃","🚴","🎯","📵","🥦","☀️","🛌","🧂","📖","🚶","💊","🧠","🥗","🍵","🏋️","🤸"];
+
+function HabitsTracker() {
+  const [habits, setHabits] = useState(DEFAULT_HABITS);
+  const [checked, setChecked] = useState({});
+  const [history, setHistory] = useState({});
+  const [loaded, setLoaded] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [newLabel, setNewLabel] = useState("");
+  const [newEmoji, setNewEmoji] = useState("🎯");
+  const today = todayKey();
+
+  useEffect(() => {
+    try {
+      // Load custom habits list
+      const savedHabits = localStorage.getItem("custom_habits");
+      if (savedHabits) setHabits(JSON.parse(savedHabits));
+      // Load check history
+      const savedHistory = localStorage.getItem("habits_history");
+      if (savedHistory) {
+        const all = JSON.parse(savedHistory);
+        setHistory(all);
+        setChecked(all[today] || {});
+      }
+    } catch {}
+    setLoaded(true);
+  }, []);
+
+  function saveHabits(next) {
+    setHabits(next);
+    try { localStorage.setItem("custom_habits", JSON.stringify(next)); } catch {}
+  }
+
+  async function toggle(id) {
+    const next = { ...checked, [id]: !checked[id] };
+    setChecked(next);
+    const nextHistory = { ...history, [today]: next };
+    setHistory(nextHistory);
+    try { localStorage.setItem("habits_history", JSON.stringify(nextHistory)); } catch {}
+  }
+
+  function deleteHabit(id) {
+    const next = habits.filter(h => h.id !== id);
+    saveHabits(next);
+    // Clean from today's checked
+    const nextChecked = { ...checked };
+    delete nextChecked[id];
+    setChecked(nextChecked);
+    const nextHistory = { ...history, [today]: nextChecked };
+    setHistory(nextHistory);
+    try { localStorage.setItem("habits_history", JSON.stringify(nextHistory)); } catch {}
+  }
+
+  function addHabit() {
+    if (!newLabel.trim()) return;
+    const id = "custom_" + Date.now();
+    const colors = [COLORS.accent, COLORS.green, COLORS.blue, COLORS.orange, "#7c5cbf", COLORS.red];
+    const color = colors[habits.length % colors.length];
+    const next = [...habits, { id, label: newLabel.trim(), icon: newEmoji, color }];
+    saveHabits(next);
+    setNewLabel("");
+    setNewEmoji("🎯");
+    setShowForm(false);
+  }
+
+  function resetToDefault() {
+    saveHabits(DEFAULT_HABITS);
+    setEditMode(false);
+  }
+
+  const done = Object.values(checked).filter(Boolean).length;
+  const total = habits.length;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+  const last7 = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(); d.setDate(d.getDate() - (6 - i));
+    const key = d.toISOString().split("T")[0];
+    const dayData = history[key] || {};
+    const cnt = Object.values(dayData).filter(Boolean).length;
+    const label = d.toLocaleDateString("es-ES", { weekday: "short" }).slice(0, 3).toUpperCase();
+    return { key, label, cnt, isToday: key === today };
+  });
+
+  if (!loaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>Cargando...</div>;
+
+  return (
+    <div>
+      {/* Progress ring */}
+      <Card style={{ display: "flex", alignItems: "center", gap: 20 }}>
+        <div style={{ position: "relative", width: 80, height: 80, flexShrink: 0 }}>
+          <svg viewBox="0 0 80 80" style={{ transform: "rotate(-90deg)", width: 80, height: 80 }}>
+            <circle cx="40" cy="40" r="32" fill="none" stroke={COLORS.cardBorder} strokeWidth="8" />
+            <circle cx="40" cy="40" r="32" fill="none" stroke={pct === 100 ? COLORS.green : COLORS.accent}
+              strokeWidth="8" strokeLinecap="round"
+              strokeDasharray={`${2 * Math.PI * 32}`}
+              strokeDashoffset={`${2 * Math.PI * 32 * (1 - pct / 100)}`}
+              style={{ transition: "stroke-dashoffset 0.5s" }} />
+          </svg>
+          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ fontSize: 18, fontWeight: 900, color: pct === 100 ? COLORS.green : COLORS.accent }}>{pct}%</span>
+          </div>
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 20, fontWeight: 900 }}>{done}/{total} hábitos</div>
+          <div style={{ fontSize: 12, color: COLORS.muted, fontStyle: "italic", marginTop: 4 }}>
+            {pct === 100 ? "🎉 Día perfecto. Así se construyen resultados." : pct >= 70 ? "Buen día, sigue así." : "Quedan hábitos por marcar."}
+          </div>
+          <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 4 }}>{new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" })}</div>
+        </div>
+      </Card>
+
+      {/* Habit list */}
+      <Card>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+          <Label style={{ marginBottom: 0 }}>Hábitos de hoy</Label>
+          <div style={{ display: "flex", gap: 6 }}>
+            {editMode && (
+              <button onClick={resetToDefault}
+                style={{ fontSize: 10, background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 20,
+                  padding: "3px 10px", color: COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>
+                Restaurar
+              </button>
+            )}
+            <button onClick={() => { setEditMode(!editMode); setShowForm(false); }}
+              style={{ fontSize: 10, background: editMode ? COLORS.accent : "none",
+                border: `1px solid ${editMode ? COLORS.accent : COLORS.cardBorder}`,
+                borderRadius: 20, padding: "3px 10px",
+                color: editMode ? "#fff" : COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>
+              {editMode ? "✓ Listo" : "✏️ Editar"}
+            </button>
+          </div>
+        </div>
+
+        {habits.map((h, idx) => (
+          <div key={h.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0",
+            borderBottom: `1px solid ${COLORS.cardBorder}` }}>
+            <span style={{ fontSize: 20 }}>{h.icon}</span>
+            <span style={{ flex: 1, fontSize: 14, color: checked[h.id] ? COLORS.text : COLORS.muted,
+              fontStyle: checked[h.id] ? "normal" : "italic" }}>
+              {h.label}
+            </span>
+            {editMode ? (
+              <button onClick={() => deleteHabit(h.id)}
+                style={{ width: 26, height: 26, borderRadius: "50%", background: COLORS.red + "18",
+                  border: `1px solid ${COLORS.red}40`, color: COLORS.red, fontSize: 14,
+                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                  fontFamily: "inherit", flexShrink: 0 }}>
+                ×
+              </button>
+            ) : (
+              <button onClick={() => toggle(h.id)}
+                style={{ width: 24, height: 24, borderRadius: 6, border: `2px solid ${checked[h.id] ? h.color : COLORS.cardBorder}`,
+                  background: checked[h.id] ? h.color : "transparent", display: "flex", alignItems: "center",
+                  justifyContent: "center", transition: "all 0.15s", flexShrink: 0, cursor: "pointer" }}>
+                {checked[h.id] && <span style={{ color: "#fff", fontSize: 13, fontWeight: 900 }}>✓</span>}
+              </button>
+            )}
+          </div>
+        ))}
+
+        {/* Add new habit */}
+        {editMode && !showForm && (
+          <button onClick={() => setShowForm(true)}
+            style={{ width: "100%", marginTop: 12, padding: "10px 0", background: COLORS.accentGlow || COLORS.bg,
+              border: `1px dashed ${COLORS.accent}`, borderRadius: 8, color: COLORS.accent,
+              cursor: "pointer", fontSize: 13, fontFamily: "inherit", fontWeight: 600 }}>
+            + Añadir hábito
+          </button>
+        )}
+
+        {editMode && showForm && (
+          <div style={{ marginTop: 12, background: COLORS.bg, borderRadius: 10, padding: 14,
+            border: `1px solid ${COLORS.cardBorder}` }}>
+            <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 10 }}>NUEVO HÁBITO</div>
+
+            {/* Emoji picker */}
+            <div style={{ marginBottom: 10 }}>
+              <div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 6 }}>Icono</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                {EMOJI_OPTIONS.map(e => (
+                  <button key={e} onClick={() => setNewEmoji(e)}
+                    style={{ width: 36, height: 36, borderRadius: 8, fontSize: 18,
+                      border: `2px solid ${newEmoji === e ? COLORS.accent : COLORS.cardBorder}`,
+                      background: newEmoji === e ? COLORS.accent + "18" : COLORS.card,
+                      cursor: "pointer" }}>
+                    {e}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Label input */}
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 6 }}>Nombre del hábito</div>
+              <input
+                value={newLabel}
+                onChange={e => setNewLabel(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && addHabit()}
+                placeholder="ej. Meditar 10 min, Leer 20 páginas..."
+                style={{ width: "100%", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`,
+                  borderRadius: 8, padding: "10px 12px", fontSize: 14, fontFamily: "inherit",
+                  color: COLORS.text, boxSizing: "border-box" }}
+              />
+            </div>
+
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={addHabit} disabled={!newLabel.trim()}
+                style={{ background: newLabel.trim() ? COLORS.accent : COLORS.cardBorder,
+                  color: "#fff", border: "none", borderRadius: 8, padding: "10px 18px",
+                  fontSize: 13, cursor: newLabel.trim() ? "pointer" : "default",
+                  fontFamily: "inherit", fontWeight: 700 }}>
+                Añadir ✓
+              </button>
+              <button onClick={() => { setShowForm(false); setNewLabel(""); setNewEmoji("🎯"); }}
+                style={{ background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8,
+                  padding: "10px 14px", fontSize: 13, color: COLORS.muted, cursor: "pointer",
+                  fontFamily: "inherit" }}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        )}
+      </Card>
+
+      {/* Last 7 days */}
+      <Card>
+        <Label>Últimos 7 días</Label>
+        <div style={{ display: "flex", gap: 8 }}>
+          {last7.map(d => {
+            const filledPct = total > 0 ? d.cnt / total : 0;
+            const col = filledPct === 1 ? COLORS.green : filledPct >= 0.7 ? COLORS.orange : filledPct > 0 ? COLORS.blue : COLORS.cardBorder;
+            return (
+              <div key={d.key} style={{ flex: 1, textAlign: "center" }}>
+                <div style={{ background: col, borderRadius: 6, height: 40, marginBottom: 6, transition: "background 0.3s",
+                  border: d.isToday ? `2px solid ${COLORS.accent}` : "none",
+                  display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {d.cnt > 0 && <span style={{ fontSize: 11, color: "#fff", fontWeight: 700 }}>{d.cnt}</span>}
+                </div>
+                <div style={{ fontSize: 9, color: d.isToday ? COLORS.accent : COLORS.muted, fontWeight: d.isToday ? 700 : 400 }}>{d.label}</div>
+              </div>
+            );
+          })}
+        </div>
+        <div style={{ display: "flex", gap: 16, marginTop: 12, flexWrap: "wrap" }}>
+          {[{ col: COLORS.green, label: "Día perfecto" }, { col: COLORS.orange, label: "≥70%" }, { col: COLORS.blue, label: "Algo hecho" }, { col: COLORS.cardBorder, label: "Sin datos" }].map(l => (
+            <div key={l.label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{ width: 10, height: 10, borderRadius: 2, background: l.col, border: `1px solid ${COLORS.cardBorder}` }} />
+              <span style={{ fontSize: 10, color: COLORS.muted }}>{l.label}</span>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </div>
+  );
+}
 
