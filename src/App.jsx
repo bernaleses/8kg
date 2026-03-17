@@ -29,6 +29,46 @@ const meals = {
       ingredients: ["50g avena", "150g yogurt griego 0%", "150ml leche desnatada", "30g arándanos", "15g almendras laminadas"],
       prep: "Mezcla la noche anterior en tupper. Deja en nevera. Listo en 1 min por la mañana.",
       macros: { kcal: 395, prot: 21, carb: 50, fat: 10 }, tupper: true },
+    { name: "Tostada centeno + aguacate + salmón ahumado", emoji: "🥑",
+      ingredients: ["60g pan de centeno (2 rebanadas)", "40g aguacate", "60g salmón ahumado", "Limón, eneldo, pimienta negra"],
+      prep: "Tuesta el pan. Aplasta el aguacate con limón. Coloca el salmón encima y añade eneldo.",
+      macros: { kcal: 370, prot: 26, carb: 28, fat: 16 }, tupper: false },
+    { name: "Protein pancakes de cottage", emoji: "🥞",
+      ingredients: ["150g queso cottage 0%", "3 claras de huevo", "40g avena en copos", "Canela, edulcorante, AOVE spray"],
+      prep: "Bate cottage + claras + avena hasta homogéneo. Cocina porciones en sartén antiadherente a fuego medio-bajo. 3-4 min por lado.",
+      macros: { kcal: 380, prot: 36, carb: 34, fat: 6 }, tupper: true },
+    { name: "Skyr + granola sin azúcar + arándanos", emoji: "🫐",
+      ingredients: ["200g skyr natural", "30g granola sin azúcar añadido", "80g arándanos frescos"],
+      prep: "Monta en bowl o tupper en capas. La granola encima para que no se ablande si lo preparas la noche anterior.",
+      macros: { kcal: 355, prot: 26, carb: 46, fat: 5 }, tupper: true },
+    { name: "Sándwich proteico de huevo y jamón", emoji: "🥪",
+      ingredients: ["2 rebanadas pan integral (70g)", "2 huevos revueltos", "40g jamón serrano", "Tomate, pimienta, AOVE spray"],
+      prep: "Revuelve los huevos con el jamón en sartén. Monta el sándwich con tomate. Rápido y contundente.",
+      macros: { kcal: 390, prot: 30, carb: 32, fat: 14 }, tupper: false },
+    { name: "Mug cake proteico", emoji: "☕",
+      ingredients: ["40g avena en copos", "25g whey proteína chocolate", "1 huevo entero", "1 cucharadita cacao puro", "Agua c/s"],
+      prep: "Mezcla todo con agua hasta pasta espesa. Microondas 90 segundos a potencia máxima. Deja reposar 1 min.",
+      macros: { kcal: 365, prot: 34, carb: 32, fat: 8 }, tupper: false },
+    { name: "Tortilla + jamón + queso fresco", emoji: "🍳",
+      ingredients: ["3 huevos enteros", "40g jamón serrano", "50g queso fresco batido 0%", "Sal, pimienta, AOVE spray"],
+      prep: "Bate los huevos con el queso fresco. Añade el jamón en trozos. Cocina en sartén antiadherente a fuego medio.",
+      macros: { kcal: 375, prot: 36, carb: 2, fat: 24 }, tupper: false },
+    { name: "Batido verde proteico", emoji: "💚",
+      ingredients: ["25g whey proteína vainilla", "200ml leche desnatada", "50g espinacas frescas", "1 plátano pequeño (100g)"],
+      prep: "Bate todo en licuadora 30 segundos. Beber inmediatamente o conservar en bote cerrado en nevera máx 8h.",
+      macros: { kcal: 360, prot: 32, carb: 44, fat: 4 }, tupper: true },
+    { name: "Bowl de requesón salado", emoji: "🥗",
+      ingredients: ["200g requesón o cottage 0%", "100g tomate cherry", "80g pepino", "10g AOVE", "Orégano, sal, pimienta"],
+      prep: "Monta en bowl. Corta el tomate y el pepino. Aliña con AOVE, sal y orégano. Listo en 3 min.",
+      macros: { kcal: 280, prot: 24, carb: 12, fat: 12 }, tupper: true },
+    { name: "Huevos al horno en tomate", emoji: "🍅",
+      ingredients: ["2 huevos enteros", "200g salsa de tomate casera (o triturado)", "40g pan de centeno", "Ajo, orégano, AOVE"],
+      prep: "Calienta el tomate en sartén apta para horno. Haz dos huecos y casca los huevos. Horno 180° 10-12 min.",
+      macros: { kcal: 370, prot: 22, carb: 34, fat: 14 }, tupper: false },
+    { name: "Gachas de arroz proteicas", emoji: "🍚",
+      ingredients: ["50g arroz cocido (o 20g en seco)", "25g whey chocolate", "200ml leche desnatada", "Canela al gusto"],
+      prep: "Calienta el arroz con la leche. Retira del fuego y disuelve el whey removiendo rápido. Añade canela.",
+      macros: { kcal: 370, prot: 30, carb: 46, fat: 4 }, tupper: true },
     { name: "Requesón + miel + nueces", emoji: "🧀",
       ingredients: ["250g requesón o cottage 0%", "10g miel", "20g nueces", "Canela al gusto"],
       prep: "Mezcla en bowl, nueces encima. Listo en 2 min. Perfecto cuando no hay tiempo de cocinar.",
@@ -75,6 +115,30 @@ const meals = {
       ingredients: ["180g ternera magra", "60g arroz (seco)", "150g zanahoria", "Caldo, laurel, sal, AOVE spray"],
       prep: "Ternera a la plancha o en guiso suave. Arroz cocido. Zanahoria al vapor o cocida. Tupper.",
       macros: { kcal: 500, prot: 44, carb: 48, fat: 10 }, tupper: true },
+    { name: "Pollo tikka masala + arroz basmati", emoji: "🫕",
+      ingredients: ["200g pechuga de pollo", "60g arroz basmati (seco)", "100g tomate triturado", "80g yogur griego 0%", "Curry, cúrcuma, comino, ajo, AOVE"],
+      prep: "Marina el pollo en yogur+especias 10 min. Saltea con tomate 10 min. Arroz cocido. Mezcla en tupper.",
+      macros: { kcal: 520, prot: 50, carb: 50, fat: 9 }, tupper: true },
+    { name: "Pollo con champiñones al ajillo + patata", emoji: "🍄",
+      ingredients: ["200g pechuga de pollo", "150g champiñones", "200g patata cocida", "Ajo laminado, perejil, AOVE 10g"],
+      prep: "Saltea el ajo con AOVE. Añade el pollo y los champiñones 8 min. Patata cocida aparte. Tupper.",
+      macros: { kcal: 510, prot: 46, carb: 40, fat: 12 }, tupper: true },
+    { name: "Pollo marroquí (chermoula) + cuscús", emoji: "🌍",
+      ingredients: ["200g pechuga de pollo", "60g cuscús (seco)", "Comino, cilantro, pimentón, limón, ajo, AOVE 10g"],
+      prep: "Marina el pollo con especias 20 min. A la plancha 6 min por lado. Cuscús: agua hirviendo, tapa 5 min.",
+      macros: { kcal: 515, prot: 48, carb: 50, fat: 11 }, tupper: true },
+    { name: "Hamburguesa de ternera + boniato chips", emoji: "🍔",
+      ingredients: ["200g ternera picada 5%", "200g boniato", "Ajo en polvo, sal, pimienta, AOVE spray"],
+      prep: "Boniato en láminas al horno 200° 25 min. Forma la hamburguesa y cocina a la plancha 4 min por lado.",
+      macros: { kcal: 530, prot: 44, carb: 42, fat: 16 }, tupper: true },
+    { name: "Berenjena rellena de carne picada", emoji: "🍆",
+      ingredients: ["1 berenjena grande (300g)", "200g carne picada magra 5%", "100g tomate triturado", "40g mozzarella light"],
+      prep: "Vacía la berenjena y saltea la carne con el tomate. Rellena, cubre con mozzarella. Horno 200° 20 min.",
+      macros: { kcal: 490, prot: 44, carb: 18, fat: 22 }, tupper: true },
+    { name: "Wok de ternera + brócoli + arroz", emoji: "🥦",
+      ingredients: ["180g ternera magra en tiras", "200g brócoli", "60g arroz (seco)", "Salsa soja light 20ml, ajo, jengibre"],
+      prep: "Wok muy caliente. Ternera 2 min, añade brócoli y soja, 4 min más. Arroz cocido aparte. Tupper.",
+      macros: { kcal: 510, prot: 46, carb: 48, fat: 10 }, tupper: true },
   ],
   cenas: [
     { name: "Pollo + verduras asadas al horno", emoji: "🍗",
@@ -97,6 +161,46 @@ const meals = {
       ingredients: ["200g ternera magra en tiras", "200g calabacín", "100g champiñones", "Salsa soja baja sal 15ml, ajo"],
       prep: "Saltea ternera a fuego fuerte 3 min. Añade verduras, soja y ajo. Listo en 8 min.",
       macros: { kcal: 410, prot: 46, carb: 10, fat: 18 }, tupper: true },
+    { name: "Crema de calabaza + huevo poché + AOVE", emoji: "🎃",
+      ingredients: ["300g calabaza", "2 huevos", "10g AOVE", "Sal, nuez moscada, caldo de verduras"],
+      prep: "Cuece la calabaza en caldo 20 min, tritura. Escalfa los huevos 3 min en agua con vinagre. Sirve encima.",
+      macros: { kcal: 360, prot: 18, carb: 24, fat: 20 }, tupper: false },
+    { name: "Salmón al vapor con jengibre + brócoli", emoji: "🐟",
+      ingredients: ["180g salmón fresco", "200g brócoli", "Jengibre rallado 5g", "Salsa soja light 10ml, limón"],
+      prep: "Salmón al vapor 12 min. Brócoli al vapor 5 min. Aliña con jengibre, soja y limón al momento.",
+      macros: { kcal: 410, prot: 40, carb: 10, fat: 22 }, tupper: true },
+    { name: "Rollitos de lechuga con carne picada asiática", emoji: "🥬",
+      ingredients: ["200g ternera picada 5%", "8 hojas lechuga romana", "Soja light 15ml", "Ajo, jengibre, sésamo"],
+      prep: "Saltea la carne con ajo, jengibre y soja 5 min. Sirve dentro de las hojas de lechuga. Sin carbos.",
+      macros: { kcal: 380, prot: 42, carb: 6, fat: 20 }, tupper: false },
+    { name: "Pollo en salsa de mostaza + calabacín", emoji: "🍋",
+      ingredients: ["220g pechuga de pollo", "200g calabacín", "15g mostaza de Dijon", "80g yogur griego 0%, sal"],
+      prep: "Pollo a la plancha. Mezcla mostaza+yogur como salsa. Calabacín a la plancha. Sirve la salsa encima.",
+      macros: { kcal: 405, prot: 52, carb: 8, fat: 14 }, tupper: true },
+    { name: "Tortilla española proteica", emoji: "🥚",
+      ingredients: ["3 huevos enteros", "100g claras pasteurizadas", "200g patata cocida", "1/2 cebolla (80g)", "AOVE spray"],
+      prep: "Sofríe la cebolla. Mezcla huevos+claras+patata cocida en dados. Cocina tapada a fuego suave 8 min.",
+      macros: { kcal: 430, prot: 38, carb: 30, fat: 16 }, tupper: true },
+    { name: "Pollo al ajillo + espárragos trigueros", emoji: "🌾",
+      ingredients: ["220g pechuga de pollo", "200g espárragos trigueros", "4 dientes ajo", "Limón, AOVE 10g, perejil"],
+      prep: "Dora el ajo en AOVE. Añade el pollo en trozos 6 min. Espárragos a la plancha paralelo. Exprime limón.",
+      macros: { kcal: 390, prot: 50, carb: 8, fat: 16 }, tupper: true },
+    { name: "Sopa de pollo con fideos", emoji: "🍜",
+      ingredients: ["200g pechuga de pollo", "40g fideos finos", "150g zanahoria", "Caldo casero, laurel, sal"],
+      prep: "Cuece el pollo en caldo 15 min. Desmenuza. Añade fideos y zanahoria 8 min más. Ideal post-carrera larga.",
+      macros: { kcal: 390, prot: 42, carb: 32, fat: 6 }, tupper: true },
+    { name: "Revuelto de claras + gambas + espárragos", emoji: "🍤",
+      ingredients: ["150g claras pasteurizadas", "100g gambas peladas", "150g espárragos", "Ajo, AOVE spray, sal"],
+      prep: "Saltea las gambas y espárragos con ajo 3 min. Añade las claras y revuelve hasta cuajar. 8 min total.",
+      macros: { kcal: 360, prot: 44, carb: 6, fat: 14 }, tupper: false },
+    { name: "Pollo con berenjena al horno", emoji: "🍆",
+      ingredients: ["220g pechuga de pollo", "200g berenjena", "100g tomate triturado", "Orégano, ajo, AOVE spray"],
+      prep: "Berenjena en rodajas al horno con tomate 15 min. Añade el pollo encima otros 20 min a 200°. Tupper.",
+      macros: { kcal: 400, prot: 50, carb: 14, fat: 10 }, tupper: true },
+    { name: "Ternera + champiñones + crema de coliflor", emoji: "🥦",
+      ingredients: ["200g ternera magra", "100g champiñones", "250g coliflor", "Ajo, caldo, AOVE 10g, nuez moscada"],
+      prep: "Coliflor cocida 15 min y triturada con caldo. Ternera y champiñones a la plancha. Sirve sobre la crema.",
+      macros: { kcal: 410, prot: 48, carb: 12, fat: 18 }, tupper: true },
     { name: "Pollo al pesto + calabacín a la plancha", emoji: "🌿",
       ingredients: ["220g pechuga de pollo", "200g calabacín en rodajas", "15g pesto ligero", "Sal, pimienta"],
       prep: "Pollo a la plancha 6 min por lado. Unta pesto al final. Calabacín a la plancha paralelo.",
@@ -111,6 +215,46 @@ const meals = {
       macros: { kcal: 430, prot: 46, carb: 8, fat: 22 }, tupper: true },
   ],
   media_manana: [
+    { name: "Skyr + frutos rojos", emoji: "🍓",
+      ingredients: ["200g skyr natural", "80g frutos rojos mixtos (frescos o congelados)"],
+      prep: "Mezcla en bowl o tupper. Más proteína que el yogur griego estándar con menos calorías.",
+      macros: { kcal: 155, prot: 20, carb: 16, fat: 1 }, tupper: true },
+    { name: "Claras cocidas + tomate", emoji: "🍅",
+      ingredients: ["4 claras de huevo cocidas (120g)", "1 tomate mediano (150g)", "Sal, orégano"],
+      prep: "Cuece las claras en batch el domingo. Lleva en tupper con el tomate entero. Máximo nivel proteico mínimo.",
+      macros: { kcal: 100, prot: 18, carb: 8, fat: 0 }, tupper: true },
+    { name: "Mini tortilla de claras (batch prep)", emoji: "🍳",
+      ingredients: ["3 claras de huevo", "1 huevo entero", "Sal, especias al gusto"],
+      prep: "Prepara el domingo en sartén pequeña. Guarda en tupper. Come fría o calienta en microondas 45 seg.",
+      macros: { kcal: 140, prot: 18, carb: 1, fat: 6 }, tupper: true },
+    { name: "Jamón ibérico + manzana", emoji: "🍎",
+      ingredients: ["50g jamón ibérico (sin grasa visible)", "1 manzana (150g)"],
+      prep: "Come por separado. El ibérico aporta proteína + grasa de calidad. La manzana, fibra y saciedad.",
+      macros: { kcal: 175, prot: 14, carb: 22, fat: 6 }, tupper: false },
+    { name: "Smoothie proteico express", emoji: "🥤",
+      ingredients: ["20g whey proteína vainilla", "150ml leche desnatada", "50g fresas frescas o congeladas"],
+      prep: "Bate o agita en shaker. Consume en 10 min. Preparado en menos de 2 minutos.",
+      macros: { kcal: 165, prot: 22, carb: 14, fat: 2 }, tupper: false },
+    { name: "Queso fresco batido + pepino + sal", emoji: "🧀",
+      ingredients: ["150g queso fresco batido 0%", "100g pepino en dados", "Sal, pimienta, eneldo"],
+      prep: "Mezcla en tupper. Refrescante y muy bajo en calorías. Ideal en días de calor post-running.",
+      macros: { kcal: 120, prot: 16, carb: 6, fat: 3 }, tupper: true },
+    { name: "Pechuga de pollo fría + mostaza", emoji: "🍗",
+      ingredients: ["100g pechuga de pollo cocida (fiambre natural o batch)", "1 cucharada mostaza Dijon"],
+      prep: "Pollo cocido del batch cooking. Come directamente con mostaza como dip. Máxima proteína, mínimo esfuerzo.",
+      macros: { kcal: 145, prot: 28, carb: 2, fat: 3 }, tupper: true },
+    { name: "Mix de nueces + arándanos secos", emoji: "🫐",
+      ingredients: ["20g nueces crudas", "20g arándanos secos sin azúcar añadido"],
+      prep: "Prepara porciones en bolsitas el domingo. Snack de bolsillo para cuando estás fuera.",
+      macros: { kcal: 180, prot: 4, carb: 18, fat: 12 }, tupper: false },
+    { name: "Café proteico (protein latte)", emoji: "☕",
+      ingredients: ["25g whey vainilla", "1 espresso (30ml)", "150ml leche desnatada fría"],
+      prep: "Mezcla la leche fría con el whey hasta disolver. Añade el espresso. Agita bien. Frío o templado.",
+      macros: { kcal: 160, prot: 22, carb: 10, fat: 2 }, tupper: false },
+    { name: "Palitos de zanahoria + queso fresco", emoji: "🥕",
+      ingredients: ["150g zanahoria en palitos", "80g queso fresco batido 0%"],
+      prep: "Corta la zanahoria el domingo. Lleva el queso en un bote pequeño. Dip proteico bajo en calorías.",
+      macros: { kcal: 110, prot: 10, carb: 14, fat: 2 }, tupper: true },
     { name: "Yogurt griego + nueces", emoji: "🥜",
       ingredients: ["200g yogurt griego 0%", "20g nueces"],
       prep: "Mezcla y listo. Cómelo entre el desayuno y el almuerzo.",
@@ -133,6 +277,46 @@ const meals = {
       macros: { kcal: 195, prot: 5, carb: 28, fat: 12 }, tupper: false },
   ],
   pre_entreno: [
+    { name: "Arroz blanco + pollo + soja", emoji: "🍚",
+      ingredients: ["60g arroz blanco (seco)", "150g pechuga de pollo", "Soja light 15ml, ajo en polvo"],
+      prep: "El clásico de gym. Arroz cocido, pollo a la plancha, aliña con soja. Prepara en batch el domingo.",
+      macros: { kcal: 380, prot: 38, carb: 46, fat: 5 }, tupper: true },
+    { name: "Boniato cocido + pollo frío", emoji: "🍠",
+      ingredients: ["200g boniato cocido", "120g pechuga de pollo cocida", "Sal, pimentón"],
+      prep: "Ambos del batch cooking del domingo. Cómelo frío o calienta en microondas 2 min. Carbos + proteína perfectos.",
+      macros: { kcal: 360, prot: 32, carb: 44, fat: 4 }, tupper: true },
+    { name: "Tostada integral + miel + requesón", emoji: "🍯",
+      ingredients: ["60g pan integral (2 rebanadas)", "10g miel", "100g requesón 0%"],
+      prep: "Unta el requesón y añade la miel. La miel da carbos rápidos ideales 45 min antes del entreno.",
+      macros: { kcal: 310, prot: 16, carb: 50, fat: 3 }, tupper: false },
+    { name: "Batido tropical pre-entreno", emoji: "🥭",
+      ingredients: ["30g whey proteína", "150ml agua de coco", "100g mango congelado o fresco"],
+      prep: "Bate todo. El agua de coco aporta electrolitos naturales. Ideal 30-45 min antes de carrera o fuerza.",
+      macros: { kcal: 280, prot: 26, carb: 36, fat: 2 }, tupper: false },
+    { name: "Dátiles + almendras + whey disuelto", emoji: "🌴",
+      ingredients: ["3 dátiles medianos (45g)", "20g almendras crudas", "20g whey en 100ml agua"],
+      prep: "Come dátiles y almendras juntos, bebe el whey disuelto aparte. Energía inmediata + proteína.",
+      macros: { kcal: 290, prot: 18, carb: 34, fat: 8 }, tupper: false },
+    { name: "Bowl mini de avena + miel + plátano", emoji: "🍌",
+      ingredients: ["35g avena en copos", "10g miel", "½ plátano (60g)", "Agua o leche desnatada 150ml"],
+      prep: "Avena en microondas 2 min con leche. Añade miel y plátano en rodajas. Toma 60-90 min antes de entrenar.",
+      macros: { kcal: 270, prot: 8, carb: 52, fat: 3 }, tupper: true },
+    { name: "Fruta de temporada + yogur griego", emoji: "🍊",
+      ingredients: ["200g yogurt griego 0%", "150g fruta de temporada (naranja, melocotón, kiwi...)"],
+      prep: "El snack más simple y efectivo. Proteína del yogur + carbos y electrolitos de la fruta.",
+      macros: { kcal: 190, prot: 18, carb: 26, fat: 0 }, tupper: true },
+    { name: "Galletas de avena caseras", emoji: "🍪",
+      ingredients: ["50g avena", "1 huevo entero", "1 plátano maduro (100g)", "Canela, cacao puro opcional"],
+      prep: "Aplasta el plátano, mezcla todo. Forma galletas. Horno 180° 12 min. Prepara el domingo en batch.",
+      macros: { kcal: 295, prot: 10, carb: 48, fat: 6 }, tupper: true },
+    { name: "Batido de mango + chía + whey", emoji: "🥭",
+      ingredients: ["30g whey proteína", "100g mango", "10g semillas de chía", "200ml agua o leche desnatada"],
+      prep: "Bate todo. Deja 5 min reposar para que la chía absorba. Hidratante y con omega-3 extra.",
+      macros: { kcal: 285, prot: 28, carb: 30, fat: 6 }, tupper: false },
+    { name: "Protein pancakes pre-entreno", emoji: "🥞",
+      ingredients: ["40g avena", "150g cottage 0%", "2 claras de huevo", "Extracto de vainilla, canela"],
+      prep: "Bate todo hasta homogéneo. Cocina en sartén 3-4 min por lado. Prepara el día anterior y recalienta.",
+      macros: { kcal: 330, prot: 30, carb: 36, fat: 5 }, tupper: true },
     { name: "Batido whey post-entreno", emoji: "💪",
       ingredients: ["25g whey proteína", "300ml agua fría"],
       prep: "Agita en shaker. Tomar en los primeros 30 min tras el entreno.",
@@ -326,7 +510,7 @@ const DONTS = [
   { icon: "🚫", text: "No compensar un mal día comiendo menos al día siguiente. Vuelve al plan sin drama." },
 ];
 
-const TABS = ["📋 Hábitos", "🔢 Mi Plan", "🍽️ Comidas", "📅 Semana", "✅ Do & Don't"];
+const TABS = ["📋 Hábitos", "🔢 Mi Plan", "🍽️ Comidas", "📅 Semana", "✅ Do & Don't", "🛒 Compra"];
 
 // ─── HELPERS ──────────────────────────────────────────────────
 function todayKey() {
@@ -1195,6 +1379,431 @@ function WeekTab() {
   );
 }
 
+
+// ─── SHOPPING LIST ────────────────────────────────────────────
+const SHOP_ITEMS = [
+  { name: "1 huevo entero (60g)", cat: "Proteínas" },
+  { name: "100g claras pasteurizadas", cat: "Proteínas" },
+  { name: "100g gambas peladas", cat: "Proteínas" },
+  { name: "100g pechuga de pollo cocida (fiambre natural o batch)", cat: "Proteínas" },
+  { name: "100g requesón 0%", cat: "Proteínas" },
+  { name: "150g cottage 0%", cat: "Proteínas" },
+  { name: "150g queso cottage 0%", cat: "Proteínas" },
+  { name: "180g salmón fresco (lomo)", cat: "Proteínas" },
+  { name: "180g ternera magra", cat: "Proteínas" },
+  { name: "180g ternera magra en tiras", cat: "Proteínas" },
+  { name: "2 huevos", cat: "Proteínas" },
+  { name: "2 huevos duros", cat: "Proteínas" },
+  { name: "2 huevos revueltos", cat: "Proteínas" },
+  { name: "200g carne picada magra 5%", cat: "Proteínas" },
+  { name: "200g carne picada magra 5% grasa", cat: "Proteínas" },
+  { name: "200g muslo de pollo sin piel", cat: "Proteínas" },
+  { name: "200g pechuga de pollo", cat: "Proteínas" },
+  { name: "200g pechuga de pollo troceada", cat: "Proteínas" },
+  { name: "200g requesón o cottage 0%", cat: "Proteínas" },
+  { name: "200g ternera picada 5%", cat: "Proteínas" },
+  { name: "200g ternera picada 5% grasa", cat: "Proteínas" },
+  { name: "20g whey en 100ml agua", cat: "Proteínas" },
+  { name: "25g whey chocolate", cat: "Proteínas" },
+  { name: "25g whey proteína chocolate", cat: "Proteínas" },
+  { name: "25g whey proteína vainilla", cat: "Proteínas" },
+  { name: "25g whey vainilla", cat: "Proteínas" },
+  { name: "3 huevos enteros", cat: "Proteínas" },
+  { name: "30g whey proteína", cat: "Proteínas" },
+  { name: "4 claras de huevo cocidas (120g)", cat: "Proteínas" },
+  { name: "40g jamón serrano", cat: "Proteínas" },
+  { name: "50g jamón ibérico (sin grasa visible)", cat: "Proteínas" },
+  { name: "6 claras de huevo (180g)", cat: "Proteínas" },
+  { name: "60g pechuga de pollo en lonchas (fiambre natural)", cat: "Proteínas" },
+  { name: "60g salmón ahumado", cat: "Proteínas" },
+  { name: "150ml leche desnatada fría", cat: "Lácteos" },
+  { name: "200g skyr natural", cat: "Lácteos" },
+  { name: "200g yogurt griego 0%", cat: "Lácteos" },
+  { name: "200ml agua o leche desnatada", cat: "Lácteos" },
+  { name: "300ml leche desnatada", cat: "Lácteos" },
+  { name: "40g mozzarella light", cat: "Lácteos" },
+  { name: "50g queso fresco batido 0%", cat: "Lácteos" },
+  { name: "80g yogur griego 0%", cat: "Lácteos" },
+  { name: "80g yogur griego 0%, sal", cat: "Lácteos" },
+  { name: "Agua o leche desnatada 150ml", cat: "Lácteos" },
+  { name: "150g boniato asado", cat: "Carbohidratos" },
+  { name: "2 rebanadas pan centeno (60g)", cat: "Carbohidratos" },
+  { name: "2 rebanadas pan integral (70g)", cat: "Carbohidratos" },
+  { name: "200g boniato", cat: "Carbohidratos" },
+  { name: "200g boniato cocido", cat: "Carbohidratos" },
+  { name: "200g patata", cat: "Carbohidratos" },
+  { name: "3 dátiles medianos (45g)", cat: "Carbohidratos" },
+  { name: "3 tortitas de arroz (27g)", cat: "Carbohidratos" },
+  { name: "300g patata cocida", cat: "Carbohidratos" },
+  { name: "40g avena en copos", cat: "Carbohidratos" },
+  { name: "40g fideos finos", cat: "Carbohidratos" },
+  { name: "40g pan integral", cat: "Carbohidratos" },
+  { name: "50g arroz cocido (o 20g en seco)", cat: "Carbohidratos" },
+  { name: "50g avena", cat: "Carbohidratos" },
+  { name: "50g quinoa (seco)", cat: "Carbohidratos" },
+  { name: "60g arroz (seco)", cat: "Carbohidratos" },
+  { name: "60g arroz basmati (seco)", cat: "Carbohidratos" },
+  { name: "60g arroz blanco (seco)", cat: "Carbohidratos" },
+  { name: "60g arroz integral (seco)", cat: "Carbohidratos" },
+  { name: "60g arroz jazmín (seco)", cat: "Carbohidratos" },
+  { name: "60g cuscús (seco)", cat: "Carbohidratos" },
+  { name: "60g pan de centeno (2 rebanadas)", cat: "Carbohidratos" },
+  { name: "1 berenjena grande (300g)", cat: "Frutas y Verduras" },
+  { name: "1 mandarina (150g)", cat: "Frutas y Verduras" },
+  { name: "1 manzana (150g)", cat: "Frutas y Verduras" },
+  { name: "1 manzana media (150g)", cat: "Frutas y Verduras" },
+  { name: "1 plátano (120g)", cat: "Frutas y Verduras" },
+  { name: "1 plátano maduro (100g)", cat: "Frutas y Verduras" },
+  { name: "1 plátano pequeño (100g)", cat: "Frutas y Verduras" },
+  { name: "1 tomate mediano (150g)", cat: "Frutas y Verduras" },
+  { name: "1/2 cebolla (80g)", cat: "Frutas y Verduras" },
+  { name: "100g cebolla", cat: "Frutas y Verduras" },
+  { name: "100g fresas", cat: "Frutas y Verduras" },
+  { name: "100g mango", cat: "Frutas y Verduras" },
+  { name: "100g mango congelado o fresco", cat: "Frutas y Verduras" },
+  { name: "100g pepino en dados", cat: "Frutas y Verduras" },
+  { name: "100g tomate cherry", cat: "Frutas y Verduras" },
+  { name: "100g tomate triturado", cat: "Frutas y Verduras" },
+  { name: "150g berenjena", cat: "Frutas y Verduras" },
+  { name: "150g calabacín", cat: "Frutas y Verduras" },
+  { name: "150g champiñones", cat: "Frutas y Verduras" },
+  { name: "150g espinacas", cat: "Frutas y Verduras" },
+  { name: "150g espárragos", cat: "Frutas y Verduras" },
+  { name: "150g fruta de temporada (naranja, melocotón, kiwi...)", cat: "Frutas y Verduras" },
+  { name: "150g zanahoria", cat: "Frutas y Verduras" },
+  { name: "150g zanahoria en palitos", cat: "Frutas y Verduras" },
+  { name: "200g brócoli", cat: "Frutas y Verduras" },
+  { name: "200g calabacín en rodajas", cat: "Frutas y Verduras" },
+  { name: "200g espárragos trigueros", cat: "Frutas y Verduras" },
+  { name: "200g espárragos verdes", cat: "Frutas y Verduras" },
+  { name: "200g salsa de tomate casera (o triturado)", cat: "Frutas y Verduras" },
+  { name: "20g arándanos secos sin azúcar añadido", cat: "Frutas y Verduras" },
+  { name: "250g coliflor", cat: "Frutas y Verduras" },
+  { name: "300g calabaza", cat: "Frutas y Verduras" },
+  { name: "30g arándanos", cat: "Frutas y Verduras" },
+  { name: "40g aguacate", cat: "Frutas y Verduras" },
+  { name: "50g espinacas frescas", cat: "Frutas y Verduras" },
+  { name: "50g fresas frescas o congeladas", cat: "Frutas y Verduras" },
+  { name: "8 hojas lechuga romana", cat: "Frutas y Verduras" },
+  { name: "80g arándanos frescos", cat: "Frutas y Verduras" },
+  { name: "80g arándanos frescos o congelados", cat: "Frutas y Verduras" },
+  { name: "80g edamame descongelado", cat: "Frutas y Verduras" },
+  { name: "80g pepino", cat: "Frutas y Verduras" },
+  { name: "Lechuga + tomate grande 250g", cat: "Frutas y Verduras" },
+  { name: "Lechuga, tomate, pepino (ilimitado)", cat: "Frutas y Verduras" },
+  { name: "Tomate, pimienta, AOVE spray", cat: "Frutas y Verduras" },
+  { name: "½ plátano (60g)", cat: "Frutas y Verduras" },
+  { name: "10g semillas de chía", cat: "Frutos Secos" },
+  { name: "15g almendras laminadas", cat: "Frutos Secos" },
+  { name: "20g crema de cacahuete natural", cat: "Frutos Secos" },
+  { name: "20g nueces", cat: "Frutos Secos" },
+  { name: "20g nueces crudas", cat: "Frutos Secos" },
+  { name: "25g almendras crudas", cat: "Frutos Secos" },
+  { name: "Ajo, caldo, AOVE 10g, nuez moscada", cat: "Frutos Secos" },
+  { name: "Sal, nuez moscada, caldo de verduras", cat: "Frutos Secos" },
+  { name: "1 cucharada mostaza Dijon", cat: "Condimentos y Extras" },
+  { name: "1 cucharadita cacao puro", cat: "Condimentos y Extras" },
+  { name: "1 espresso (30ml)", cat: "Condimentos y Extras" },
+  { name: "10g aceite oliva virgen extra", cat: "Condimentos y Extras" },
+  { name: "10g AOVE", cat: "Condimentos y Extras" },
+  { name: "10g miel", cat: "Condimentos y Extras" },
+  { name: "150ml agua de coco", cat: "Condimentos y Extras" },
+  { name: "15g mostaza de Dijon", cat: "Condimentos y Extras" },
+  { name: "15g pesto ligero", cat: "Condimentos y Extras" },
+  { name: "300ml agua fría", cat: "Condimentos y Extras" },
+  { name: "30g granola sin azúcar añadido", cat: "Condimentos y Extras" },
+  { name: "4 dientes ajo", cat: "Condimentos y Extras" },
+  { name: "5g canela", cat: "Condimentos y Extras" },
+  { name: "80g frutos rojos mixtos (frescos o congelados)", cat: "Condimentos y Extras" },
+  { name: "Agua c/s", cat: "Condimentos y Extras" },
+  { name: "Ajo en polvo, sal, pimienta, AOVE spray", cat: "Condimentos y Extras" },
+  { name: "Ajo laminado, perejil, AOVE 10g", cat: "Condimentos y Extras" },
+  { name: "Ajo, AOVE spray, sal", cat: "Condimentos y Extras" },
+  { name: "Ajo, jengibre, sésamo", cat: "Condimentos y Extras" },
+  { name: "Ajo, orégano, AOVE", cat: "Condimentos y Extras" },
+  { name: "Ajo, sal, AOVE spray", cat: "Condimentos y Extras" },
+  { name: "AOVE spray", cat: "Condimentos y Extras" },
+  { name: "AOVE, limón, sal", cat: "Condimentos y Extras" },
+  { name: "Caldo casero, laurel, sal", cat: "Condimentos y Extras" },
+  { name: "Caldo, laurel, sal, AOVE spray", cat: "Condimentos y Extras" },
+  { name: "Canela al gusto", cat: "Condimentos y Extras" },
+  { name: "Canela, cacao puro opcional", cat: "Condimentos y Extras" },
+  { name: "Canela, edulcorante, AOVE spray", cat: "Condimentos y Extras" },
+  { name: "Comino, cilantro, pimentón, limón, ajo, AOVE 10g", cat: "Condimentos y Extras" },
+  { name: "Curry, cúrcuma, comino, ajo, AOVE", cat: "Condimentos y Extras" },
+  { name: "Curry, cúrcuma, comino, AOVE spray", cat: "Condimentos y Extras" },
+  { name: "Eneldo, limón, sal, AOVE spray", cat: "Condimentos y Extras" },
+  { name: "Eneldo, zumo limón, sal, AOVE spray", cat: "Condimentos y Extras" },
+  { name: "Ensalada mixta, limón, sal", cat: "Condimentos y Extras" },
+  { name: "Extracto de vainilla, canela", cat: "Condimentos y Extras" },
+  { name: "Hierbas provenzales, sal, AOVE spray", cat: "Condimentos y Extras" },
+  { name: "Jengibre rallado 5g", cat: "Condimentos y Extras" },
+  { name: "Limón, AOVE 10g, perejil", cat: "Condimentos y Extras" },
+  { name: "Limón, eneldo, pimienta negra", cat: "Condimentos y Extras" },
+  { name: "Limón, mostaza, sal", cat: "Condimentos y Extras" },
+  { name: "Limón, romero, ajo, AOVE", cat: "Condimentos y Extras" },
+  { name: "Orégano, ajo, AOVE spray", cat: "Condimentos y Extras" },
+  { name: "Orégano, sal, pimienta", cat: "Condimentos y Extras" },
+  { name: "Sal, ajo en polvo", cat: "Condimentos y Extras" },
+  { name: "Sal, especias al gusto", cat: "Condimentos y Extras" },
+  { name: "Sal, especias, AOVE spray", cat: "Condimentos y Extras" },
+  { name: "Sal, limón", cat: "Condimentos y Extras" },
+  { name: "Sal, orégano", cat: "Condimentos y Extras" },
+  { name: "Sal, pimentón", cat: "Condimentos y Extras" },
+  { name: "Sal, pimienta", cat: "Condimentos y Extras" },
+  { name: "Sal, pimienta, AOVE spray", cat: "Condimentos y Extras" },
+  { name: "Sal, pimienta, eneldo", cat: "Condimentos y Extras" },
+  { name: "Salsa soja baja sal 15ml, ajo", cat: "Condimentos y Extras" },
+  { name: "Salsa soja light 10ml, limón", cat: "Condimentos y Extras" },
+  { name: "Salsa soja light 20ml, ajo, jengibre", cat: "Condimentos y Extras" },
+  { name: "Salsa teriyaki light 20ml, sésamo", cat: "Condimentos y Extras" },
+  { name: "Soja light 15ml", cat: "Condimentos y Extras" },
+  { name: "Soja light 15ml, ajo en polvo", cat: "Condimentos y Extras" },
+];
+
+const CAT_ICONS = {
+  "Proteínas": "🥩",
+  "Lácteos": "🥛",
+  "Carbohidratos": "🍚",
+  "Frutas y Verduras": "🥦",
+  "Frutos Secos": "🥜",
+  "Condimentos y Extras": "🧂",
+};
+
+const CAT_COLORS = {
+  "Proteínas": "#c8440a",
+  "Lácteos": "#1a5c8a",
+  "Carbohidratos": "#c47a1a",
+  "Frutas y Verduras": "#2d7a45",
+  "Frutos Secos": "#7c5cbf",
+  "Condimentos y Extras": "#8a7f72",
+};
+
+function ShoppingTab() {
+  const [checked, setChecked] = useState({});
+  const [search, setSearch] = useState("");
+  const [customItems, setCustomItems] = useState([]);
+  const [customInput, setCustomInput] = useState("");
+  const [loaded, setLoaded] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("Todos");
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("shop_list");
+      if (raw) {
+        const d = JSON.parse(raw);
+        setChecked(d.checked || {});
+        setCustomItems(d.custom || []);
+      }
+    } catch {}
+    setLoaded(true);
+  }, []);
+
+  async function save(nextChecked, nextCustom) {
+    try { localStorage.setItem("shop_list", JSON.stringify({ checked: nextChecked, custom: nextCustom })); } catch {}
+  }
+
+  function toggleItem(key) {
+    const next = { ...checked, [key]: !checked[key] };
+    setChecked(next);
+    save(next, customItems);
+  }
+
+  function addCustom() {
+    const val = customInput.trim();
+    if (!val) return;
+    const next = [...customItems, { name: val, cat: "Mis añadidos" }];
+    setCustomItems(next);
+    setCustomInput("");
+    save(checked, next);
+  }
+
+  function removeCustom(idx) {
+    const next = customItems.filter((_, i) => i !== idx);
+    setCustomItems(next);
+    // also clear checked for this custom item if any
+    const key = `custom_${idx}`;
+    const nextChecked = { ...checked };
+    delete nextChecked[key];
+    setChecked(nextChecked);
+    save(nextChecked, next);
+  }
+
+  function clearAll() {
+    setChecked({});
+    save({}, customItems);
+  }
+
+  const allItems = [
+    ...SHOP_ITEMS.map((it, i) => ({ ...it, key: `shop_${i}` })),
+    ...customItems.map((it, i) => ({ ...it, cat: "Mis añadidos", key: `custom_${i}` })),
+  ];
+
+  const checkedItems = allItems.filter(it => checked[it.key]);
+  const checkedCount = checkedItems.length;
+
+  const cats = ["Todos", "Proteínas", "Lácteos", "Carbohidratos", "Frutas y Verduras", "Frutos Secos", "Condimentos y Extras", "Mis añadidos"];
+
+  const filtered = allItems.filter(it => {
+    const matchSearch = it.name.toLowerCase().includes(search.toLowerCase());
+    const matchCat = activeFilter === "Todos" || it.cat === activeFilter;
+    const isChecked = checked[it.key];
+    return matchSearch && matchCat && !isChecked;
+  });
+
+  // Group filtered by category
+  const grouped = {};
+  filtered.forEach(it => {
+    if (!grouped[it.cat]) grouped[it.cat] = [];
+    grouped[it.cat].push(it);
+  });
+
+  const catOrder = ["Mis añadidos", "Proteínas", "Lácteos", "Carbohidratos", "Frutas y Verduras", "Frutos Secos", "Condimentos y Extras"];
+
+  if (!loaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>Cargando...</div>;
+
+  return (
+    <div>
+      {/* ── CHECKED ITEMS PANEL ── */}
+      {checkedCount > 0 && (
+        <div style={{ background: COLORS.green + "12", border: `1px solid ${COLORS.green}30`, borderRadius: 12, padding: "14px 16px", marginBottom: 16 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+            <div style={{ fontSize: 9, color: COLORS.green, letterSpacing: 2 }}>EN EL CARRITO — {checkedCount} {checkedCount === 1 ? "producto" : "productos"}</div>
+            <button onClick={clearAll}
+              style={{ fontSize: 10, background: "none", border: `1px solid ${COLORS.green}40`, borderRadius: 20, padding: "3px 10px", color: COLORS.green, cursor: "pointer", fontFamily: "inherit" }}>
+              Vaciar ×
+            </button>
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {checkedItems.map(it => (
+              <button key={it.key} onClick={() => toggleItem(it.key)}
+                style={{ display: "flex", alignItems: "center", gap: 5, background: COLORS.green, border: "none",
+                  borderRadius: 20, padding: "5px 12px", cursor: "pointer", fontFamily: "inherit" }}>
+                <span style={{ fontSize: 11, color: "#fff", fontStyle: "italic" }}>{it.name}</span>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>×</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── SEARCH ── */}
+      <div style={{ position: "relative", marginBottom: 12 }}>
+        <span style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", fontSize: 14, color: COLORS.muted, pointerEvents: "none" }}>🔍</span>
+        <input
+          type="text"
+          placeholder="Buscar ingrediente..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          style={{ width: "100%", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`,
+            borderRadius: 8, padding: "11px 12px 11px 36px", fontSize: 14, fontFamily: "inherit",
+            color: COLORS.text, boxSizing: "border-box" }}
+        />
+        {search && (
+          <button onClick={() => setSearch("")}
+            style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: COLORS.muted, fontSize: 16 }}>
+            ×
+          </button>
+        )}
+      </div>
+
+      {/* ── CATEGORY FILTER ── */}
+      <div style={{ display: "flex", gap: 6, marginBottom: 16, overflowX: "auto", paddingBottom: 4 }}>
+        {cats.map(cat => {
+          const isActive = activeFilter === cat;
+          const color = CAT_COLORS[cat] || COLORS.accent;
+          return (
+            <button key={cat} onClick={() => setActiveFilter(cat)}
+              style={{ background: isActive ? color : COLORS.card, color: isActive ? "#fff" : COLORS.muted,
+                border: `1px solid ${isActive ? color : COLORS.cardBorder}`, borderRadius: 20,
+                padding: "5px 12px", fontSize: 10, cursor: "pointer", fontFamily: "inherit",
+                whiteSpace: "nowrap", flexShrink: 0, transition: "all 0.15s" }}>
+              {CAT_ICONS[cat] || "✨"} {cat}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ── ADD CUSTOM ITEM ── */}
+      <div style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, padding: "12px 14px", marginBottom: 16 }}>
+        <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 8 }}>AÑADIR PRODUCTO PERSONALIZADO</div>
+        <div style={{ display: "flex", gap: 8 }}>
+          <input
+            type="text"
+            placeholder="ej. Leche de avena, Sal del Himalaya..."
+            value={customInput}
+            onChange={e => setCustomInput(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && addCustom()}
+            style={{ flex: 1, background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6,
+              padding: "9px 12px", fontSize: 13, fontFamily: "inherit", color: COLORS.text }}
+          />
+          <button onClick={addCustom}
+            style={{ background: COLORS.accent, color: "#fff", border: "none", borderRadius: 6,
+              padding: "9px 16px", fontSize: 13, cursor: "pointer", fontFamily: "inherit", fontWeight: 700 }}>
+            + Añadir
+          </button>
+        </div>
+      </div>
+
+      {/* ── RESULTS COUNT ── */}
+      {search && (
+        <div style={{ fontSize: 11, color: COLORS.muted, fontStyle: "italic", marginBottom: 12 }}>
+          {filtered.length} resultado{filtered.length !== 1 ? "s" : ""} para "{search}"
+        </div>
+      )}
+
+      {/* ── GROUPED LIST ── */}
+      {catOrder.map(cat => {
+        const items = grouped[cat];
+        if (!items || items.length === 0) return null;
+        const color = CAT_COLORS[cat] || COLORS.accent;
+        return (
+          <div key={cat} style={{ marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+              <span style={{ fontSize: 14 }}>{CAT_ICONS[cat] || "✨"}</span>
+              <span style={{ fontSize: 10, color: color, letterSpacing: 2, fontWeight: 700 }}>{cat.toUpperCase()}</span>
+              <span style={{ fontSize: 10, color: COLORS.muted }}>({items.length})</span>
+            </div>
+            <div style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, overflow: "hidden" }}>
+              {items.map((it, idx) => (
+                <div key={it.key}
+                  style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 14px",
+                    borderBottom: idx < items.length - 1 ? `1px solid ${COLORS.cardBorder}` : "none",
+                    cursor: "pointer", transition: "background 0.1s" }}
+                  onClick={() => toggleItem(it.key)}>
+                  {/* Checkbox */}
+                  <div style={{ width: 22, height: 22, borderRadius: 6, border: `2px solid ${color}40`,
+                    background: "transparent", display: "flex", alignItems: "center",
+                    justifyContent: "center", flexShrink: 0 }}>
+                  </div>
+                  <span style={{ fontSize: 13, color: COLORS.text, flex: 1, lineHeight: 1.4 }}>{it.name}</span>
+                  {it.cat === "Mis añadidos" && (
+                    <button onClick={e => { e.stopPropagation(); removeCustom(customItems.findIndex(c => c.name === it.name)); }}
+                      style={{ background: "none", border: "none", color: COLORS.muted, cursor: "pointer", fontSize: 14, padding: 0 }}>
+                      ×
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+
+      {filtered.length === 0 && !search && (
+        <div style={{ textAlign: "center", padding: 40, color: COLORS.muted, fontStyle: "italic" }}>
+          ¡Todo marcado! 🎉
+        </div>
+      )}
+      {filtered.length === 0 && search && (
+        <div style={{ textAlign: "center", padding: 30, color: COLORS.muted, fontStyle: "italic" }}>
+          Sin resultados para "{search}"
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── DO & DONT TAB ───────────────────────────────────────────
 function DosDonts() {
   return (
@@ -1279,6 +1888,7 @@ export default function CutPlan() {
         {activeTab === 2 && <MealsTab targetKcal={userTarget} />}
         {activeTab === 3 && <WeekTab />}
         {activeTab === 4 && <DosDonts />}
+        {activeTab === 5 && <ShoppingTab />}
       </div>
     </div>
   );
