@@ -1715,7 +1715,7 @@ export default function CutPlan() {
       {/* ── BOTTOM NAV ── */}
       <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: COLORS.card, borderTop: `1px solid ${COLORS.cardBorder}`, display: "flex", paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 16px)" }}>
         {TAB_ICONS.map((icon, i) => (
-          <button key={i} onClick={() => setActiveTab(i)}
+          <button key={i} onClick={() => { setActiveTab(i); window.scrollTo({ top: 0, behavior: "instant" }); }}
             style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
               gap: 4, padding: "10px 4px 10px", background: "none", border: "none", cursor: "pointer",
               fontFamily: "inherit", borderTop: `2px solid ${activeTab === i ? COLORS.accent : "transparent"}`,
