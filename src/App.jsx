@@ -1332,6 +1332,15 @@ const SHOP_ITEMS = [
   { name: "Tomillo seco", cat: "Condimentos y Extras" },
   { name: "Sésamo", cat: "Condimentos y Extras" },
   { name: "Extracto de vainilla", cat: "Condimentos y Extras" },
+  { name: "Parmesano rallado", cat: "Lácteos" },
+  { name: "Pasta integral", cat: "Carbohidratos" },
+  { name: "Tortilla integral grande", cat: "Carbohidratos" },
+  { name: "Pan brioche integral", cat: "Carbohidratos" },
+  { name: "Espresso / café", cat: "Condimentos y Extras" },
+  { name: "Perejil fresco", cat: "Condimentos y Extras" },
+  { name: "Levadura en polvo", cat: "Condimentos y Extras" },
+  { name: "Tahini", cat: "Condimentos y Extras" },
+  { name: "Edulcorante", cat: "Condimentos y Extras" },
 ];
 
 const CAT_ICONS = {
