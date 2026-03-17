@@ -302,7 +302,6 @@ const HABITS = [
   { id: "protein", label: "Proteína en cada comida", icon: "🥩", color: COLORS.green },
   { id: "noalcohol", label: "Sin alcohol", icon: "🚫", color: COLORS.red },
   { id: "training", label: "Entreno completado", icon: "💪", color: COLORS.accent },
-  { id: "weigh", label: "Pesaje en ayunas", icon: "⚖️", color: COLORS.muted },
 ];
 
 const DOS = [
@@ -702,11 +701,13 @@ function CalcCycling({ saved }) {
 }
 
 // ─── MEALS TAB ────────────────────────────────────────────────
-function MealsTab() {
+function MealsTab({ targetKcal }) {
   const [activeMeal, setActiveMeal] = useState("desayunos");
   const [eaten, setEaten] = useState({});
   const [expanded, setExpanded] = useState({});
   const [loaded, setLoaded] = useState(false);
+  const [customEntries, setCustomEntries] = useState({});
+  const [customInput, setCustomInput] = useState({});
   const labels = { desayunos: "Desayunos", almuerzos: "Almuerzos", cenas: "Cenas", media_manana: "Media Mañana", pre_entreno: "Pre-Entreno" };
   const mealCatColors = { desayunos: "#c47a1a", almuerzos: COLORS.blue, cenas: "#7c5cbf", media_manana: COLORS.green, pre_entreno: COLORS.accent };
 
@@ -718,8 +719,12 @@ function MealsTab() {
         const r = await (async () => { const v = localStorage.getItem("meals_eaten"); return v ? {value: v} : null; })();
         if (r) {
           const stored = JSON.parse(r.value);
-          if (stored.date === todayDateKey()) setEaten(stored.eaten || {});
-          else await (async () => { localStorage.setItem("meals_eaten", JSON.stringify({ date: todayDateKey(), eaten: {} })); })();
+          if (stored.date === todayDateKey()) {
+            setEaten(stored.eaten || {});
+            setCustomEntries(stored.custom || {});
+          } else {
+            localStorage.setItem("meals_eaten", JSON.stringify({ date: todayDateKey(), eaten: {}, custom: {} }));
+          }
         }
       } catch {}
       setLoaded(true);
@@ -741,13 +746,32 @@ function MealsTab() {
     // clean nulls
     Object.keys(next).forEach(k => { if (!next[k]) delete next[k]; });
     setEaten(next);
-    try { await (async () => { localStorage.setItem("meals_eaten", JSON.stringify({ date: todayDateKey(), eaten: next })); })(); } catch {}
+    try { localStorage.setItem("meals_eaten", JSON.stringify({ date: todayDateKey(), eaten: next, custom: customEntries })); } catch {}
   }
 
   function toggleExpand(key) { setExpanded(p => ({ ...p, [key]: !p[key] })); }
 
+  async function addCustomEntry(cat) {
+    const kcal = parseInt(customInput[cat] || "0");
+    if (!kcal || kcal <= 0) return;
+    const existing = customEntries[cat] || [];
+    const next = { ...customEntries, [cat]: [...existing, kcal] };
+    setCustomEntries(next);
+    setCustomInput(p => ({ ...p, [cat]: "" }));
+    try { localStorage.setItem("meals_eaten", JSON.stringify({ date: todayDateKey(), eaten, custom: next })); } catch {}
+  }
+
+  async function removeCustomEntry(cat, idx) {
+    const existing = [...(customEntries[cat] || [])];
+    existing.splice(idx, 1);
+    const next = { ...customEntries, [cat]: existing };
+    setCustomEntries(next);
+    try { localStorage.setItem("meals_eaten", JSON.stringify({ date: todayDateKey(), eaten, custom: next })); } catch {}
+  }
+
   // Totals
-  const totalKcal = Object.values(eaten).reduce((s, v) => s + (v?.kcal || 0), 0);
+  const customKcalTotal = Object.values(customEntries).flat().reduce((s, v) => s + (v || 0), 0);
+  const totalKcal = Object.values(eaten).reduce((s, v) => s + (v?.kcal || 0), 0) + customKcalTotal;
   const totalProt = Object.entries(eaten).reduce((s, [k, v]) => {
     if (!v) return s;
     const [cat, idx] = k.split("_");
@@ -767,7 +791,7 @@ function MealsTab() {
     return s + (meal?.macros?.fat || 0);
   }, 0);
 
-  const TARGET_KCAL = 1700;
+  const TARGET_KCAL = targetKcal || 1700;
   const pct = Math.min(100, Math.round((totalKcal / TARGET_KCAL) * 100));
   const remaining = TARGET_KCAL - totalKcal;
   const isOver = totalKcal > TARGET_KCAL;
@@ -839,7 +863,7 @@ function MealsTab() {
                 {labels[cat]} ×{cnt}
               </span>
             ))}
-            <button onClick={async () => { setEaten({}); try { await (async () => { localStorage.setItem("meals_eaten", JSON.stringify({ date: todayDateKey(), eaten: {} })); })(); } catch {} }}
+            <button onClick={async () => { setEaten({}); setCustomEntries({}); try { localStorage.setItem("meals_eaten", JSON.stringify({ date: todayDateKey(), eaten: {}, custom: {} })); } catch {} }}
               style={{ fontSize: 10, background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 20, padding: "3px 10px", color: COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>
               Resetear
             </button>
@@ -871,6 +895,41 @@ function MealsTab() {
             </button>
           );
         })}
+      </div>
+
+      {/* ── CUSTOM ENTRY ── */}
+      <div style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, padding: "14px 16px", marginBottom: 10 }}>
+        <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 10 }}>AÑADIR ENTRADA MANUAL</div>
+        <div style={{ display: "flex", gap: 8 }}>
+          <input
+            type="number"
+            min="0"
+            placeholder="ej. 250 kcal"
+            value={customInput[activeMeal] || ""}
+            onChange={e => setCustomInput(p => ({ ...p, [activeMeal]: e.target.value }))}
+            onKeyDown={e => e.key === "Enter" && addCustomEntry(activeMeal)}
+            style={{ flex: 1, background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6,
+              padding: "9px 12px", fontSize: 14, fontFamily: "inherit", color: COLORS.text }}
+          />
+          <button onClick={() => addCustomEntry(activeMeal)}
+            style={{ background: mealCatColors[activeMeal], color: "#fff", border: "none", borderRadius: 6,
+              padding: "9px 18px", fontSize: 13, cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", fontWeight: 700 }}>
+            + Añadir
+          </button>
+        </div>
+        {(customEntries[activeMeal] || []).length > 0 && (
+          <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {(customEntries[activeMeal] || []).map((kcal, idx) => (
+              <span key={idx} style={{ display: "flex", alignItems: "center", gap: 4, background: mealCatColors[activeMeal] + "18",
+                border: `1px solid ${mealCatColors[activeMeal]}30`, borderRadius: 20, padding: "3px 10px", fontSize: 11, color: mealCatColors[activeMeal] }}>
+                {kcal} kcal
+                <button onClick={() => removeCustomEntry(activeMeal, idx)}
+                  style={{ background: "none", border: "none", color: mealCatColors[activeMeal], cursor: "pointer",
+                    fontSize: 13, lineHeight: 1, padding: "0 0 0 2px", fontFamily: "inherit" }}>×</button>
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ── MEAL CARDS ── */}
@@ -1182,6 +1241,14 @@ function DosDonts() {
 // ─── APP ──────────────────────────────────────────────────────
 export default function CutPlan() {
   const [activeTab, setActiveTab] = useState(0);
+  const [userTarget, setUserTarget] = useState(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("user_calc");
+      if (raw) { const d = JSON.parse(raw); setUserTarget(d.target || null); }
+    } catch {}
+  }, []);
 
   return (
     <div style={{ background: COLORS.bg, minHeight: "100vh", fontFamily: "'Playfair Display', Georgia, serif", color: COLORS.text }}>
@@ -1208,8 +1275,8 @@ export default function CutPlan() {
 
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "24px 20px" }}>
         {activeTab === 0 && <HabitsTracker />}
-        {activeTab === 1 && <CalcPlan />}
-        {activeTab === 2 && <MealsTab />}
+        {activeTab === 1 && <CalcPlan onUpdate={(d) => setUserTarget(d.target || null)} />}
+        {activeTab === 2 && <MealsTab targetKcal={userTarget} />}
         {activeTab === 3 && <WeekTab />}
         {activeTab === 4 && <DosDonts />}
       </div>
