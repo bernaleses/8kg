@@ -591,42 +591,38 @@ const DONTS = [
 // ─── I18N ────────────────────────────────────────────────────────────────────
 const T = {
   es: {
-    // Header
     appSubtitle: "PLAN DE CORTE",
     appWeeks: "8 SEMANAS",
-    appObjective: t.target,
+    appObjective: "OBJETIVO",
     appBrief: "Tu compañero de entrenamiento para los días en que todo cuenta. Déficit agresivo · Alta proteína · Fuerza 3× semana · Media maratón.",
     tags: ["Fuerza 3×", "Media maratón", "Alta proteína", "Déficit agresivo"],
-    // Tabs
     tabs: ["📋 Hábitos", "📆 Mi Plan", "🛒 Compra", "📅 Semana", "✅ Do & Don't", "🍽️ Recetas"],
-    // Habits
-    habitsToday: t.habitsToday,
-    habitsLast7: t.habitsLast7,
-    habitsPerfect: t.habitsPerfect,
-    habitsGood: t.habitsGood,
-    habitsRemain: t.habitsRemain,
-    habitsReset: t.habitsReset,
+    habitsToday: "Hábitos de hoy",
+    habitsLast7: "Últimos 7 días",
+    habitsPerfect: "🎉 Día perfecto. Así se construyen resultados.",
+    habitsGood: "Buen día, sigue así.",
+    habitsRemain: "Quedan hábitos por marcar.",
+    habitsReset: "↺ reset a las 00:00",
     habitsList: [
-      { id: "steps", label: "10.000 pasos", icon: "👟" },
-      { id: "water",  label: "3–4L de agua",            icon: "💧" },
-      { id: "sleep",  label: "8h de sueño",              icon: "😴" },
-      { id: "protein",label: "Proteína en cada comida",  icon: "🥩" },
-      { id: "noalcohol",label:"Sin alcohol",             icon: "🚫" },
-      { id: "training",label:"Entreno completado",       icon: "💪" },
+      { id: "steps",     label: "10.000 pasos",             icon: "👟" },
+      { id: "water",     label: "3–4L de agua",             icon: "💧" },
+      { id: "sleep",     label: "8h de sueño",              icon: "😴" },
+      { id: "protein",   label: "Proteína en cada comida",  icon: "🥩" },
+      { id: "noalcohol", label: "Sin alcohol",              icon: "🚫" },
+      { id: "training",  label: "Entreno completado",       icon: "💪" },
     ],
-    legendPerfect: t.legendPerfect, legendGood: "≥70%", legendSomething: t.legendSomething, legendNone: t.legendNone,
-    // Mi Plan
-    activePlan: t.activePlan,
-    recalculate: t.recalculate,
-    tdee: t.tdee, target: t.target, protein: t.protein, loss: t.loss,
-    rest: t.rest, training: t.training, load: t.load,
-    calcTitle: t.calcTitle,
-    weightLabel: t.weightLabel, heightLabel: t.heightLabel, ageLabel: t.ageLabel, sexLabel: t.sexLabel,
-    male: t.male, female: t.female,
-    bodyfatLabel: t.bodyfatLabel, bodyfatOptional: t.bodyfatOptional,
+    legendPerfect: "Día perfecto", legendGood: "≥70%", legendSomething: "Algo hecho", legendNone: "Sin datos",
+    activePlan: "TU PLAN ACTIVO",
+    recalculate: "Recalcular",
+    tdee: "TDEE", target: "OBJETIVO", protein: "PROTEÍNA", loss: "PÉRDIDA",
+    rest: "Descanso", training: "Entreno", load: "Carga",
+    calcTitle: "Calcula tu plan personalizado",
+    weightLabel: "Peso (kg)", heightLabel: "Altura (cm)", ageLabel: "Edad", sexLabel: "Sexo",
+    male: "Hombre", female: "Mujer",
+    bodyfatLabel: "% Grasa corporal", bodyfatOptional: "(opcional)",
     bodyfatNote: "Si lo introduces se usa la fórmula Katch-McArdle (más precisa para atletas). Si no, se usa Mifflin-St Jeor.",
-    next: t.next, back: t.back, calculate: t.calculate,
-    activityTitle: t.activityTitle,
+    next: "Siguiente →", back: "← Atrás", calculate: "Calcular →",
+    activityTitle: "Nivel de actividad y objetivo",
     activityLevels: [
       ["sedentary","Sedentario","Escritorio, sin ejercicio regular"],
       ["light","Ligero","1-2 sesiones suaves por semana"],
@@ -638,45 +634,40 @@ const T = {
       ["cut_aggressive","Corte agresivo −700 kcal","~0.8-1 kg/sem"],
       ["cut_moderate","Corte moderado −400 kcal","~0.4-0.5 kg/sem"],
     ],
-    // Planner
-    weekLabel: t.weekLabel,
-    weeklyPlanned: t.weeklyPlanned,
-    notPlannedYet: t.notPlannedYet,
-    exportShop: t.exportShop,
-    exportDone: t.exportDone,
-    noMeal: t.noMeal,
-    seeRecipe: t.seeRecipe,
-    changeBtn: t.changeBtn, chooseBtn: t.chooseBtn,
-    clearDay: t.clearDay,
-    overTarget: t.overTarget,
-    remaining: t.remaining,
-    chooseMealFor: t.chooseMealFor,
-    closeBtn: t.closeBtn,
+    weekLabel: "SEMANA ACTUAL",
+    weeklyPlanned: "kcal planificadas",
+    notPlannedYet: "Sin planificar aún",
+    exportShop: "🛒 Exportar a compra",
+    exportDone: "✓ Añadido!",
+    noMeal: "Sin planificar",
+    seeRecipe: "ver receta ›",
+    changeBtn: "Cambiar", chooseBtn: "+ Elegir",
+    clearDay: "Borrar día ×",
+    overTarget: "sobre objetivo",
+    remaining: "kcal restantes",
+    chooseMealFor: "ELEGIR PARA",
+    closeBtn: "Cerrar",
     slotLabels: { desayuno: "Desayuno", media_m: "Media Mañana", almuerzo: "Almuerzo", pre: "Pre-Entreno", cena: "Cena" },
-    // Shop
-    inCart: t.inCart,
+    inCart: "EN EL CARRITO",
     products: "productos", product: "producto",
-    clearCart: t.clearCart,
-    searchPlaceholder: t.searchPlaceholder,
-    addProduct: t.addProduct,
-    addProductPlaceholder: t.addProductPlaceholder,
-    addBtn: t.addBtn,
-    resultsFor: "resultado",
-    resultsForPlural: "resultados",
-    allInCart: t.allInCart,
+    clearCart: "Vaciar ×",
+    searchPlaceholder: "Buscar ingrediente...",
+    addProduct: "AÑADIR PRODUCTO",
+    addProductPlaceholder: "ej. Leche de avena, proteína vegana...",
+    addBtn: "+ Añadir",
+    resultsFor: "resultado", resultsForPlural: "resultados",
+    allInCart: "✅ Todo en el carrito",
     noResults: "Sin resultados para",
     catFilter: ["Todos","Proteínas","Lácteos","Carbohidratos","Frutas y Verduras","Frutos Secos","Condimentos y Extras","Mis añadidos"],
-    // Week/Training
-    weekSchedule: t.weekSchedule,
-    trainingBlocks: t.trainingBlocks,
-    trainingReset: "{t.trainingReset}",
-    weekNote: t.weekNote,
-    doneLbl: t.doneLbl,
-    execution: t.execution,
-    muscles: t.muscles,
-    // Do & Dont
-    doTitle: t.doTitle,
-    dontTitle: t.dontTitle,
+    weekSchedule: "HORARIO SEMANAL",
+    trainingBlocks: "BLOQUES DE ENTRENAMIENTO",
+    trainingReset: "🔄 Reset automático cada lunes · Semana:",
+    weekNote: "nota →",
+    doneLbl: "HECHOS",
+    execution: "EJECUCIÓN",
+    muscles: "MÚSCULOS →",
+    doTitle: "✅ Do — hábitos clave",
+    dontTitle: "❌ Don't — evita esto",
     dos: [
       { icon: "⚖️", text: "Pesa toda la comida los primeros 14 días hasta calibrar las raciones visualmente." },
       { icon: "🥡", text: "Batch cooking dominical: prepara 4-5 tuppers de almuerzo y cena de golpe." },
@@ -697,32 +688,30 @@ const T = {
       { icon: "🚫", text: "No te saltes el snack post-entreno. La ventana anabólica existe, aprovéchala." },
       { icon: "🚫", text: "No compensar un mal día comiendo menos al día siguiente. Vuelve al plan sin drama." },
     ],
-    // Recipes
-    recipesTitle: "Recetas",
-    searchRecipe: t.searchRecipe,
+    searchRecipe: "Buscar receta o ingrediente...",
     recipeCount1: "receta", recipeCountN: "recetas",
-    newRecipe: t.newRecipe,
-    cancelBtn: t.cancelBtn,
+    newRecipe: "+ Nueva receta",
+    cancelBtn: "× Cancelar",
     newRecipeTitle: "NUEVA RECETA",
-    emojiLabel: t.emojiLabel, nameLabel: t.nameLabel, kcalLabel: t.kcalLabel,
-    protLabel: t.protLabel, carbLabel: t.carbLabel, fatLabel: t.fatLabel,
-    ingredientsLabel: t.ingredientsLabel,
+    emojiLabel: "Emoji", nameLabel: "Nombre *", kcalLabel: "Kcal *",
+    protLabel: "Prot (g)", carbLabel: "Carb (g)", fatLabel: "Grasas (g)",
+    ingredientsLabel: "Ingredientes (uno por línea)",
     ingredientsPlaceholder: "200g pechuga de pollo\n60g arroz basmati\n100g mango",
-    prepLabel: t.prepLabel,
-    prepPlaceholder: t.prepPlaceholder,
-    saveRecipe: t.saveRecipe,
-    myRecipeBadge: t.myRecipeBadge,
+    prepLabel: "Preparación",
+    prepPlaceholder: "Cómo se prepara...",
+    saveRecipe: "Guardar receta ✓",
+    myRecipeBadge: "mía",
     tupperBadge: "tupper",
-    noResultsRecipe: t.noResultsRecipe,
+    noResultsRecipe: "Sin resultados",
     mealCatLabels: { desayunos: "Desayunos", almuerzos: "Almuerzos", cenas: "Cenas", media_manana: "Media Mañana", pre_entreno: "Pre-Entreno" },
-    ingredientsSect: t.ingredientsSect,
-    prepSect: t.prepSect,
-    noDetailMsg: t.noDetailMsg,
+    ingredientsSect: "INGREDIENTES",
+    prepSect: "PREPARACIÓN",
+    noDetailMsg: "Planifica esta comida de nuevo para ver los detalles completos",
     kcalToday: "CALORÍAS HOY",
     mealsMarked1: "comida marcada", mealsMarkedN: "comidas marcadas",
     macroLabels: { prot: "Proteína", carb: "Carbos", fat: "Grasas" },
     aboveTarget: "kcal por encima del objetivo",
-    kcalRemaining: t.remaining,
+    kcalRemaining: "kcal restantes",
     targetReached: "¡Objetivo alcanzado!",
     resetBtn: "Resetear",
     addManual: "AÑADIR ENTRADA MANUAL",
@@ -743,17 +732,17 @@ const T = {
     habitsRemain: "Some habits still to check.",
     habitsReset: "↺ resets at midnight",
     habitsList: [
-      { id: "steps",    label: "10,000 steps",           icon: "👟" },
-      { id: "water",    label: "3–4L of water",          icon: "💧" },
-      { id: "sleep",    label: "8h of sleep",            icon: "😴" },
-      { id: "protein",  label: "Protein in every meal",  icon: "🥩" },
-      { id: "noalcohol",label: "No alcohol",             icon: "🚫" },
-      { id: "training", label: "Training completed",     icon: "💪" },
+      { id: "steps",     label: "10,000 steps",           icon: "👟" },
+      { id: "water",     label: "3–4L of water",          icon: "💧" },
+      { id: "sleep",     label: "8h of sleep",            icon: "😴" },
+      { id: "protein",   label: "Protein in every meal",  icon: "🥩" },
+      { id: "noalcohol", label: "No alcohol",             icon: "🚫" },
+      { id: "training",  label: "Training completed",     icon: "💪" },
     ],
     legendPerfect: "Perfect day", legendGood: "≥70%", legendSomething: "Something done", legendNone: "No data",
     activePlan: "YOUR ACTIVE PLAN",
     recalculate: "Recalculate",
-    tdee: t.tdee, target: "TARGET", protein: "PROTEIN", loss: "LOSS",
+    tdee: "TDEE", target: "TARGET", protein: "PROTEIN", loss: "LOSS",
     rest: "Rest", training: "Training", load: "Load day",
     calcTitle: "Calculate your personalised plan",
     weightLabel: "Weight (kg)", heightLabel: "Height (cm)", ageLabel: "Age", sexLabel: "Sex",
@@ -794,8 +783,7 @@ const T = {
     addProduct: "ADD PRODUCT",
     addProductPlaceholder: "e.g. Oat milk, vegan protein...",
     addBtn: "+ Add",
-    resultsFor: "result",
-    resultsForPlural: "results",
+    resultsFor: "result", resultsForPlural: "results",
     allInCart: "✅ All in cart",
     noResults: "No results for",
     catFilter: ["All","Proteins","Dairy","Carbs","Fruit & Veg","Nuts & Seeds","Condiments & Extras","My additions"],
@@ -828,14 +816,13 @@ const T = {
       { icon: "🚫", text: "Don't skip the post-workout snack. The anabolic window is real, use it." },
       { icon: "🚫", text: "Don't compensate a bad day by eating less the next. Just get back on plan." },
     ],
-    recipesTitle: "Recipes",
     searchRecipe: "Search recipe or ingredient...",
     recipeCount1: "recipe", recipeCountN: "recipes",
     newRecipe: "+ New recipe",
     cancelBtn: "× Cancel",
     newRecipeTitle: "NEW RECIPE",
-    emojiLabel: t.emojiLabel, nameLabel: "Name *", kcalLabel: t.kcalLabel,
-    protLabel: t.protLabel, carbLabel: t.carbLabel, fatLabel: "Fat (g)",
+    emojiLabel: "Emoji", nameLabel: "Name *", kcalLabel: "Kcal *",
+    protLabel: "Prot (g)", carbLabel: "Carb (g)", fatLabel: "Fat (g)",
     ingredientsLabel: "Ingredients (one per line)",
     ingredientsPlaceholder: "200g chicken breast\n60g basmati rice\n100g mango",
     prepLabel: "Preparation",
@@ -848,7 +835,7 @@ const T = {
     ingredientsSect: "INGREDIENTS",
     prepSect: "PREPARATION",
     noDetailMsg: "Re-plan this meal to see full details",
-    kcalToday: "TODAY\'S CALORIES",
+    kcalToday: "TODAY'S CALORIES",
     mealsMarked1: "meal logged", mealsMarkedN: "meals logged",
     macroLabels: { prot: "Protein", carb: "Carbs", fat: "Fat" },
     aboveTarget: "kcal above target",
@@ -932,7 +919,7 @@ function HabitsTracker({ t }) {
   }
 
   const done = Object.values(checked).filter(Boolean).length;
-  const total = HABITS.length;
+  const total = t.habitsList.length;
   const pct = Math.round((done / total) * 100);
 
   // Last 7 days streak
@@ -945,7 +932,7 @@ function HabitsTracker({ t }) {
     return { key, label, cnt, isToday: key === today };
   });
 
-  if (!loaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>Cargando...</div>;
+  if (!loaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>{lang === "en" ? "Loading..." : "Cargando..."}</div>;
 
   return (
     <div>
@@ -1003,7 +990,7 @@ function HabitsTracker({ t }) {
         <Label>Últimos 7 días</Label>
         <div style={{ display: "flex", gap: 8 }}>
           {last7.map(d => {
-            const filledPct = d.cnt / HABITS.length;
+            const filledPct = d.cnt / t.habitsList.length;
             const col = filledPct === 1 ? COLORS.green : filledPct >= 0.7 ? COLORS.orange : filledPct > 0 ? COLORS.blue : COLORS.cardBorder;
             return (
               <div key={d.key} style={{ flex: 1, textAlign: "center" }}>
@@ -1319,7 +1306,7 @@ function MiPlanTab({ onUpdate, userTarget, t }) {
     </Card>
   );
 
-  if (!planLoaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>Cargando...</div>;
+  if (!planLoaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>{lang === "en" ? "Loading..." : "Cargando..."}</div>;
 
   return (
     <div>
@@ -1712,7 +1699,7 @@ function ShoppingTab({ t }) {
     grouped[it.cat].push(it);
   });
 
-  if (!loaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>Cargando...</div>;
+  if (!loaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>{lang === "en" ? "Loading..." : "Cargando..."}</div>;
 
   return (
     <div>
@@ -2112,7 +2099,7 @@ export default function CutPlan() {
               </div>
               <div>
                 <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: -1, color: COLORS.text, lineHeight: 1 }}>FORMA</div>
-                <div style={{ fontSize: 10, color: COLORS.muted, letterSpacing: 2, marginTop: 2 }}>PLAN DE CORTE · 8 SEMANAS</div>
+                <div style={{ fontSize: 10, color: COLORS.muted, letterSpacing: 2, marginTop: 2 }}>{t.appSubtitle} · {t.appWeeks}</div>
               </div>
             </div>
             {/* Mini stats */}
@@ -2121,11 +2108,26 @@ export default function CutPlan() {
               <span style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1 }}>OBJETIVO</span>
             </div>
           </div>
-          {/* Brief */}
-          <div style={{ background: COLORS.bg, borderRadius: 8, padding: "10px 14px", marginBottom: 16, borderLeft: `3px solid ${COLORS.accent}` }}>
-            <p style={{ margin: 0, fontSize: 12, color: COLORS.muted, lineHeight: 1.7, fontStyle: "italic" }}>
-              Tu compañero de entrenamiento para los días en que todo cuenta. Déficit agresivo · Alta proteína · Fuerza 3× semana · Media maratón. Sin apps de terceros, sin suscripciones.
-            </p>
+          {/* Brief + Language switcher */}
+          <div style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 16 }}>
+            <div style={{ background: COLORS.bg, borderRadius: 8, padding: "10px 14px", flex: 1, borderLeft: `3px solid ${COLORS.accent}` }}>
+              <p style={{ margin: 0, fontSize: 12, color: COLORS.muted, lineHeight: 1.7, fontStyle: "italic" }}>
+                {t.appBrief}
+              </p>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2, flexShrink: 0 }}>
+              {["es", "en"].map(l => (
+                <button key={l} onClick={() => toggleLang(l)}
+                  style={{ background: lang === l ? COLORS.accent : COLORS.card,
+                    color: lang === l ? "#fff" : COLORS.muted,
+                    border: `1px solid ${lang === l ? COLORS.accent : COLORS.cardBorder}`,
+                    borderRadius: 6, padding: "6px 10px", fontSize: 11, fontWeight: 700,
+                    cursor: "pointer", fontFamily: "inherit", letterSpacing: 1,
+                    transition: "all 0.15s", textAlign: "center" }}>
+                  {l === "es" ? "🇪🇸 ES" : "🇬🇧 EN"}
+                </button>
+              ))}
+            </div>
           </div>
           <div style={{ display: "flex", gap: 0, overflowX: "auto" }}>
             {t.tabs.map((tab, i) => (
