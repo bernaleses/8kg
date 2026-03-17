@@ -698,6 +698,22 @@ function getPlannerWeekLabel() {
   return `${fmt(mon)} – ${fmt(sun)}`;
 }
 
+function findFullMeal(name) {
+  for (const cat of Object.keys(meals)) {
+    const found = meals[cat].find(m => m.name === name);
+    if (found) return found;
+  }
+  // Also check custom meals in localStorage
+  try {
+    const custom = JSON.parse(localStorage.getItem("custom_meals") || "{}");
+    for (const cat of Object.keys(custom)) {
+      const found = custom[cat].find(m => m.name === name);
+      if (found) return found;
+    }
+  } catch {}
+  return null;
+}
+
 function MiPlanTab({ onUpdate, userTarget }) {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({ weight: "", height: "", age: "", sex: "H", activity: "moderate", goal: "cut_aggressive" });
@@ -984,7 +1000,10 @@ function MiPlanTab({ onUpdate, userTarget }) {
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1, marginBottom: 2 }}>{slot.label.toUpperCase()}</div>
                     {meal ? (
-                      <button onClick={() => setMealDetail(meal)}
+                      <button onClick={() => {
+                          const full = findFullMeal(meal.name);
+                          setMealDetail(full ? { ...meal, ingredients: full.ingredients, prep: full.prep } : meal);
+                        }}
                         style={{ background: "none", border: "none", padding: 0, textAlign: "left", cursor: "pointer", fontFamily: "inherit", width: "100%" }}>
                         <div style={{ fontSize: 13, color: COLORS.text, fontWeight: 600 }}>{meal.emoji} {meal.name}</div>
                         <div style={{ fontSize: 10, color: COLORS.muted, marginTop: 2 }}>
