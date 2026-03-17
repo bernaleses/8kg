@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 const COLORS = {
-  bg: "#e8e0d0", card: "#f5f0e8", cardBorder: "#d4c9b5",
+  bg: "#f5f2eb", card: "#ffffff", cardBorder: "#e8e2d9",
   accent: "#c8440a", text: "#1a1a1a", muted: "#8a7f72",
   red: "#c8440a", green: "#2d7a45", orange: "#c47a1a", blue: "#1a5c8a",
 };
