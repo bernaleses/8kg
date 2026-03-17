@@ -1793,23 +1793,7 @@ function DosDonts() {
           </div>
         ))}
       </div>
-      <Card style={{ borderLeft: `3px solid ${COLORS.accent}` }}>
-        <Label color={COLORS.accent}>📊 Progreso esperado</Label>
-        {[
-          { week: "Semanas 1–2", v: "−1 a −1.5 kg (mucho es agua)", c: COLORS.green },
-          { week: "Semanas 3–4", v: "−0.8 a −1 kg/semana", c: COLORS.blue },
-          { week: "Semanas 5–6", v: "−0.7 a −0.9 kg/semana", c: COLORS.orange },
-          { week: "Semanas 7–8", v: "−0.5 a −0.8 kg (el cuerpo se adapta)", c: COLORS.red },
-        ].map((r, i) => (
-          <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "9px 0", borderBottom: i < 3 ? `1px solid ${COLORS.cardBorder}` : "none" }}>
-            <span style={{ fontSize: 13, color: COLORS.muted, fontStyle: "italic" }}>{r.week}</span>
-            <span style={{ fontSize: 13, color: r.c, fontWeight: 700 }}>{r.v}</span>
-          </div>
-        ))}
-        <div style={{ marginTop: 14, fontSize: 12, color: COLORS.muted, lineHeight: 1.7, fontStyle: "italic" }}>
-          Si pierdes más de 1.2 kg/semana sostenido, añade 150 kcal en carbos. Si no pierdes nada en 2 semanas, reduce 100 kcal o añade una sesión de cardio suave.
-        </div>
-      </Card>
+
     </div>
   );
 }
@@ -1830,12 +1814,34 @@ export default function CutPlan() {
     <div style={{ background: COLORS.bg, minHeight: "100vh", fontFamily: "'Playfair Display', Georgia, serif", color: COLORS.text }}>
       <div style={{ borderBottom: `1px solid ${COLORS.cardBorder}`, padding: "24px 20px 0", background: COLORS.card }}>
         <div style={{ maxWidth: 720, margin: "0 auto" }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 4 }}>
-            <span style={{ fontSize: 10, color: COLORS.accent, letterSpacing: 4, textTransform: "uppercase", fontStyle: "italic" }}>Plan de Corte</span>
-            <span style={{ fontSize: 10, color: COLORS.muted }}>8 semanas · Media maratón</span>
+          {/* FORMA Logo + Brand */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              {/* Logo mark */}
+              <div style={{ width: 48, height: 48, borderRadius: 12, background: COLORS.accent, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 2px 8px rgba(200,68,10,0.3)" }}>
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                  {/* F letterform + pulse line */}
+                  <text x="4" y="22" fontSize="22" fontWeight="900" fill="white" fontFamily="Georgia, serif">F</text>
+                  <path d="M16 18 L19 12 L22 16 L25 10" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.85"/>
+                </svg>
+              </div>
+              <div>
+                <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: -1, color: COLORS.text, lineHeight: 1 }}>FORMA</div>
+                <div style={{ fontSize: 10, color: COLORS.muted, letterSpacing: 2, marginTop: 2 }}>PLAN DE CORTE · 8 SEMANAS</div>
+              </div>
+            </div>
+            {/* Mini stats */}
+            <div style={{ textAlign: "right", display: "flex", flexDirection: "column", gap: 2 }}>
+              <span style={{ fontSize: 18, fontWeight: 900, color: COLORS.accent, lineHeight: 1 }}>−8 kg</span>
+              <span style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1 }}>OBJETIVO</span>
+            </div>
           </div>
-          <h1 style={{ margin: "0 0 6px", fontSize: 30, fontWeight: 900, letterSpacing: -1, lineHeight: 1 }}>−8 KG EN 8 SEMANAS</h1>
-          <p style={{ margin: "0 0 20px", color: COLORS.muted, fontSize: 13, fontStyle: "italic" }}>Déficit agresivo · Alta proteína · Fuerza + Running</p>
+          {/* Brief */}
+          <div style={{ background: COLORS.bg, borderRadius: 8, padding: "10px 14px", marginBottom: 16, borderLeft: `3px solid ${COLORS.accent}` }}>
+            <p style={{ margin: 0, fontSize: 12, color: COLORS.muted, lineHeight: 1.7, fontStyle: "italic" }}>
+              Tu compañero de entrenamiento para los días en que todo cuenta. Déficit agresivo · Alta proteína · Fuerza 3× semana · Media maratón. Sin apps de terceros, sin suscripciones.
+            </p>
+          </div>
           <div style={{ display: "flex", gap: 0, overflowX: "auto" }}>
             {TABS.map((tab, i) => (
               <button key={i} onClick={() => setActiveTab(i)}
