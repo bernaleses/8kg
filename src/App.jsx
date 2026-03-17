@@ -587,6 +587,280 @@ const DONTS = [
   { icon: "🚫", text: "No compensar un mal día comiendo menos al día siguiente. Vuelve al plan sin drama." },
 ];
 
+
+// ─── I18N ────────────────────────────────────────────────────────────────────
+const T = {
+  es: {
+    // Header
+    appSubtitle: "PLAN DE CORTE",
+    appWeeks: "8 SEMANAS",
+    appObjective: t.target,
+    appBrief: "Tu compañero de entrenamiento para los días en que todo cuenta. Déficit agresivo · Alta proteína · Fuerza 3× semana · Media maratón.",
+    tags: ["Fuerza 3×", "Media maratón", "Alta proteína", "Déficit agresivo"],
+    // Tabs
+    tabs: ["📋 Hábitos", "📆 Mi Plan", "🛒 Compra", "📅 Semana", "✅ Do & Don't", "🍽️ Recetas"],
+    // Habits
+    habitsToday: t.habitsToday,
+    habitsLast7: t.habitsLast7,
+    habitsPerfect: t.habitsPerfect,
+    habitsGood: t.habitsGood,
+    habitsRemain: t.habitsRemain,
+    habitsReset: t.habitsReset,
+    habitsList: [
+      { id: "steps", label: "10.000 pasos", icon: "👟" },
+      { id: "water",  label: "3–4L de agua",            icon: "💧" },
+      { id: "sleep",  label: "8h de sueño",              icon: "😴" },
+      { id: "protein",label: "Proteína en cada comida",  icon: "🥩" },
+      { id: "noalcohol",label:"Sin alcohol",             icon: "🚫" },
+      { id: "training",label:"Entreno completado",       icon: "💪" },
+    ],
+    legendPerfect: t.legendPerfect, legendGood: "≥70%", legendSomething: t.legendSomething, legendNone: t.legendNone,
+    // Mi Plan
+    activePlan: t.activePlan,
+    recalculate: t.recalculate,
+    tdee: t.tdee, target: t.target, protein: t.protein, loss: t.loss,
+    rest: t.rest, training: t.training, load: t.load,
+    calcTitle: t.calcTitle,
+    weightLabel: t.weightLabel, heightLabel: t.heightLabel, ageLabel: t.ageLabel, sexLabel: t.sexLabel,
+    male: t.male, female: t.female,
+    bodyfatLabel: t.bodyfatLabel, bodyfatOptional: t.bodyfatOptional,
+    bodyfatNote: "Si lo introduces se usa la fórmula Katch-McArdle (más precisa para atletas). Si no, se usa Mifflin-St Jeor.",
+    next: t.next, back: t.back, calculate: t.calculate,
+    activityTitle: t.activityTitle,
+    activityLevels: [
+      ["sedentary","Sedentario","Escritorio, sin ejercicio regular"],
+      ["light","Ligero","1-2 sesiones suaves por semana"],
+      ["moderate","Moderado","3-4 sesiones: gym o running alternados"],
+      ["active","Activo","Fuerza 3x + running 3-4x semanal ← tu caso"],
+      ["very_active","Muy activo","Dobles sesiones o trabajo físico intenso"],
+    ],
+    goalLevels: [
+      ["cut_aggressive","Corte agresivo −700 kcal","~0.8-1 kg/sem"],
+      ["cut_moderate","Corte moderado −400 kcal","~0.4-0.5 kg/sem"],
+    ],
+    // Planner
+    weekLabel: t.weekLabel,
+    weeklyPlanned: t.weeklyPlanned,
+    notPlannedYet: t.notPlannedYet,
+    exportShop: t.exportShop,
+    exportDone: t.exportDone,
+    noMeal: t.noMeal,
+    seeRecipe: t.seeRecipe,
+    changeBtn: t.changeBtn, chooseBtn: t.chooseBtn,
+    clearDay: t.clearDay,
+    overTarget: t.overTarget,
+    remaining: t.remaining,
+    chooseMealFor: t.chooseMealFor,
+    closeBtn: t.closeBtn,
+    slotLabels: { desayuno: "Desayuno", media_m: "Media Mañana", almuerzo: "Almuerzo", pre: "Pre-Entreno", cena: "Cena" },
+    // Shop
+    inCart: t.inCart,
+    products: "productos", product: "producto",
+    clearCart: t.clearCart,
+    searchPlaceholder: t.searchPlaceholder,
+    addProduct: t.addProduct,
+    addProductPlaceholder: t.addProductPlaceholder,
+    addBtn: t.addBtn,
+    resultsFor: "resultado",
+    resultsForPlural: "resultados",
+    allInCart: t.allInCart,
+    noResults: "Sin resultados para",
+    catFilter: ["Todos","Proteínas","Lácteos","Carbohidratos","Frutas y Verduras","Frutos Secos","Condimentos y Extras","Mis añadidos"],
+    // Week/Training
+    weekSchedule: t.weekSchedule,
+    trainingBlocks: t.trainingBlocks,
+    trainingReset: "{t.trainingReset}",
+    weekNote: t.weekNote,
+    doneLbl: t.doneLbl,
+    execution: t.execution,
+    muscles: t.muscles,
+    // Do & Dont
+    doTitle: t.doTitle,
+    dontTitle: t.dontTitle,
+    dos: [
+      { icon: "⚖️", text: "Pesa toda la comida los primeros 14 días hasta calibrar las raciones visualmente." },
+      { icon: "🥡", text: "Batch cooking dominical: prepara 4-5 tuppers de almuerzo y cena de golpe." },
+      { icon: "💧", text: "Bebe 3-3.5L de agua al día. Añade 500ml extra cada hora de carrera." },
+      { icon: "🥩", text: "Proteína en cada comida. Sin excepción. Mínimo 30g por toma." },
+      { icon: "😴", text: "8 horas de sueño. Crucial para recuperación y control de cortisol en déficit." },
+      { icon: "🍚", text: "Los días de carrera larga (sábado) añade 200-300 kcal en carbos al almuerzo." },
+      { icon: "📊", text: "Pésate cada mañana en ayunas, registra la media semanal — no el dato diario." },
+      { icon: "🧂", text: "Sal extra post-carrera larga: el sodio perdido en el sudor hay que reponerlo." },
+    ],
+    donts: [
+      { icon: "🚫", text: "No bajes de 1.600 kcal los días de entrenamiento de running intenso." },
+      { icon: "🚫", text: "No hagas ayuno antes de la carrera larga del sábado. Come siempre 90 min antes." },
+      { icon: "🚫", text: "No elimines los carbos del todo. Tu cerebro y músculos los necesitan para correr." },
+      { icon: "🚫", text: "No hagas más de 3 sesiones de alta intensidad a la semana — aumentas el cortisol." },
+      { icon: "🚫", text: "Alcohol fuera. Bloquea la síntesis proteica y añade calorías vacías." },
+      { icon: "🚫", text: "No añadas cardio extra si el cuerpo pide descanso. Contraproducente en déficit." },
+      { icon: "🚫", text: "No te saltes el snack post-entreno. La ventana anabólica existe, aprovéchala." },
+      { icon: "🚫", text: "No compensar un mal día comiendo menos al día siguiente. Vuelve al plan sin drama." },
+    ],
+    // Recipes
+    recipesTitle: "Recetas",
+    searchRecipe: t.searchRecipe,
+    recipeCount1: "receta", recipeCountN: "recetas",
+    newRecipe: t.newRecipe,
+    cancelBtn: t.cancelBtn,
+    newRecipeTitle: "NUEVA RECETA",
+    emojiLabel: t.emojiLabel, nameLabel: t.nameLabel, kcalLabel: t.kcalLabel,
+    protLabel: t.protLabel, carbLabel: t.carbLabel, fatLabel: t.fatLabel,
+    ingredientsLabel: t.ingredientsLabel,
+    ingredientsPlaceholder: "200g pechuga de pollo\n60g arroz basmati\n100g mango",
+    prepLabel: t.prepLabel,
+    prepPlaceholder: t.prepPlaceholder,
+    saveRecipe: t.saveRecipe,
+    myRecipeBadge: t.myRecipeBadge,
+    tupperBadge: "tupper",
+    noResultsRecipe: t.noResultsRecipe,
+    mealCatLabels: { desayunos: "Desayunos", almuerzos: "Almuerzos", cenas: "Cenas", media_manana: "Media Mañana", pre_entreno: "Pre-Entreno" },
+    ingredientsSect: t.ingredientsSect,
+    prepSect: t.prepSect,
+    noDetailMsg: t.noDetailMsg,
+    kcalToday: "CALORÍAS HOY",
+    mealsMarked1: "comida marcada", mealsMarkedN: "comidas marcadas",
+    macroLabels: { prot: "Proteína", carb: "Carbos", fat: "Grasas" },
+    aboveTarget: "kcal por encima del objetivo",
+    kcalRemaining: t.remaining,
+    targetReached: "¡Objetivo alcanzado!",
+    resetBtn: "Resetear",
+    addManual: "AÑADIR ENTRADA MANUAL",
+    addKcalPlaceholder: "ej. 250 kcal",
+    tierLight: "light", tierMid: "medio", tierHigh: "alto",
+  },
+  en: {
+    appSubtitle: "CUT PLAN",
+    appWeeks: "8 WEEKS",
+    appObjective: "GOAL",
+    appBrief: "Your training companion for the days when everything counts. Aggressive deficit · High protein · Strength 3× week · Half marathon.",
+    tags: ["Strength 3×", "Half marathon", "High protein", "Aggressive deficit"],
+    tabs: ["📋 Habits", "📆 My Plan", "🛒 Shopping", "📅 Schedule", "✅ Do & Don't", "🍽️ Recipes"],
+    habitsToday: "Today's habits",
+    habitsLast7: "Last 7 days",
+    habitsPerfect: "🎉 Perfect day. This is how results are built.",
+    habitsGood: "Good day, keep it up.",
+    habitsRemain: "Some habits still to check.",
+    habitsReset: "↺ resets at midnight",
+    habitsList: [
+      { id: "steps",    label: "10,000 steps",           icon: "👟" },
+      { id: "water",    label: "3–4L of water",          icon: "💧" },
+      { id: "sleep",    label: "8h of sleep",            icon: "😴" },
+      { id: "protein",  label: "Protein in every meal",  icon: "🥩" },
+      { id: "noalcohol",label: "No alcohol",             icon: "🚫" },
+      { id: "training", label: "Training completed",     icon: "💪" },
+    ],
+    legendPerfect: "Perfect day", legendGood: "≥70%", legendSomething: "Something done", legendNone: "No data",
+    activePlan: "YOUR ACTIVE PLAN",
+    recalculate: "Recalculate",
+    tdee: t.tdee, target: "TARGET", protein: "PROTEIN", loss: "LOSS",
+    rest: "Rest", training: "Training", load: "Load day",
+    calcTitle: "Calculate your personalised plan",
+    weightLabel: "Weight (kg)", heightLabel: "Height (cm)", ageLabel: "Age", sexLabel: "Sex",
+    male: "Male", female: "Female",
+    bodyfatLabel: "Body fat %", bodyfatOptional: "(optional)",
+    bodyfatNote: "If provided, Katch-McArdle formula is used (more accurate for athletes). Otherwise Mifflin-St Jeor.",
+    next: "Next →", back: "← Back", calculate: "Calculate →",
+    activityTitle: "Activity level and goal",
+    activityLevels: [
+      ["sedentary","Sedentary","Desk job, no regular exercise"],
+      ["light","Light","1-2 easy sessions per week"],
+      ["moderate","Moderate","3-4 sessions: gym or running alternated"],
+      ["active","Active","Strength 3x + running 3-4x/week ← your case"],
+      ["very_active","Very active","Double sessions or intense physical work"],
+    ],
+    goalLevels: [
+      ["cut_aggressive","Aggressive cut −700 kcal","~0.8-1 kg/week"],
+      ["cut_moderate","Moderate cut −400 kcal","~0.4-0.5 kg/week"],
+    ],
+    weekLabel: "CURRENT WEEK",
+    weeklyPlanned: "kcal planned",
+    notPlannedYet: "Nothing planned yet",
+    exportShop: "🛒 Export to shopping",
+    exportDone: "✓ Added!",
+    noMeal: "Not planned",
+    seeRecipe: "see recipe ›",
+    changeBtn: "Change", chooseBtn: "+ Choose",
+    clearDay: "Clear day ×",
+    overTarget: "above target",
+    remaining: "kcal remaining",
+    chooseMealFor: "CHOOSE FOR",
+    closeBtn: "Close",
+    slotLabels: { desayuno: "Breakfast", media_m: "Mid-morning", almuerzo: "Lunch", pre: "Pre-workout", cena: "Dinner" },
+    inCart: "IN CART",
+    products: "products", product: "product",
+    clearCart: "Clear ×",
+    searchPlaceholder: "Search ingredient...",
+    addProduct: "ADD PRODUCT",
+    addProductPlaceholder: "e.g. Oat milk, vegan protein...",
+    addBtn: "+ Add",
+    resultsFor: "result",
+    resultsForPlural: "results",
+    allInCart: "✅ All in cart",
+    noResults: "No results for",
+    catFilter: ["All","Proteins","Dairy","Carbs","Fruit & Veg","Nuts & Seeds","Condiments & Extras","My additions"],
+    weekSchedule: "WEEKLY SCHEDULE",
+    trainingBlocks: "TRAINING BLOCKS",
+    trainingReset: "🔄 Auto-reset every Monday · Week:",
+    weekNote: "note →",
+    doneLbl: "DONE",
+    execution: "EXECUTION",
+    muscles: "MUSCLES →",
+    doTitle: "✅ Do — key habits",
+    dontTitle: "❌ Don't — avoid this",
+    dos: [
+      { icon: "⚖️", text: "Weigh all food for the first 14 days until you can eyeball portions accurately." },
+      { icon: "🥡", text: "Sunday batch cooking: prep 4-5 tupperware lunches and dinners in one go." },
+      { icon: "💧", text: "Drink 3-3.5L of water daily. Add 500ml extra per hour of running." },
+      { icon: "🥩", text: "Protein in every meal. No exceptions. Minimum 30g per serving." },
+      { icon: "😴", text: "8 hours of sleep. Critical for recovery and cortisol control during deficit." },
+      { icon: "🍚", text: "On long run days (Saturday) add 200-300 extra kcal in carbs at lunch." },
+      { icon: "📊", text: "Weigh yourself every morning fasted, track the weekly average — not the daily number." },
+      { icon: "🧂", text: "Extra salt after long runs: replenish the sodium lost through sweat." },
+    ],
+    donts: [
+      { icon: "🚫", text: "Don't drop below 1,600 kcal on intense running training days." },
+      { icon: "🚫", text: "Don't fast before the Saturday long run. Always eat 90 min beforehand." },
+      { icon: "🚫", text: "Don't cut out carbs entirely. Your brain and muscles need them to run." },
+      { icon: "🚫", text: "No more than 3 high-intensity sessions per week — cortisol will spike." },
+      { icon: "🚫", text: "Alcohol out. It blocks protein synthesis and adds empty calories." },
+      { icon: "🚫", text: "Don't add extra cardio if your body needs rest. Counterproductive in deficit." },
+      { icon: "🚫", text: "Don't skip the post-workout snack. The anabolic window is real, use it." },
+      { icon: "🚫", text: "Don't compensate a bad day by eating less the next. Just get back on plan." },
+    ],
+    recipesTitle: "Recipes",
+    searchRecipe: "Search recipe or ingredient...",
+    recipeCount1: "recipe", recipeCountN: "recipes",
+    newRecipe: "+ New recipe",
+    cancelBtn: "× Cancel",
+    newRecipeTitle: "NEW RECIPE",
+    emojiLabel: t.emojiLabel, nameLabel: "Name *", kcalLabel: t.kcalLabel,
+    protLabel: t.protLabel, carbLabel: t.carbLabel, fatLabel: "Fat (g)",
+    ingredientsLabel: "Ingredients (one per line)",
+    ingredientsPlaceholder: "200g chicken breast\n60g basmati rice\n100g mango",
+    prepLabel: "Preparation",
+    prepPlaceholder: "How to prepare...",
+    saveRecipe: "Save recipe ✓",
+    myRecipeBadge: "mine",
+    tupperBadge: "meal prep",
+    noResultsRecipe: "No results",
+    mealCatLabels: { desayunos: "Breakfast", almuerzos: "Lunch", cenas: "Dinner", media_manana: "Mid-morning", pre_entreno: "Pre-workout" },
+    ingredientsSect: "INGREDIENTS",
+    prepSect: "PREPARATION",
+    noDetailMsg: "Re-plan this meal to see full details",
+    kcalToday: "TODAY\'S CALORIES",
+    mealsMarked1: "meal logged", mealsMarkedN: "meals logged",
+    macroLabels: { prot: "Protein", carb: "Carbs", fat: "Fat" },
+    aboveTarget: "kcal above target",
+    kcalRemaining: "kcal remaining",
+    targetReached: "Target reached!",
+    resetBtn: "Reset",
+    addManual: "ADD MANUAL ENTRY",
+    addKcalPlaceholder: "e.g. 250 kcal",
+    tierLight: "light", tierMid: "medium", tierHigh: "high",
+  }
+};
+
 const TABS = ["📋 Hábitos", "📆 Mi Plan", "🛒 Compra", "📅 Semana", "✅ Do & Don't", "🍽️ Recetas"];
 
 // ─── HELPERS ──────────────────────────────────────────────────
@@ -631,7 +905,7 @@ function Label({ children, color }) {
 }
 
 // ─── HABITS TRACKER ───────────────────────────────────────────
-function HabitsTracker() {
+function HabitsTracker({ t }) {
   const [checked, setChecked] = useState({});
   const [history, setHistory] = useState({});
   const [loaded, setLoaded] = useState(false);
@@ -693,7 +967,7 @@ function HabitsTracker() {
         <div>
           <div style={{ fontSize: 20, fontWeight: 900 }}>{done}/{total} hábitos</div>
           <div style={{ fontSize: 12, color: COLORS.muted, fontStyle: "italic", marginTop: 4 }}>
-            {pct === 100 ? "🎉 Día perfecto. Así se construyen resultados." : pct >= 70 ? "Buen día, sigue así." : "Quedan hábitos por marcar."}
+            {pct === 100 ? t.habitsPerfect : pct >= 70 ? t.habitsGood : t.habitsRemain}
           </div>
           <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 6 }}>{new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" })}</div>
         </div>
@@ -702,7 +976,7 @@ function HabitsTracker() {
       {/* Habit checkboxes */}
       <Card>
         <Label>Hábitos de hoy</Label>
-        {HABITS.map(h => (
+        {t.habitsList.map(h => (
           <button key={h.id} onClick={() => toggle(h.id)}
             style={{ width: "100%", display: "flex", alignItems: "center", gap: 14, padding: "11px 0",
               borderBottom: `1px solid ${COLORS.cardBorder}`, background: "none", border: "none",
@@ -744,7 +1018,7 @@ function HabitsTracker() {
           })}
         </div>
         <div style={{ display: "flex", gap: 16, marginTop: 12, flexWrap: "wrap" }}>
-          {[{ col: COLORS.green, label: "Día perfecto" }, { col: COLORS.orange, label: "≥70%" }, { col: COLORS.blue, label: "Algo hecho" }, { col: COLORS.cardBorder, label: "Sin datos" }].map(l => (
+          {[{ col: COLORS.green, label: t.legendPerfect }, { col: COLORS.orange, label: t.legendGood }, { col: COLORS.blue, label: t.legendSomething }, { col: COLORS.cardBorder, label: t.legendNone }].map(l => (
             <div key={l.label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <div style={{ width: 10, height: 10, borderRadius: 2, background: l.col, border: `1px solid ${COLORS.cardBorder}` }} />
               <span style={{ fontSize: 10, color: COLORS.muted }}>{l.label}</span>
@@ -820,7 +1094,7 @@ function findFullMeal(name) {
   return null;
 }
 
-function MiPlanTab({ onUpdate, userTarget }) {
+function MiPlanTab({ onUpdate, userTarget, t }) {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({ weight: "", height: "", age: "", sex: "H", activity: "moderate", goal: "cut_aggressive", bodyfat: "" });
   const [saved, setSaved] = useState(null);
@@ -966,10 +1240,10 @@ function MiPlanTab({ onUpdate, userTarget }) {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 12 }}>
         {[
-          { l: "TDEE", v: `${saved.tdee}`, unit: "kcal", c: COLORS.muted },
-          { l: "OBJETIVO", v: `${saved.target}`, unit: "kcal", c: COLORS.accent },
-          { l: "PROTEÍNA", v: `${saved.protein}g`, unit: "mín.", c: COLORS.green },
-          { l: "PÉRDIDA", v: `~${saved.weightLoss}`, unit: "kg/sem", c: COLORS.orange },
+          { l: t.tdee, v: `${saved.tdee}`, unit: "kcal", c: COLORS.muted },
+          { l: t.target, v: `${saved.target}`, unit: "kcal", c: COLORS.accent },
+          { l: t.protein, v: `${saved.protein}g`, unit: "mín.", c: COLORS.green },
+          { l: t.loss, v: `~${saved.weightLoss}`, unit: "kg/sem", c: COLORS.orange },
         ].map(x => (
           <div key={x.l} style={{ background: COLORS.bg, borderRadius: 8, padding: "10px 8px", textAlign: "center" }}>
             <div style={{ fontSize: 8, color: COLORS.muted, letterSpacing: 1.5 }}>{x.l}</div>
@@ -980,9 +1254,9 @@ function MiPlanTab({ onUpdate, userTarget }) {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
         {[
-          { l: "Descanso", kcal: Math.round(saved.target - 150), d: "Vie, Dom", c: COLORS.muted },
-          { l: "Entreno", kcal: saved.target, d: "Lun, Mar, Jue", c: COLORS.blue },
-          { l: "Carga", kcal: Math.round(saved.target + 200), d: "Mié, Sáb", c: COLORS.accent },
+          { l: t.rest, kcal: Math.round(saved.target - 150), d: "Vie, Dom", c: COLORS.muted },
+          { l: t.training, kcal: saved.target, d: "Lun, Mar, Jue", c: COLORS.blue },
+          { l: t.load, kcal: Math.round(saved.target + 200), d: "Mié, Sáb", c: COLORS.accent },
         ].map(x => (
           <div key={x.l} style={{ borderLeft: `3px solid ${x.c}`, paddingLeft: 10 }}>
             <div style={{ fontSize: 16, fontWeight: 900, color: x.c }}>{x.kcal}</div>
@@ -1002,7 +1276,7 @@ function MiPlanTab({ onUpdate, userTarget }) {
         <div><div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 6 }}>Edad</div><input style={inputStyle} type="number" value={form.age} onChange={e => setF("age", e.target.value)} placeholder="ej. 30" /></div>
         <div><div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 6 }}>Sexo</div>
           <div style={{ display: "flex", gap: 8 }}>
-            {[["H","Hombre"],["M","Mujer"]].map(([v,l]) => (
+            {[["H",t.male],["M",t.female]].map(([v,l]) => (
               <button key={v} onClick={() => setF("sex", v)} style={{ flex: 1, padding: "10px 0", borderRadius: 6, border: `1px solid ${form.sex===v?COLORS.accent:COLORS.cardBorder}`, background: form.sex===v?COLORS.accent:COLORS.bg, color: form.sex===v?"#fff":COLORS.muted, cursor: "pointer", fontFamily: "inherit", fontSize: 13, fontStyle: "italic" }}>{l}</button>
             ))}
           </div>
@@ -1023,13 +1297,7 @@ function MiPlanTab({ onUpdate, userTarget }) {
     <Card>
       <Label>Nivel de actividad y objetivo</Label>
       <div style={{ marginBottom: 12 }}>
-        {[
-          ["sedentary","Sedentario","Escritorio, sin ejercicio regular"],
-          ["light","Ligero","1-2 sesiones suaves por semana"],
-          ["moderate","Moderado","3-4 sesiones: gym o running alternados"],
-          ["active","Activo","Fuerza 3x + running 3-4x semanal ← tu caso"],
-          ["very_active","Muy activo","Dobles sesiones o trabajo físico intenso"]
-        ].map(([v,l,d]) => (
+        {t.activityLevels.map(([v,l,d]) => (
           <button key={v} onClick={() => setF("activity", v)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", marginBottom: 6, borderRadius: 6, border: `1px solid ${form.activity===v?COLORS.accent:COLORS.cardBorder}`, background: form.activity===v?"#fff5f2":COLORS.bg, cursor: "pointer", fontFamily: "inherit", textAlign: "left" }}>
             <div style={{ width: 12, height: 12, borderRadius: "50%", border: `2px solid ${form.activity===v?COLORS.accent:COLORS.cardBorder}`, background: form.activity===v?COLORS.accent:"transparent", flexShrink: 0 }} />
             <div><div style={{ fontSize: 12, color: COLORS.text, fontWeight: form.activity===v?700:400 }}>{l}</div><div style={{ fontSize: 10, color: COLORS.muted, fontStyle: "italic" }}>{d}</div></div>
@@ -1037,7 +1305,7 @@ function MiPlanTab({ onUpdate, userTarget }) {
         ))}
       </div>
       <div style={{ marginBottom: 14 }}>
-        {[["cut_aggressive","Corte agresivo −700 kcal","~0.8-1 kg/sem"],["cut_moderate","Corte moderado −400 kcal","~0.4-0.5 kg/sem"]].map(([v,l,d]) => (
+        {t.goalLevels.map(([v,l,d]) => (
           <button key={v} onClick={() => setF("goal", v)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", marginBottom: 6, borderRadius: 6, border: `1px solid ${form.goal===v?COLORS.accent:COLORS.cardBorder}`, background: form.goal===v?"#fff5f2":COLORS.bg, cursor: "pointer", fontFamily: "inherit", textAlign: "left" }}>
             <div style={{ width: 12, height: 12, borderRadius: "50%", border: `2px solid ${form.goal===v?COLORS.accent:COLORS.cardBorder}`, background: form.goal===v?COLORS.accent:"transparent", flexShrink: 0 }} />
             <div><div style={{ fontSize: 12, color: COLORS.text, fontWeight: form.goal===v?700:400 }}>{l}</div><div style={{ fontSize: 10, color: COLORS.muted, fontStyle: "italic" }}>{d}</div></div>
@@ -1066,7 +1334,7 @@ function MiPlanTab({ onUpdate, userTarget }) {
         </div>
         <button onClick={exportToShop}
           style={{ background: exported ? COLORS.green : COLORS.accent, color: "#fff", border: "none", borderRadius: 8, padding: "9px 14px", fontSize: 12, cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", fontWeight: 700, transition: "background 0.3s" }}>
-          {exported ? "✓ Añadido!" : "🛒 Exportar a compra"}
+          {exported ? t.exportDone : t.exportShop}
         </button>
       </div>
 
@@ -1119,7 +1387,7 @@ function MiPlanTab({ onUpdate, userTarget }) {
                 <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
                   <span style={{ fontSize: 16, flexShrink: 0 }}>{slot.emoji}</span>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1, marginBottom: 2 }}>{slot.label.toUpperCase()}</div>
+                    <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1, marginBottom: 2 }}>{(t.slotLabels[slot.key] || slot.label).toUpperCase()}</div>
                     {meal ? (
                       <button onClick={() => {
                           const full = findFullMeal(meal.name);
@@ -1141,7 +1409,7 @@ function MiPlanTab({ onUpdate, userTarget }) {
                   {meal && <button onClick={() => clearSlot(activeDay, slot.key)} style={{ background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6, padding: "5px 8px", fontSize: 11, color: COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>×</button>}
                   <button onClick={() => setPicker({ day: activeDay, slotKey: slot.key, mealKey: slot.mealKey, label: slot.label })}
                     style={{ background: COLORS.accent, border: "none", borderRadius: 6, padding: "6px 12px", fontSize: 11, color: "#fff", cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", fontWeight: 700 }}>
-                    {meal ? "Cambiar" : "+ Elegir"}
+                    {meal ? t.changeBtn : t.chooseBtn}
                   </button>
                 </div>
               </div>
@@ -1361,7 +1629,7 @@ const CAT_COLORS = {
   "Condimentos y Extras": "#8a7f72",
 };
 
-function ShoppingTab() {
+function ShoppingTab({ t }) {
   const [checked, setChecked] = useState({});
   const [search, setSearch] = useState("");
   const [customItems, setCustomItems] = useState([]);
@@ -1429,7 +1697,7 @@ function ShoppingTab() {
     checkedGrouped[it.cat].push(it);
   });
 
-  const cats = ["Todos", "Proteínas", "Lácteos", "Carbohidratos", "Frutas y Verduras", "Frutos Secos", "Condimentos y Extras", "Mis añadidos"];
+  const cats = t.catFilter;
   const catOrder = ["Mis añadidos", "Proteínas", "Lácteos", "Carbohidratos", "Frutas y Verduras", "Frutos Secos", "Condimentos y Extras"];
 
   const filtered = allItems.filter(it => {
@@ -1496,7 +1764,7 @@ function ShoppingTab() {
         <span style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", fontSize: 14, color: COLORS.muted, pointerEvents: "none" }}>🔍</span>
         <input
           type="text"
-          placeholder="Buscar ingrediente..."
+            placeholder={t.searchPlaceholder}
           value={search}
           onChange={e => setSearch(e.target.value)}
           style={{ width: "100%", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`,
@@ -1532,7 +1800,7 @@ function ShoppingTab() {
         <div style={{ display: "flex", gap: 8 }}>
           <input
             type="text"
-            placeholder="ej. Leche de avena, proteína vegana..."
+            placeholder={t.addProductPlaceholder}
             value={customInput}
             onChange={e => setCustomInput(e.target.value)}
             onKeyDown={e => e.key === "Enter" && addCustom()}
@@ -1549,7 +1817,7 @@ function ShoppingTab() {
 
       {search && (
         <div style={{ fontSize: 11, color: COLORS.muted, fontStyle: "italic", marginBottom: 12 }}>
-          {filtered.length} resultado{filtered.length !== 1 ? "s" : ""} para "{search}"
+          {filtered.length} {filtered.length !== 1 ? t.resultsForPlural : t.resultsFor} {t.noResults.replace("Sin resultados para","").trim()} "{search}"
         </div>
       )}
 
@@ -1587,12 +1855,12 @@ function ShoppingTab() {
 
       {filtered.length === 0 && checkedItems.length > 0 && !search && (
         <div style={{ textAlign: "center", padding: 32, color: COLORS.muted, fontStyle: "italic" }}>
-          ✅ Todo en el carrito
+          {t.allInCart}
         </div>
       )}
       {filtered.length === 0 && search && (
         <div style={{ textAlign: "center", padding: 32, color: COLORS.muted, fontStyle: "italic" }}>
-          Sin resultados para "{search}"
+          {t.noResults} "{search}"
         </div>
       )}
     </div>
@@ -1601,7 +1869,7 @@ function ShoppingTab() {
 
 
 // ─── WEEK TAB (Horario + Entrenamientos) ─────────────────────
-function WeekTab() {
+function WeekTab({ t }) {
   const [expandedDay, setExpandedDay] = useState(null);
   const [expandedEx, setExpandedEx] = useState({});
   const [done, setDone] = useState({});
@@ -1693,7 +1961,7 @@ function WeekTab() {
       <div style={{ marginTop: 24, marginBottom: 10 }}>
         <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 10 }}>BLOQUES DE ENTRENAMIENTO</div>
         <div style={{ background: "#fff8f0", border: "1px solid #f0e0d0", borderRadius: 8, padding: "9px 14px", marginBottom: 14, fontSize: 11, color: COLORS.muted, fontStyle: "italic" }}>
-          🔄 Reset automático cada lunes · Semana: <strong style={{ color: COLORS.accent }}>{currentMonday}</strong>
+          {t.trainingReset} <strong style={{ color: COLORS.accent }}>{currentMonday}</strong>
         </div>
         <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
           {TRAINING_BLOCKS.map(b => {
@@ -1781,12 +2049,12 @@ function WeekTab() {
 }
 
 // ─── DO & DONT TAB ───────────────────────────────────────────
-function DosDonts() {
+function DosDonts({ t }) {
   return (
     <div>
       <div style={{ marginBottom: 20 }}>
         <Label color={COLORS.green}>✅ Do — hábitos clave</Label>
-        {DOS.map((item, i) => (
+        {t.dos.map((item, i) => (
           <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderLeft: `3px solid ${COLORS.green}`, borderRadius: 8, padding: "12px 16px", marginBottom: 8 }}>
             <span style={{ fontSize: 18, flexShrink: 0 }}>{item.icon}</span>
             <span style={{ fontSize: 13, color: COLORS.text, lineHeight: 1.6 }}>{item.text}</span>
@@ -1795,7 +2063,7 @@ function DosDonts() {
       </div>
       <div style={{ marginBottom: 20 }}>
         <Label color={COLORS.red}>❌ Don't — evita esto</Label>
-        {DONTS.map((item, i) => (
+        {t.donts.map((item, i) => (
           <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderLeft: `3px solid ${COLORS.red}`, borderRadius: 8, padding: "12px 16px", marginBottom: 8 }}>
             <span style={{ fontSize: 18, flexShrink: 0 }}>{item.icon}</span>
             <span style={{ fontSize: 13, color: COLORS.text, lineHeight: 1.6 }}>{item.text}</span>
@@ -1810,6 +2078,14 @@ function DosDonts() {
 // ─── APP ──────────────────────────────────────────────────────
 export default function CutPlan() {
   const [activeTab, setActiveTab] = useState(0);
+  const [lang, setLang] = useState(() => {
+    try { return localStorage.getItem("forma_lang") || "es"; } catch { return "es"; }
+  });
+  const t = T[lang] || T.es;
+  function toggleLang(l) {
+    setLang(l);
+    try { localStorage.setItem("forma_lang", l); } catch {}
+  }
   const [userTarget, setUserTarget] = useState(null);
 
   useEffect(() => {
@@ -1852,7 +2128,7 @@ export default function CutPlan() {
             </p>
           </div>
           <div style={{ display: "flex", gap: 0, overflowX: "auto" }}>
-            {TABS.map((tab, i) => (
+            {t.tabs.map((tab, i) => (
               <button key={i} onClick={() => setActiveTab(i)}
                 style={{ background: "none", border: "none", borderBottom: activeTab === i ? `2px solid ${COLORS.accent}` : "2px solid transparent",
                   color: activeTab === i ? COLORS.accent : COLORS.muted, padding: "10px 14px", fontSize: 12,
@@ -1865,17 +2141,17 @@ export default function CutPlan() {
       </div>
 
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "24px 20px" }}>
-        {activeTab === 0 && <HabitsTracker />}
-        {activeTab === 1 && <MiPlanTab onUpdate={(d) => setUserTarget(d.target || null)} userTarget={userTarget} />}
-        {activeTab === 2 && <ShoppingTab />}
-        {activeTab === 3 && <WeekTab />}
-        {activeTab === 4 && <DosDonts />}
-        {activeTab === 5 && <RecetasTab />}
+        {activeTab === 0 && <HabitsTracker t={t} />}
+        {activeTab === 1 && <MiPlanTab onUpdate={(d) => setUserTarget(d.target || null)} userTarget={userTarget} t={t} />}
+        {activeTab === 2 && <ShoppingTab t={t} />}
+        {activeTab === 3 && <WeekTab t={t} />}
+        {activeTab === 4 && <DosDonts t={t} />}
+        {activeTab === 5 && <RecetasTab t={t} />}
       </div>
     </div>
   );
 }// ─── RECETAS TAB (simple browser, no tracker) ────────────────
-function RecetasTab() {
+function RecetasTab({ t }) {
   const [activeMeal, setActiveMeal] = useState("desayunos");
   const [expanded, setExpanded] = useState({});
   const [search, setSearch] = useState("");
@@ -1918,7 +2194,7 @@ function RecetasTab() {
     const next = { ...customMeals, [cat]: arr };
     saveCustom(next);
   }
-  const labels = { desayunos: "Desayunos", almuerzos: "Almuerzos", cenas: "Cenas", media_manana: "Media Mañana", pre_entreno: "Pre-Entreno" };
+  const labels = t.mealCatLabels;
   const mealCatColors = { desayunos: "#c47a1a", almuerzos: COLORS.blue, cenas: "#7c5cbf", media_manana: COLORS.green, pre_entreno: COLORS.accent };
 
   function toggleExpand(key) { setExpanded(p => ({ ...p, [key]: !p[key] })); }
@@ -1936,7 +2212,7 @@ function RecetasTab() {
       {/* Search */}
       <div style={{ position: "relative", marginBottom: 12 }}>
         <span style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", fontSize: 14, color: COLORS.muted, pointerEvents: "none" }}>🔍</span>
-        <input type="text" placeholder="Buscar receta o ingrediente..." value={search} onChange={e => setSearch(e.target.value)}
+        <input type="text" placeholder={t.searchRecipe} value={search} onChange={e => setSearch(e.target.value)}
           style={{ width: "100%", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "10px 12px 10px 36px", fontSize: 13, fontFamily: "inherit", color: COLORS.text, boxSizing: "border-box" }} />
         {search && <button onClick={() => setSearch("")} style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: COLORS.muted, fontSize: 18 }}>×</button>}
       </div>
@@ -1960,7 +2236,7 @@ function RecetasTab() {
         </div>
         <button onClick={() => setShowForm(!showForm)}
           style={{ background: showForm ? COLORS.bg : COLORS.accent, color: showForm ? COLORS.muted : "#fff", border: `1px solid ${showForm ? COLORS.cardBorder : COLORS.accent}`, borderRadius: 6, padding: "6px 12px", fontSize: 11, cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", fontWeight: 700 }}>
-          {showForm ? "× Cancelar" : "+ Nueva receta"}
+          {showForm ? t.cancelBtn : t.newRecipe}
         </button>
       </div>
 
@@ -1981,7 +2257,7 @@ function RecetasTab() {
             </div>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 8, marginBottom: 10 }}>
-            {[["kcal","Kcal *",""], ["prot","Prot (g)",""], ["carb","Carb (g)",""], ["fat","Grasas (g)",""]].map(([k,l]) => (
+            {[["kcal",t.kcalLabel,""], ["prot",t.protLabel,""], ["carb",t.carbLabel,""], ["fat",t.fatLabel,""]].map(([k,l]) => (
               <div key={k}>
                 <div style={{ fontSize: 10, color: COLORS.muted, marginBottom: 4 }}>{l}</div>
                 <input type="number" value={form[k]} onChange={e => setForm(f => ({...f, [k]: e.target.value}))} placeholder="0"
@@ -1996,7 +2272,7 @@ function RecetasTab() {
           </div>
           <div style={{ marginBottom: 14 }}>
             <div style={{ fontSize: 10, color: COLORS.muted, marginBottom: 4 }}>Preparación</div>
-            <textarea value={form.prep} onChange={e => setForm(f => ({...f, prep: e.target.value}))} placeholder="Cómo se prepara..."
+            <textarea value={form.prep} onChange={e => setForm(f => ({...f, prep: e.target.value}))} placeholder={t.prepPlaceholder}
               rows={3} style={{ width: "100%", background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6, padding: "9px 12px", fontSize: 13, fontFamily: "inherit", color: COLORS.text, resize: "vertical", boxSizing: "border-box" }} />
           </div>
           <button onClick={addRecipe} disabled={!form.name || !form.kcal}
