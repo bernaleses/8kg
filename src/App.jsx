@@ -510,7 +510,7 @@ const DONTS = [
   { icon: "🚫", text: "No compensar un mal día comiendo menos al día siguiente. Vuelve al plan sin drama." },
 ];
 
-const TABS = ["📋 Hábitos", "🔢 Mi Plan", "🍽️ Comidas", "📅 Semana", "✅ Do & Don't", "🛒 Compra"];
+const TABS = ["📋 Hábitos", "🔢 Mi Plan", "🍽️ Comidas", "🛒 Compra", "📅 Semana", "✅ Do & Don't"];
 
 // ─── HELPERS ──────────────────────────────────────────────────
 function todayKey() {
@@ -1382,183 +1382,93 @@ function WeekTab() {
 
 // ─── SHOPPING LIST ────────────────────────────────────────────
 const SHOP_ITEMS = [
-  { name: "1 huevo entero (60g)", cat: "Proteínas" },
-  { name: "100g claras pasteurizadas", cat: "Proteínas" },
-  { name: "100g gambas peladas", cat: "Proteínas" },
-  { name: "100g pechuga de pollo cocida (fiambre natural o batch)", cat: "Proteínas" },
-  { name: "100g requesón 0%", cat: "Proteínas" },
-  { name: "150g cottage 0%", cat: "Proteínas" },
-  { name: "150g queso cottage 0%", cat: "Proteínas" },
-  { name: "180g salmón fresco (lomo)", cat: "Proteínas" },
-  { name: "180g ternera magra", cat: "Proteínas" },
-  { name: "180g ternera magra en tiras", cat: "Proteínas" },
-  { name: "2 huevos", cat: "Proteínas" },
-  { name: "2 huevos duros", cat: "Proteínas" },
-  { name: "2 huevos revueltos", cat: "Proteínas" },
-  { name: "200g carne picada magra 5%", cat: "Proteínas" },
-  { name: "200g carne picada magra 5% grasa", cat: "Proteínas" },
-  { name: "200g muslo de pollo sin piel", cat: "Proteínas" },
-  { name: "200g pechuga de pollo", cat: "Proteínas" },
-  { name: "200g pechuga de pollo troceada", cat: "Proteínas" },
-  { name: "200g requesón o cottage 0%", cat: "Proteínas" },
-  { name: "200g ternera picada 5%", cat: "Proteínas" },
-  { name: "200g ternera picada 5% grasa", cat: "Proteínas" },
-  { name: "20g whey en 100ml agua", cat: "Proteínas" },
-  { name: "25g whey chocolate", cat: "Proteínas" },
-  { name: "25g whey proteína chocolate", cat: "Proteínas" },
-  { name: "25g whey proteína vainilla", cat: "Proteínas" },
-  { name: "25g whey vainilla", cat: "Proteínas" },
-  { name: "3 huevos enteros", cat: "Proteínas" },
-  { name: "30g whey proteína", cat: "Proteínas" },
-  { name: "4 claras de huevo cocidas (120g)", cat: "Proteínas" },
-  { name: "40g jamón serrano", cat: "Proteínas" },
-  { name: "50g jamón ibérico (sin grasa visible)", cat: "Proteínas" },
-  { name: "6 claras de huevo (180g)", cat: "Proteínas" },
-  { name: "60g pechuga de pollo en lonchas (fiambre natural)", cat: "Proteínas" },
-  { name: "60g salmón ahumado", cat: "Proteínas" },
-  { name: "150ml leche desnatada fría", cat: "Lácteos" },
-  { name: "200g skyr natural", cat: "Lácteos" },
-  { name: "200g yogurt griego 0%", cat: "Lácteos" },
-  { name: "200ml agua o leche desnatada", cat: "Lácteos" },
-  { name: "300ml leche desnatada", cat: "Lácteos" },
-  { name: "40g mozzarella light", cat: "Lácteos" },
-  { name: "50g queso fresco batido 0%", cat: "Lácteos" },
-  { name: "80g yogur griego 0%", cat: "Lácteos" },
-  { name: "80g yogur griego 0%, sal", cat: "Lácteos" },
-  { name: "Agua o leche desnatada 150ml", cat: "Lácteos" },
-  { name: "150g boniato asado", cat: "Carbohidratos" },
-  { name: "2 rebanadas pan centeno (60g)", cat: "Carbohidratos" },
-  { name: "2 rebanadas pan integral (70g)", cat: "Carbohidratos" },
-  { name: "200g boniato", cat: "Carbohidratos" },
-  { name: "200g boniato cocido", cat: "Carbohidratos" },
-  { name: "200g patata", cat: "Carbohidratos" },
-  { name: "3 dátiles medianos (45g)", cat: "Carbohidratos" },
-  { name: "3 tortitas de arroz (27g)", cat: "Carbohidratos" },
-  { name: "300g patata cocida", cat: "Carbohidratos" },
-  { name: "40g avena en copos", cat: "Carbohidratos" },
-  { name: "40g fideos finos", cat: "Carbohidratos" },
-  { name: "40g pan integral", cat: "Carbohidratos" },
-  { name: "50g arroz cocido (o 20g en seco)", cat: "Carbohidratos" },
-  { name: "50g avena", cat: "Carbohidratos" },
-  { name: "50g quinoa (seco)", cat: "Carbohidratos" },
-  { name: "60g arroz (seco)", cat: "Carbohidratos" },
-  { name: "60g arroz basmati (seco)", cat: "Carbohidratos" },
-  { name: "60g arroz blanco (seco)", cat: "Carbohidratos" },
-  { name: "60g arroz integral (seco)", cat: "Carbohidratos" },
-  { name: "60g arroz jazmín (seco)", cat: "Carbohidratos" },
-  { name: "60g cuscús (seco)", cat: "Carbohidratos" },
-  { name: "60g pan de centeno (2 rebanadas)", cat: "Carbohidratos" },
-  { name: "1 berenjena grande (300g)", cat: "Frutas y Verduras" },
-  { name: "1 mandarina (150g)", cat: "Frutas y Verduras" },
-  { name: "1 manzana (150g)", cat: "Frutas y Verduras" },
-  { name: "1 manzana media (150g)", cat: "Frutas y Verduras" },
-  { name: "1 plátano (120g)", cat: "Frutas y Verduras" },
-  { name: "1 plátano maduro (100g)", cat: "Frutas y Verduras" },
-  { name: "1 plátano pequeño (100g)", cat: "Frutas y Verduras" },
-  { name: "1 tomate mediano (150g)", cat: "Frutas y Verduras" },
-  { name: "1/2 cebolla (80g)", cat: "Frutas y Verduras" },
-  { name: "100g cebolla", cat: "Frutas y Verduras" },
-  { name: "100g fresas", cat: "Frutas y Verduras" },
-  { name: "100g mango", cat: "Frutas y Verduras" },
-  { name: "100g mango congelado o fresco", cat: "Frutas y Verduras" },
-  { name: "100g pepino en dados", cat: "Frutas y Verduras" },
-  { name: "100g tomate cherry", cat: "Frutas y Verduras" },
-  { name: "100g tomate triturado", cat: "Frutas y Verduras" },
-  { name: "150g berenjena", cat: "Frutas y Verduras" },
-  { name: "150g calabacín", cat: "Frutas y Verduras" },
-  { name: "150g champiñones", cat: "Frutas y Verduras" },
-  { name: "150g espinacas", cat: "Frutas y Verduras" },
-  { name: "150g espárragos", cat: "Frutas y Verduras" },
-  { name: "150g fruta de temporada (naranja, melocotón, kiwi...)", cat: "Frutas y Verduras" },
-  { name: "150g zanahoria", cat: "Frutas y Verduras" },
-  { name: "150g zanahoria en palitos", cat: "Frutas y Verduras" },
-  { name: "200g brócoli", cat: "Frutas y Verduras" },
-  { name: "200g calabacín en rodajas", cat: "Frutas y Verduras" },
-  { name: "200g espárragos trigueros", cat: "Frutas y Verduras" },
-  { name: "200g espárragos verdes", cat: "Frutas y Verduras" },
-  { name: "200g salsa de tomate casera (o triturado)", cat: "Frutas y Verduras" },
-  { name: "20g arándanos secos sin azúcar añadido", cat: "Frutas y Verduras" },
-  { name: "250g coliflor", cat: "Frutas y Verduras" },
-  { name: "300g calabaza", cat: "Frutas y Verduras" },
-  { name: "30g arándanos", cat: "Frutas y Verduras" },
-  { name: "40g aguacate", cat: "Frutas y Verduras" },
-  { name: "50g espinacas frescas", cat: "Frutas y Verduras" },
-  { name: "50g fresas frescas o congeladas", cat: "Frutas y Verduras" },
-  { name: "8 hojas lechuga romana", cat: "Frutas y Verduras" },
-  { name: "80g arándanos frescos", cat: "Frutas y Verduras" },
-  { name: "80g arándanos frescos o congelados", cat: "Frutas y Verduras" },
-  { name: "80g edamame descongelado", cat: "Frutas y Verduras" },
-  { name: "80g pepino", cat: "Frutas y Verduras" },
-  { name: "Lechuga + tomate grande 250g", cat: "Frutas y Verduras" },
-  { name: "Lechuga, tomate, pepino (ilimitado)", cat: "Frutas y Verduras" },
-  { name: "Tomate, pimienta, AOVE spray", cat: "Frutas y Verduras" },
-  { name: "½ plátano (60g)", cat: "Frutas y Verduras" },
-  { name: "10g semillas de chía", cat: "Frutos Secos" },
-  { name: "15g almendras laminadas", cat: "Frutos Secos" },
-  { name: "20g crema de cacahuete natural", cat: "Frutos Secos" },
-  { name: "20g nueces", cat: "Frutos Secos" },
-  { name: "20g nueces crudas", cat: "Frutos Secos" },
-  { name: "25g almendras crudas", cat: "Frutos Secos" },
-  { name: "Ajo, caldo, AOVE 10g, nuez moscada", cat: "Frutos Secos" },
-  { name: "Sal, nuez moscada, caldo de verduras", cat: "Frutos Secos" },
-  { name: "1 cucharada mostaza Dijon", cat: "Condimentos y Extras" },
-  { name: "1 cucharadita cacao puro", cat: "Condimentos y Extras" },
-  { name: "1 espresso (30ml)", cat: "Condimentos y Extras" },
-  { name: "10g aceite oliva virgen extra", cat: "Condimentos y Extras" },
-  { name: "10g AOVE", cat: "Condimentos y Extras" },
-  { name: "10g miel", cat: "Condimentos y Extras" },
-  { name: "150ml agua de coco", cat: "Condimentos y Extras" },
-  { name: "15g mostaza de Dijon", cat: "Condimentos y Extras" },
-  { name: "15g pesto ligero", cat: "Condimentos y Extras" },
-  { name: "300ml agua fría", cat: "Condimentos y Extras" },
-  { name: "30g granola sin azúcar añadido", cat: "Condimentos y Extras" },
-  { name: "4 dientes ajo", cat: "Condimentos y Extras" },
-  { name: "5g canela", cat: "Condimentos y Extras" },
-  { name: "80g frutos rojos mixtos (frescos o congelados)", cat: "Condimentos y Extras" },
-  { name: "Agua c/s", cat: "Condimentos y Extras" },
-  { name: "Ajo en polvo, sal, pimienta, AOVE spray", cat: "Condimentos y Extras" },
-  { name: "Ajo laminado, perejil, AOVE 10g", cat: "Condimentos y Extras" },
-  { name: "Ajo, AOVE spray, sal", cat: "Condimentos y Extras" },
-  { name: "Ajo, jengibre, sésamo", cat: "Condimentos y Extras" },
-  { name: "Ajo, orégano, AOVE", cat: "Condimentos y Extras" },
-  { name: "Ajo, sal, AOVE spray", cat: "Condimentos y Extras" },
-  { name: "AOVE spray", cat: "Condimentos y Extras" },
-  { name: "AOVE, limón, sal", cat: "Condimentos y Extras" },
-  { name: "Caldo casero, laurel, sal", cat: "Condimentos y Extras" },
-  { name: "Caldo, laurel, sal, AOVE spray", cat: "Condimentos y Extras" },
-  { name: "Canela al gusto", cat: "Condimentos y Extras" },
-  { name: "Canela, cacao puro opcional", cat: "Condimentos y Extras" },
-  { name: "Canela, edulcorante, AOVE spray", cat: "Condimentos y Extras" },
-  { name: "Comino, cilantro, pimentón, limón, ajo, AOVE 10g", cat: "Condimentos y Extras" },
-  { name: "Curry, cúrcuma, comino, ajo, AOVE", cat: "Condimentos y Extras" },
-  { name: "Curry, cúrcuma, comino, AOVE spray", cat: "Condimentos y Extras" },
-  { name: "Eneldo, limón, sal, AOVE spray", cat: "Condimentos y Extras" },
-  { name: "Eneldo, zumo limón, sal, AOVE spray", cat: "Condimentos y Extras" },
-  { name: "Ensalada mixta, limón, sal", cat: "Condimentos y Extras" },
-  { name: "Extracto de vainilla, canela", cat: "Condimentos y Extras" },
-  { name: "Hierbas provenzales, sal, AOVE spray", cat: "Condimentos y Extras" },
-  { name: "Jengibre rallado 5g", cat: "Condimentos y Extras" },
-  { name: "Limón, AOVE 10g, perejil", cat: "Condimentos y Extras" },
-  { name: "Limón, eneldo, pimienta negra", cat: "Condimentos y Extras" },
-  { name: "Limón, mostaza, sal", cat: "Condimentos y Extras" },
-  { name: "Limón, romero, ajo, AOVE", cat: "Condimentos y Extras" },
-  { name: "Orégano, ajo, AOVE spray", cat: "Condimentos y Extras" },
-  { name: "Orégano, sal, pimienta", cat: "Condimentos y Extras" },
-  { name: "Sal, ajo en polvo", cat: "Condimentos y Extras" },
-  { name: "Sal, especias al gusto", cat: "Condimentos y Extras" },
-  { name: "Sal, especias, AOVE spray", cat: "Condimentos y Extras" },
-  { name: "Sal, limón", cat: "Condimentos y Extras" },
-  { name: "Sal, orégano", cat: "Condimentos y Extras" },
-  { name: "Sal, pimentón", cat: "Condimentos y Extras" },
-  { name: "Sal, pimienta", cat: "Condimentos y Extras" },
-  { name: "Sal, pimienta, AOVE spray", cat: "Condimentos y Extras" },
-  { name: "Sal, pimienta, eneldo", cat: "Condimentos y Extras" },
-  { name: "Salsa soja baja sal 15ml, ajo", cat: "Condimentos y Extras" },
-  { name: "Salsa soja light 10ml, limón", cat: "Condimentos y Extras" },
-  { name: "Salsa soja light 20ml, ajo, jengibre", cat: "Condimentos y Extras" },
-  { name: "Salsa teriyaki light 20ml, sésamo", cat: "Condimentos y Extras" },
-  { name: "Soja light 15ml", cat: "Condimentos y Extras" },
-  { name: "Soja light 15ml, ajo en polvo", cat: "Condimentos y Extras" },
+  { name: "Pechuga de pollo", cat: "Proteínas" },
+  { name: "Muslo de pollo sin piel", cat: "Proteínas" },
+  { name: "Ternera magra", cat: "Proteínas" },
+  { name: "Ternera picada magra 5%", cat: "Proteínas" },
+  { name: "Carne picada magra 5%", cat: "Proteínas" },
+  { name: "Salmón fresco", cat: "Proteínas" },
+  { name: "Salmón ahumado", cat: "Proteínas" },
+  { name: "Atún al natural (bote)", cat: "Proteínas" },
+  { name: "Gambas peladas", cat: "Proteínas" },
+  { name: "Huevos", cat: "Proteínas" },
+  { name: "Claras de huevo", cat: "Proteínas" },
+  { name: "Jamón serrano", cat: "Proteínas" },
+  { name: "Jamón ibérico", cat: "Proteínas" },
+  { name: "Proteína whey", cat: "Proteínas" },
+  { name: "Requesón / Cottage 0%", cat: "Proteínas" },
+  { name: "Yogurt griego 0%", cat: "Lácteos" },
+  { name: "Skyr natural", cat: "Lácteos" },
+  { name: "Leche desnatada", cat: "Lácteos" },
+  { name: "Queso fresco batido 0%", cat: "Lácteos" },
+  { name: "Mozzarella light", cat: "Lácteos" },
+  { name: "Avena en copos", cat: "Carbohidratos" },
+  { name: "Arroz basmati", cat: "Carbohidratos" },
+  { name: "Arroz integral", cat: "Carbohidratos" },
+  { name: "Arroz jazmín", cat: "Carbohidratos" },
+  { name: "Arroz blanco", cat: "Carbohidratos" },
+  { name: "Quinoa", cat: "Carbohidratos" },
+  { name: "Cuscús", cat: "Carbohidratos" },
+  { name: "Fideos integrales", cat: "Carbohidratos" },
+  { name: "Patata", cat: "Carbohidratos" },
+  { name: "Boniato", cat: "Carbohidratos" },
+  { name: "Pan de centeno", cat: "Carbohidratos" },
+  { name: "Pan integral", cat: "Carbohidratos" },
+  { name: "Tortitas de arroz", cat: "Carbohidratos" },
+  { name: "Granola sin azúcar", cat: "Carbohidratos" },
+  { name: "Dátiles", cat: "Carbohidratos" },
+  { name: "Brócoli", cat: "Frutas y Verduras" },
+  { name: "Espinacas frescas", cat: "Frutas y Verduras" },
+  { name: "Calabacín", cat: "Frutas y Verduras" },
+  { name: "Berenjena", cat: "Frutas y Verduras" },
+  { name: "Champiñones", cat: "Frutas y Verduras" },
+  { name: "Zanahoria", cat: "Frutas y Verduras" },
+  { name: "Cebolla", cat: "Frutas y Verduras" },
+  { name: "Tomate cherry", cat: "Frutas y Verduras" },
+  { name: "Tomate triturado (bote)", cat: "Frutas y Verduras" },
+  { name: "Pepino", cat: "Frutas y Verduras" },
+  { name: "Lechuga", cat: "Frutas y Verduras" },
+  { name: "Espárragos trigueros", cat: "Frutas y Verduras" },
+  { name: "Coliflor", cat: "Frutas y Verduras" },
+  { name: "Edamame (congelado)", cat: "Frutas y Verduras" },
+  { name: "Calabaza", cat: "Frutas y Verduras" },
+  { name: "Aguacate", cat: "Frutas y Verduras" },
+  { name: "Plátano", cat: "Frutas y Verduras" },
+  { name: "Fresas", cat: "Frutas y Verduras" },
+  { name: "Arándanos", cat: "Frutas y Verduras" },
+  { name: "Arándanos secos", cat: "Frutas y Verduras" },
+  { name: "Manzana", cat: "Frutas y Verduras" },
+  { name: "Mandarina", cat: "Frutas y Verduras" },
+  { name: "Mango", cat: "Frutas y Verduras" },
+  { name: "Frutos rojos (congelados)", cat: "Frutas y Verduras" },
+  { name: "Fruta de temporada", cat: "Frutas y Verduras" },
+  { name: "Almendras", cat: "Frutos Secos" },
+  { name: "Nueces", cat: "Frutos Secos" },
+  { name: "Crema de cacahuete natural", cat: "Frutos Secos" },
+  { name: "Semillas de chía", cat: "Frutos Secos" },
+  { name: "Aceite de oliva (AOVE)", cat: "Condimentos y Extras" },
+  { name: "Miel", cat: "Condimentos y Extras" },
+  { name: "Cacao puro sin azúcar", cat: "Condimentos y Extras" },
+  { name: "Canela molida", cat: "Condimentos y Extras" },
+  { name: "Mostaza de Dijon", cat: "Condimentos y Extras" },
+  { name: "Salsa de soja light", cat: "Condimentos y Extras" },
+  { name: "Salsa teriyaki light", cat: "Condimentos y Extras" },
+  { name: "Pesto ligero (bote)", cat: "Condimentos y Extras" },
+  { name: "Ajo (cabeza)", cat: "Condimentos y Extras" },
+  { name: "Jengibre fresco", cat: "Condimentos y Extras" },
+  { name: "Caldo de pollo bajo en sal", cat: "Condimentos y Extras" },
+  { name: "Agua de coco", cat: "Condimentos y Extras" },
+  { name: "Curry en polvo", cat: "Condimentos y Extras" },
+  { name: "Cúrcuma", cat: "Condimentos y Extras" },
+  { name: "Pimentón dulce/ahumado", cat: "Condimentos y Extras" },
+  { name: "Comino molido", cat: "Condimentos y Extras" },
+  { name: "Orégano seco", cat: "Condimentos y Extras" },
+  { name: "Eneldo seco", cat: "Condimentos y Extras" },
+  { name: "Hierbas provenzales", cat: "Condimentos y Extras" },
+  { name: "Romero seco", cat: "Condimentos y Extras" },
+  { name: "Tomillo seco", cat: "Condimentos y Extras" },
+  { name: "Sésamo", cat: "Condimentos y Extras" },
+  { name: "Extracto de vainilla", cat: "Condimentos y Extras" },
 ];
 
 const CAT_ICONS = {
@@ -1599,14 +1509,14 @@ function ShoppingTab() {
     setLoaded(true);
   }, []);
 
-  async function save(nextChecked, nextCustom) {
+  function persist(nextChecked, nextCustom) {
     try { localStorage.setItem("shop_list", JSON.stringify({ checked: nextChecked, custom: nextCustom })); } catch {}
   }
 
   function toggleItem(key) {
     const next = { ...checked, [key]: !checked[key] };
     setChecked(next);
-    save(next, customItems);
+    persist(next, customItems);
   }
 
   function addCustom() {
@@ -1615,23 +1525,22 @@ function ShoppingTab() {
     const next = [...customItems, { name: val, cat: "Mis añadidos" }];
     setCustomItems(next);
     setCustomInput("");
-    save(checked, next);
+    persist(checked, next);
   }
 
   function removeCustom(idx) {
     const next = customItems.filter((_, i) => i !== idx);
-    setCustomItems(next);
-    // also clear checked for this custom item if any
-    const key = `custom_${idx}`;
     const nextChecked = { ...checked };
-    delete nextChecked[key];
+    delete nextChecked[`custom_${idx}`];
     setChecked(nextChecked);
-    save(nextChecked, next);
+    setCustomItems(next);
+    persist(nextChecked, next);
   }
 
-  function clearAll() {
-    setChecked({});
-    save({}, customItems);
+  function clearChecked() {
+    const next = {};
+    setChecked(next);
+    persist(next, customItems);
   }
 
   const allItems = [
@@ -1640,50 +1549,73 @@ function ShoppingTab() {
   ];
 
   const checkedItems = allItems.filter(it => checked[it.key]);
-  const checkedCount = checkedItems.length;
+
+  // Group checked items by category
+  const checkedGrouped = {};
+  checkedItems.forEach(it => {
+    if (!checkedGrouped[it.cat]) checkedGrouped[it.cat] = [];
+    checkedGrouped[it.cat].push(it);
+  });
 
   const cats = ["Todos", "Proteínas", "Lácteos", "Carbohidratos", "Frutas y Verduras", "Frutos Secos", "Condimentos y Extras", "Mis añadidos"];
+  const catOrder = ["Mis añadidos", "Proteínas", "Lácteos", "Carbohidratos", "Frutas y Verduras", "Frutos Secos", "Condimentos y Extras"];
 
   const filtered = allItems.filter(it => {
     const matchSearch = it.name.toLowerCase().includes(search.toLowerCase());
     const matchCat = activeFilter === "Todos" || it.cat === activeFilter;
-    const isChecked = checked[it.key];
-    return matchSearch && matchCat && !isChecked;
+    return matchSearch && matchCat && !checked[it.key];
   });
 
-  // Group filtered by category
   const grouped = {};
   filtered.forEach(it => {
     if (!grouped[it.cat]) grouped[it.cat] = [];
     grouped[it.cat].push(it);
   });
 
-  const catOrder = ["Mis añadidos", "Proteínas", "Lácteos", "Carbohidratos", "Frutas y Verduras", "Frutos Secos", "Condimentos y Extras"];
-
   if (!loaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>Cargando...</div>;
 
   return (
     <div>
-      {/* ── CHECKED ITEMS PANEL ── */}
-      {checkedCount > 0 && (
-        <div style={{ background: COLORS.green + "12", border: `1px solid ${COLORS.green}30`, borderRadius: 12, padding: "14px 16px", marginBottom: 16 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-            <div style={{ fontSize: 9, color: COLORS.green, letterSpacing: 2 }}>EN EL CARRITO — {checkedCount} {checkedCount === 1 ? "producto" : "productos"}</div>
-            <button onClick={clearAll}
-              style={{ fontSize: 10, background: "none", border: `1px solid ${COLORS.green}40`, borderRadius: 20, padding: "3px 10px", color: COLORS.green, cursor: "pointer", fontFamily: "inherit" }}>
+      {/* ── CART: proper grouped list ── */}
+      {checkedItems.length > 0 && (
+        <div style={{ background: COLORS.card, border: `2px solid ${COLORS.green}`, borderRadius: 12, marginBottom: 20, overflow: "hidden" }}>
+          {/* Cart header */}
+          <div style={{ background: COLORS.green, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 16 }}>🛒</span>
+              <span style={{ fontSize: 13, fontWeight: 900, color: "#fff" }}>Lista de compra</span>
+              <span style={{ background: "rgba(255,255,255,0.25)", borderRadius: 20, fontSize: 11, color: "#fff", padding: "2px 8px", fontWeight: 700 }}>{checkedItems.length}</span>
+            </div>
+            <button onClick={clearChecked}
+              style={{ fontSize: 11, background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.4)", borderRadius: 20, padding: "4px 12px", color: "#fff", cursor: "pointer", fontFamily: "inherit" }}>
               Vaciar ×
             </button>
           </div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-            {checkedItems.map(it => (
-              <button key={it.key} onClick={() => toggleItem(it.key)}
-                style={{ display: "flex", alignItems: "center", gap: 5, background: COLORS.green, border: "none",
-                  borderRadius: 20, padding: "5px 12px", cursor: "pointer", fontFamily: "inherit" }}>
-                <span style={{ fontSize: 11, color: "#fff", fontStyle: "italic" }}>{it.name}</span>
-                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>×</span>
-              </button>
-            ))}
-          </div>
+          {/* Cart grouped by cat */}
+          {catOrder.map(cat => {
+            const items = checkedGrouped[cat];
+            if (!items || items.length === 0) return null;
+            const color = CAT_COLORS[cat] || COLORS.accent;
+            return (
+              <div key={cat}>
+                <div style={{ padding: "8px 16px 4px", background: color + "10", borderBottom: `1px solid ${color}20` }}>
+                  <span style={{ fontSize: 9, color: color, letterSpacing: 2, fontWeight: 700 }}>{CAT_ICONS[cat]} {cat.toUpperCase()}</span>
+                </div>
+                {items.map((it, idx) => (
+                  <div key={it.key} onClick={() => toggleItem(it.key)}
+                    style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 16px",
+                      borderBottom: `1px solid ${COLORS.cardBorder}`, cursor: "pointer",
+                      background: "#fff" }}>
+                    <div style={{ width: 20, height: 20, borderRadius: 5, background: color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <span style={{ color: "#fff", fontSize: 11, fontWeight: 900 }}>✓</span>
+                    </div>
+                    <span style={{ fontSize: 13, color: COLORS.muted, flex: 1, textDecoration: "line-through" }}>{it.name}</span>
+                    <span style={{ fontSize: 11, color: COLORS.muted }}>quitar ×</span>
+                  </div>
+                ))}
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -1701,9 +1633,7 @@ function ShoppingTab() {
         />
         {search && (
           <button onClick={() => setSearch("")}
-            style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: COLORS.muted, fontSize: 16 }}>
-            ×
-          </button>
+            style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: COLORS.muted, fontSize: 18 }}>×</button>
         )}
       </div>
 
@@ -1724,13 +1654,13 @@ function ShoppingTab() {
         })}
       </div>
 
-      {/* ── ADD CUSTOM ITEM ── */}
+      {/* ── ADD CUSTOM ── */}
       <div style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, padding: "12px 14px", marginBottom: 16 }}>
-        <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 8 }}>AÑADIR PRODUCTO PERSONALIZADO</div>
+        <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 8 }}>AÑADIR PRODUCTO</div>
         <div style={{ display: "flex", gap: 8 }}>
           <input
             type="text"
-            placeholder="ej. Leche de avena, Sal del Himalaya..."
+            placeholder="ej. Leche de avena, proteína vegana..."
             value={customInput}
             onChange={e => setCustomInput(e.target.value)}
             onKeyDown={e => e.key === "Enter" && addCustom()}
@@ -1745,43 +1675,36 @@ function ShoppingTab() {
         </div>
       </div>
 
-      {/* ── RESULTS COUNT ── */}
       {search && (
         <div style={{ fontSize: 11, color: COLORS.muted, fontStyle: "italic", marginBottom: 12 }}>
           {filtered.length} resultado{filtered.length !== 1 ? "s" : ""} para "{search}"
         </div>
       )}
 
-      {/* ── GROUPED LIST ── */}
+      {/* ── INGREDIENT LIST ── */}
       {catOrder.map(cat => {
         const items = grouped[cat];
         if (!items || items.length === 0) return null;
         const color = CAT_COLORS[cat] || COLORS.accent;
         return (
-          <div key={cat} style={{ marginBottom: 16 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+          <div key={cat} style={{ marginBottom: 14 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
               <span style={{ fontSize: 14 }}>{CAT_ICONS[cat] || "✨"}</span>
               <span style={{ fontSize: 10, color: color, letterSpacing: 2, fontWeight: 700 }}>{cat.toUpperCase()}</span>
               <span style={{ fontSize: 10, color: COLORS.muted }}>({items.length})</span>
             </div>
             <div style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, overflow: "hidden" }}>
               {items.map((it, idx) => (
-                <div key={it.key}
+                <div key={it.key} onClick={() => toggleItem(it.key)}
                   style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 14px",
                     borderBottom: idx < items.length - 1 ? `1px solid ${COLORS.cardBorder}` : "none",
-                    cursor: "pointer", transition: "background 0.1s" }}
-                  onClick={() => toggleItem(it.key)}>
-                  {/* Checkbox */}
-                  <div style={{ width: 22, height: 22, borderRadius: 6, border: `2px solid ${color}40`,
-                    background: "transparent", display: "flex", alignItems: "center",
-                    justifyContent: "center", flexShrink: 0 }}>
-                  </div>
-                  <span style={{ fontSize: 13, color: COLORS.text, flex: 1, lineHeight: 1.4 }}>{it.name}</span>
+                    cursor: "pointer" }}>
+                  <div style={{ width: 22, height: 22, borderRadius: 6, border: `2px solid ${color}50`,
+                    background: "transparent", flexShrink: 0 }} />
+                  <span style={{ fontSize: 13, color: COLORS.text, flex: 1 }}>{it.name}</span>
                   {it.cat === "Mis añadidos" && (
                     <button onClick={e => { e.stopPropagation(); removeCustom(customItems.findIndex(c => c.name === it.name)); }}
-                      style={{ background: "none", border: "none", color: COLORS.muted, cursor: "pointer", fontSize: 14, padding: 0 }}>
-                      ×
-                    </button>
+                      style={{ background: "none", border: "none", color: COLORS.muted, cursor: "pointer", fontSize: 16, padding: 0 }}>×</button>
                   )}
                 </div>
               ))}
@@ -1790,13 +1713,13 @@ function ShoppingTab() {
         );
       })}
 
-      {filtered.length === 0 && !search && (
-        <div style={{ textAlign: "center", padding: 40, color: COLORS.muted, fontStyle: "italic" }}>
-          ¡Todo marcado! 🎉
+      {filtered.length === 0 && checkedItems.length > 0 && !search && (
+        <div style={{ textAlign: "center", padding: 32, color: COLORS.muted, fontStyle: "italic" }}>
+          ✅ Todo en el carrito
         </div>
       )}
       {filtered.length === 0 && search && (
-        <div style={{ textAlign: "center", padding: 30, color: COLORS.muted, fontStyle: "italic" }}>
+        <div style={{ textAlign: "center", padding: 32, color: COLORS.muted, fontStyle: "italic" }}>
           Sin resultados para "{search}"
         </div>
       )}
@@ -1886,9 +1809,9 @@ export default function CutPlan() {
         {activeTab === 0 && <HabitsTracker />}
         {activeTab === 1 && <CalcPlan onUpdate={(d) => setUserTarget(d.target || null)} />}
         {activeTab === 2 && <MealsTab targetKcal={userTarget} />}
-        {activeTab === 3 && <WeekTab />}
-        {activeTab === 4 && <DosDonts />}
-        {activeTab === 5 && <ShoppingTab />}
+        {activeTab === 3 && <ShoppingTab />}
+        {activeTab === 4 && <WeekTab />}
+        {activeTab === 5 && <DosDonts />}
       </div>
     </div>
   );
