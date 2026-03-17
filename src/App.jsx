@@ -667,6 +667,37 @@ function HabitsTracker() {
 // ─── CALORIE CALCULATOR ───────────────────────────────────────
 const STEPS = ["datos", "actividad", "resultado"];
 
+// ─── PLANNER CONSTANTS ───────────────────────────────────────
+const DAYS = ["LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB", "DOM"];
+const DAY_NAMES = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+const SLOTS = [
+  { key: "desayuno",  label: "Desayuno",      mealKey: "desayunos",    emoji: "☀️" },
+  { key: "media_m",  label: "Media Mañana",   mealKey: "media_manana", emoji: "🍎" },
+  { key: "almuerzo", label: "Almuerzo",        mealKey: "almuerzos",   emoji: "🍗" },
+  { key: "pre",      label: "Pre-Entreno",     mealKey: "pre_entreno", emoji: "💪" },
+  { key: "cena",     label: "Cena",            mealKey: "cenas",       emoji: "🌙" },
+];
+
+function getSundayKey() {
+  const d = new Date();
+  const day = d.getDay();
+  const diff = day === 0 ? 0 : 7 - day;
+  const sunday = new Date(d);
+  sunday.setDate(d.getDate() + diff);
+  return sunday.toISOString().split("T")[0];
+}
+
+function getPlannerWeekLabel() {
+  const d = new Date();
+  const day = d.getDay();
+  const mon = new Date(d);
+  mon.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
+  const sun = new Date(mon);
+  sun.setDate(mon.getDate() + 6);
+  const fmt = (dt) => dt.toLocaleDateString("es-ES", { day: "numeric", month: "short" });
+  return `${fmt(mon)} – ${fmt(sun)}`;
+}
+
 function MiPlanTab({ onUpdate, userTarget }) {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({ weight: "", height: "", age: "", sex: "H", activity: "moderate", goal: "cut_aggressive" });
