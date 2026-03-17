@@ -510,7 +510,7 @@ const DONTS = [
   { icon: "🚫", text: "No compensar un mal día comiendo menos al día siguiente. Vuelve al plan sin drama." },
 ];
 
-const TABS = ["📋 Hábitos", "🔢 Mi Plan", "🍽️ Comidas", "🛒 Compra", "📆 Planificador", "📅 Semana", "✅ Do & Don't"];
+const TABS = ["📋 Hábitos", "📆 Mi Plan", "🛒 Compra", "📅 Semana", "✅ Do & Don't", "🍽️ Recetas"];
 
 // ─── HELPERS ──────────────────────────────────────────────────
 function todayKey() {
@@ -667,24 +667,38 @@ function HabitsTracker() {
 // ─── CALORIE CALCULATOR ───────────────────────────────────────
 const STEPS = ["datos", "actividad", "resultado"];
 
-function CalcPlan({ onUpdate }) {
+function MiPlanTab({ onUpdate, userTarget }) {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({ weight: "", height: "", age: "", sex: "H", activity: "moderate", goal: "cut_aggressive" });
   const [saved, setSaved] = useState(null);
+  // Planner state
+  const [plan, setPlan] = useState({});
+  const [activeDay, setActiveDay] = useState("LUN");
+  const [picker, setPicker] = useState(null);
+  const [exported, setExported] = useState(false);
+  const [planLoaded, setPlanLoaded] = useState(false);
+  const sundayKey = getSundayKey();
 
   useEffect(() => {
-    (async () => {
-      try {
-        const r = await (async () => { const v = localStorage.getItem("user_calc"); return v ? {value: v} : null; })();
-        if (r) { const d = JSON.parse(r.value); setSaved(d); onUpdate && onUpdate(d); }
-      } catch {}
-    })();
+    try {
+      const raw = localStorage.getItem("user_calc");
+      if (raw) { const d = JSON.parse(raw); setSaved(d); onUpdate && onUpdate(d); }
+    } catch {}
+    try {
+      const raw = localStorage.getItem("meal_plan");
+      if (raw) {
+        const d = JSON.parse(raw);
+        if (d.sunday === sundayKey) setPlan(d.plan || {});
+        else localStorage.setItem("meal_plan", JSON.stringify({ sunday: sundayKey, plan: {} }));
+      }
+    } catch {}
+    setPlanLoaded(true);
   }, []);
 
-  function set(k, v) { setForm(f => ({ ...f, [k]: v })); }
+  function setF(k, v) { setForm(f => ({ ...f, [k]: v })); }
 
-  async function save(result) {
-    try { await (async () => { localStorage.setItem("user_calc", JSON.stringify(result)); })(); } catch {}
+  function saveMeta(result) {
+    try { localStorage.setItem("user_calc", JSON.stringify(result)); } catch {}
     setSaved(result);
     onUpdate && onUpdate(result);
   }
@@ -696,742 +710,9 @@ function CalcPlan({ onUpdate }) {
     const target = tdee - deficit;
     const protein = Math.round(form.weight * 2.2);
     const result = { ...form, tdee, target, protein, deficit, weightLoss: (deficit * 7 / 7700).toFixed(2) };
-    save(result);
-    setStep(2);
+    saveMeta(result);
+    setStep(0);
   }
-
-  const inputStyle = {
-    width: "100%", background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6,
-    padding: "10px 12px", fontSize: 14, fontFamily: "inherit", color: COLORS.text, boxSizing: "border-box"
-  };
-  const btnStyle = {
-    background: COLORS.accent, color: "#fff", border: "none", borderRadius: 6, padding: "11px 24px",
-    fontSize: 13, cursor: "pointer", fontFamily: "inherit", fontStyle: "italic"
-  };
-
-  if (saved && step === 0) {
-    return (
-      <div>
-        <Card style={{ borderLeft: `3px solid ${COLORS.green}` }}>
-          <Label color={COLORS.green}>Tu plan personalizado guardado</Label>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
-            {[
-              { l: "TDEE", v: `${saved.tdee} kcal`, c: COLORS.muted },
-              { l: "Objetivo", v: `${saved.target} kcal`, c: COLORS.accent },
-              { l: "Proteína mínima", v: `${saved.protein}g`, c: COLORS.green },
-              { l: "Pérdida estimada", v: `~${saved.weightLoss} kg/sem`, c: COLORS.orange },
-            ].map(x => (
-              <div key={x.l} style={{ background: COLORS.bg, borderRadius: 8, padding: "12px 14px" }}>
-                <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2 }}>{x.l}</div>
-                <div style={{ fontSize: 20, fontWeight: 900, color: x.c, marginTop: 4 }}>{x.v}</div>
-              </div>
-            ))}
-          </div>
-          <button onClick={() => { setSaved(null); setStep(0); }} style={{ ...btnStyle, background: COLORS.bg, color: COLORS.muted, border: `1px solid ${COLORS.cardBorder}`, fontSize: 11 }}>
-            Recalcular →
-          </button>
-        </Card>
-        <CalcCycling saved={saved} />
-      </div>
-    );
-  }
-
-  return (
-    <div>
-      <Card>
-        {/* Progress bar */}
-        <div style={{ display: "flex", gap: 4, marginBottom: 20 }}>
-          {STEPS.map((s, i) => (
-            <div key={s} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= step ? COLORS.accent : COLORS.cardBorder, transition: "background 0.3s" }} />
-          ))}
-        </div>
-
-        {step === 0 && (
-          <div>
-            <Label>Datos personales</Label>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
-              <div>
-                <div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 6 }}>Peso actual (kg)</div>
-                <input style={inputStyle} type="number" value={form.weight} onChange={e => set("weight", e.target.value)} placeholder="ej. 82" />
-              </div>
-              <div>
-                <div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 6 }}>Altura (cm)</div>
-                <input style={inputStyle} type="number" value={form.height} onChange={e => set("height", e.target.value)} placeholder="ej. 178" />
-              </div>
-              <div>
-                <div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 6 }}>Edad</div>
-                <input style={inputStyle} type="number" value={form.age} onChange={e => set("age", e.target.value)} placeholder="ej. 30" />
-              </div>
-              <div>
-                <div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 6 }}>Sexo</div>
-                <div style={{ display: "flex", gap: 8 }}>
-                  {[["H", "Hombre"], ["M", "Mujer"]].map(([v, l]) => (
-                    <button key={v} onClick={() => set("sex", v)}
-                      style={{ flex: 1, padding: "10px 0", borderRadius: 6, border: `1px solid ${form.sex === v ? COLORS.accent : COLORS.cardBorder}`,
-                        background: form.sex === v ? COLORS.accent : COLORS.bg, color: form.sex === v ? "#fff" : COLORS.muted,
-                        cursor: "pointer", fontFamily: "inherit", fontSize: 13, fontStyle: "italic" }}>
-                      {l}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <button style={btnStyle} onClick={() => form.weight && form.height && form.age && setStep(1)}>
-              Siguiente →
-            </button>
-          </div>
-        )}
-
-        {step === 1 && (
-          <div>
-            <Label>Nivel de actividad y objetivo</Label>
-            <div style={{ marginBottom: 16 }}>
-              <div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 10 }}>Nivel de actividad actual</div>
-              {[
-                ["sedentary", "Sedentario", "Trabajo de escritorio, sin ejercicio"],
-                ["light", "Ligero", "1-2 días de ejercicio suave"],
-                ["moderate", "Moderado", "3-4 días de ejercicio (tu caso habitual)"],
-                ["active", "Activo", "Entrenamiento diario o físicamente exigente"],
-                ["very_active", "Muy activo", "Dobles sesiones, trabajo físico"],
-              ].map(([v, l, d]) => (
-                <button key={v} onClick={() => set("activity", v)}
-                  style={{ width: "100%", display: "flex", alignItems: "center", gap: 12, padding: "10px 12px",
-                    marginBottom: 6, borderRadius: 6, border: `1px solid ${form.activity === v ? COLORS.accent : COLORS.cardBorder}`,
-                    background: form.activity === v ? "#fff5f2" : COLORS.bg,
-                    cursor: "pointer", fontFamily: "inherit", textAlign: "left" }}>
-                  <div style={{ width: 14, height: 14, borderRadius: "50%", border: `2px solid ${form.activity === v ? COLORS.accent : COLORS.cardBorder}`,
-                    background: form.activity === v ? COLORS.accent : "transparent", flexShrink: 0 }} />
-                  <div>
-                    <div style={{ fontSize: 13, color: COLORS.text, fontWeight: form.activity === v ? 700 : 400 }}>{l}</div>
-                    <div style={{ fontSize: 11, color: COLORS.muted, fontStyle: "italic" }}>{d}</div>
-                  </div>
-                </button>
-              ))}
-            </div>
-            <div style={{ marginBottom: 16 }}>
-              <div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 10 }}>Objetivo de déficit</div>
-              {[
-                ["cut_aggressive", "Corte agresivo (-700 kcal)", "~0.8-1 kg/semana — el plan original"],
-                ["cut_moderate", "Corte moderado (-400 kcal)", "~0.4-0.5 kg/semana — más sostenible"],
-              ].map(([v, l, d]) => (
-                <button key={v} onClick={() => set("goal", v)}
-                  style={{ width: "100%", display: "flex", alignItems: "center", gap: 12, padding: "10px 12px",
-                    marginBottom: 6, borderRadius: 6, border: `1px solid ${form.goal === v ? COLORS.accent : COLORS.cardBorder}`,
-                    background: form.goal === v ? "#fff5f2" : COLORS.bg,
-                    cursor: "pointer", fontFamily: "inherit", textAlign: "left" }}>
-                  <div style={{ width: 14, height: 14, borderRadius: "50%", border: `2px solid ${form.goal === v ? COLORS.accent : COLORS.cardBorder}`,
-                    background: form.goal === v ? COLORS.accent : "transparent", flexShrink: 0 }} />
-                  <div>
-                    <div style={{ fontSize: 13, color: COLORS.text, fontWeight: form.goal === v ? 700 : 400 }}>{l}</div>
-                    <div style={{ fontSize: 11, color: COLORS.muted, fontStyle: "italic" }}>{d}</div>
-                  </div>
-                </button>
-              ))}
-            </div>
-            <div style={{ display: "flex", gap: 8 }}>
-              <button style={{ ...btnStyle, background: COLORS.bg, color: COLORS.muted, border: `1px solid ${COLORS.cardBorder}` }} onClick={() => setStep(0)}>← Atrás</button>
-              <button style={btnStyle} onClick={compute}>Calcular mi plan →</button>
-            </div>
-          </div>
-        )}
-
-        {step === 2 && saved && (
-          <div>
-            <Label color={COLORS.green}>Plan calculado para ti ✓</Label>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 16 }}>
-              {[
-                { l: "Tu TDEE", v: `${saved.tdee} kcal`, c: COLORS.muted, sub: "calorías de mantenimiento" },
-                { l: "Objetivo diario", v: `${saved.target} kcal`, c: COLORS.accent, sub: "déficit incluido" },
-                { l: "Proteína mínima", v: `${saved.protein}g`, c: COLORS.green, sub: `${saved.weight}kg × 2.2` },
-                { l: "Pérdida estimada", v: `~${saved.weightLoss} kg/sem`, c: COLORS.orange, sub: "con este déficit" },
-              ].map(x => (
-                <div key={x.l} style={{ background: COLORS.bg, borderRadius: 8, padding: "12px 14px" }}>
-                  <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2 }}>{x.l}</div>
-                  <div style={{ fontSize: 20, fontWeight: 900, color: x.c, marginTop: 4 }}>{x.v}</div>
-                  <div style={{ fontSize: 10, color: COLORS.muted, fontStyle: "italic", marginTop: 2 }}>{x.sub}</div>
-                </div>
-              ))}
-            </div>
-            <CalcCycling saved={saved} />
-          </div>
-        )}
-      </Card>
-    </div>
-  );
-}
-
-function CalcCycling({ saved }) {
-  if (!saved) return null;
-  const base = saved.target;
-  return (
-    <Card>
-      <Label>Ciclado de calorías personalizado</Label>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
-        {[
-          { l: "Descanso", kcal: Math.round(base - 150), d: "Viernes, Domingo", c: COLORS.muted },
-          { l: "Entreno normal", kcal: base, d: "Lun, Mar, Jue", c: COLORS.blue },
-          { l: "Carga (tempo + long)", kcal: Math.round(base + 200), d: "Miércoles, Sábado", c: COLORS.accent },
-        ].map(x => (
-          <div key={x.l} style={{ borderLeft: `3px solid ${x.c}`, paddingLeft: 12 }}>
-            <div style={{ fontSize: 22, fontWeight: 900, color: x.c }}>{x.kcal.toLocaleString("es-ES")}</div>
-            <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1 }}>KCAL</div>
-            <div style={{ fontSize: 11, color: COLORS.text, marginTop: 6, fontStyle: "italic" }}>{x.l}</div>
-            <div style={{ fontSize: 10, color: COLORS.muted, marginTop: 2 }}>{x.d}</div>
-          </div>
-        ))}
-      </div>
-    </Card>
-  );
-}
-
-// ─── MEALS TAB ────────────────────────────────────────────────
-function MealsTab({ targetKcal }) {
-  const [activeMeal, setActiveMeal] = useState("desayunos");
-  const [eaten, setEaten] = useState({});
-  const [expanded, setExpanded] = useState({});
-  const [loaded, setLoaded] = useState(false);
-  const [customEntries, setCustomEntries] = useState({});
-  const [customInput, setCustomInput] = useState({});
-  const labels = { desayunos: "Desayunos", almuerzos: "Almuerzos", cenas: "Cenas", media_manana: "Media Mañana", pre_entreno: "Pre-Entreno" };
-  const mealCatColors = { desayunos: "#c47a1a", almuerzos: COLORS.blue, cenas: "#7c5cbf", media_manana: COLORS.green, pre_entreno: COLORS.accent };
-
-  function todayDateKey() { return new Date().toISOString().split("T")[0]; }
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const r = await (async () => { const v = localStorage.getItem("meals_eaten"); return v ? {value: v} : null; })();
-        if (r) {
-          const stored = JSON.parse(r.value);
-          if (stored.date === todayDateKey()) {
-            setEaten(stored.eaten || {});
-            setCustomEntries(stored.custom || {});
-          } else {
-            localStorage.setItem("meals_eaten", JSON.stringify({ date: todayDateKey(), eaten: {}, custom: {} }));
-          }
-        }
-      } catch {}
-      setLoaded(true);
-    })();
-    // Schedule midnight reset check every minute
-    const interval = setInterval(() => {
-      const now = new Date();
-      if (now.getHours() === 0 && now.getMinutes() === 0) {
-        setEaten({});
-        (async () => { localStorage.setItem("meals_eaten", JSON.stringify({ date: todayDateKey(), eaten: {} })); })();
-      }
-    }, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  async function toggleMeal(cat, idx, kcal) {
-    const key = `${cat}_${idx}`;
-    const next = { ...eaten, [key]: eaten[key] ? null : { kcal, cat } };
-    // clean nulls
-    Object.keys(next).forEach(k => { if (!next[k]) delete next[k]; });
-    setEaten(next);
-    try { localStorage.setItem("meals_eaten", JSON.stringify({ date: todayDateKey(), eaten: next, custom: customEntries })); } catch {}
-  }
-
-  function toggleExpand(key) { setExpanded(p => ({ ...p, [key]: !p[key] })); }
-
-  async function addCustomEntry(cat) {
-    const kcal = parseInt(customInput[cat] || "0");
-    if (!kcal || kcal <= 0) return;
-    const existing = customEntries[cat] || [];
-    const next = { ...customEntries, [cat]: [...existing, kcal] };
-    setCustomEntries(next);
-    setCustomInput(p => ({ ...p, [cat]: "" }));
-    try { localStorage.setItem("meals_eaten", JSON.stringify({ date: todayDateKey(), eaten, custom: next })); } catch {}
-  }
-
-  async function removeCustomEntry(cat, idx) {
-    const existing = [...(customEntries[cat] || [])];
-    existing.splice(idx, 1);
-    const next = { ...customEntries, [cat]: existing };
-    setCustomEntries(next);
-    try { localStorage.setItem("meals_eaten", JSON.stringify({ date: todayDateKey(), eaten, custom: next })); } catch {}
-  }
-
-  // Totals
-  const customKcalTotal = Object.values(customEntries).flat().reduce((s, v) => s + (v || 0), 0);
-  const totalKcal = Object.values(eaten).reduce((s, v) => s + (v?.kcal || 0), 0) + customKcalTotal;
-  const totalProt = Object.entries(eaten).reduce((s, [k, v]) => {
-    if (!v) return s;
-    const [cat, idx] = k.split("_");
-    const meal = meals[cat]?.[+idx];
-    return s + (meal?.macros?.prot || 0);
-  }, 0);
-  const totalCarb = Object.entries(eaten).reduce((s, [k, v]) => {
-    if (!v) return s;
-    const [cat, idx] = k.split("_");
-    const meal = meals[cat]?.[+idx];
-    return s + (meal?.macros?.carb || 0);
-  }, 0);
-  const totalFat = Object.entries(eaten).reduce((s, [k, v]) => {
-    if (!v) return s;
-    const [cat, idx] = k.split("_");
-    const meal = meals[cat]?.[+idx];
-    return s + (meal?.macros?.fat || 0);
-  }, 0);
-
-  const TARGET_KCAL = targetKcal || 1700;
-  const pct = Math.min(100, Math.round((totalKcal / TARGET_KCAL) * 100));
-  const remaining = TARGET_KCAL - totalKcal;
-  const isOver = totalKcal > TARGET_KCAL;
-  const eatenCount = Object.keys(eaten).length;
-
-  // Category counts
-  const catCounts = Object.entries(eaten).reduce((acc, [k]) => {
-    const cat = k.split("_")[0];
-    acc[cat] = (acc[cat] || 0) + 1;
-    return acc;
-  }, {});
-
-  if (!loaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>Cargando...</div>;
-
-  return (
-    <div>
-      {/* ── CALORIE TRACKER ── */}
-      <div style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 12, padding: 18, marginBottom: 16 }}>
-        {/* Main numbers */}
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 14 }}>
-          <div>
-            <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 4 }}>CALORÍAS HOY</div>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-              <span style={{ fontSize: 42, fontWeight: 900, color: isOver ? COLORS.red : COLORS.accent, lineHeight: 1 }}>
-                {totalKcal.toLocaleString("es-ES")}
-              </span>
-              <span style={{ fontSize: 14, color: COLORS.muted }}>/ {TARGET_KCAL.toLocaleString("es-ES")} kcal</span>
-            </div>
-            <div style={{ fontSize: 12, color: isOver ? COLORS.red : COLORS.green, fontStyle: "italic", marginTop: 4 }}>
-              {isOver ? `+${Math.abs(remaining)} kcal por encima del objetivo` : remaining > 0 ? `${remaining} kcal restantes` : "¡Objetivo alcanzado!"}
-            </div>
-          </div>
-          <div style={{ textAlign: "right" }}>
-            <div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 2 }}>{eatenCount} comida{eatenCount !== 1 ? "s" : ""} marcada{eatenCount !== 1 ? "s" : ""}</div>
-            <div style={{ fontSize: 10, color: COLORS.muted, fontStyle: "italic" }}>
-              {new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "short" })}
-            </div>
-            <div style={{ fontSize: 9, color: COLORS.muted, marginTop: 4 }}>↺ reset a las 00:00</div>
-          </div>
-        </div>
-
-        {/* Progress bar */}
-        <div style={{ background: COLORS.bg, borderRadius: 6, height: 10, marginBottom: 14, overflow: "hidden" }}>
-          <div style={{
-            width: `${pct}%`, height: 10, borderRadius: 6, transition: "width 0.5s",
-            background: isOver ? COLORS.red : pct > 85 ? COLORS.orange : COLORS.accent
-          }} />
-        </div>
-
-        {/* Macro breakdown */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
-          {[
-            { l: "Proteína", v: totalProt, c: COLORS.green, unit: "g" },
-            { l: "Carbos", v: totalCarb, c: COLORS.blue, unit: "g" },
-            { l: "Grasas", v: totalFat, c: COLORS.orange, unit: "g" },
-          ].map(m => (
-            <div key={m.l} style={{ background: COLORS.bg, borderRadius: 8, padding: "10px 12px", textAlign: "center" }}>
-              <div style={{ fontSize: 20, fontWeight: 900, color: m.c }}>{m.v}{m.unit}</div>
-              <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1, marginTop: 2 }}>{m.l}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Category pills */}
-        {eatenCount > 0 && (
-          <div style={{ display: "flex", gap: 6, marginTop: 12, flexWrap: "wrap" }}>
-            {Object.entries(catCounts).map(([cat, cnt]) => (
-              <span key={cat} style={{ fontSize: 10, background: mealCatColors[cat] + "18", color: mealCatColors[cat], padding: "3px 10px", borderRadius: 20, border: `1px solid ${mealCatColors[cat]}30` }}>
-                {labels[cat]} ×{cnt}
-              </span>
-            ))}
-            <button onClick={async () => { setEaten({}); setCustomEntries({}); try { localStorage.setItem("meals_eaten", JSON.stringify({ date: todayDateKey(), eaten: {}, custom: {} })); } catch {} }}
-              style={{ fontSize: 10, background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 20, padding: "3px 10px", color: COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>
-              Resetear
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* ── CATEGORY TABS ── */}
-      <div style={{ display: "flex", gap: 6, marginBottom: 16, flexWrap: "wrap" }}>
-        {Object.keys(meals).map(k => {
-          const cnt = catCounts[k] || 0;
-          const isActive = activeMeal === k;
-          return (
-            <button key={k} onClick={() => setActiveMeal(k)}
-              style={{ background: isActive ? mealCatColors[k] : COLORS.card,
-                color: isActive ? "#fff" : COLORS.muted,
-                border: `1px solid ${isActive ? mealCatColors[k] : COLORS.cardBorder}`,
-                borderRadius: 6, padding: "7px 14px", fontSize: 11, cursor: "pointer",
-                fontFamily: "inherit", fontStyle: "italic", transition: "all 0.15s",
-                display: "flex", alignItems: "center", gap: 6 }}>
-              {labels[k]}
-              {cnt > 0 && (
-                <span style={{ background: isActive ? "rgba(255,255,255,0.3)" : mealCatColors[k] + "25",
-                  color: isActive ? "#fff" : mealCatColors[k],
-                  borderRadius: 10, fontSize: 9, padding: "1px 6px", fontStyle: "normal", fontWeight: 700 }}>
-                  {cnt}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* ── CUSTOM ENTRY ── */}
-      <div style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, padding: "14px 16px", marginBottom: 10 }}>
-        <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 10 }}>AÑADIR ENTRADA MANUAL</div>
-        <div style={{ display: "flex", gap: 8 }}>
-          <input
-            type="number"
-            min="0"
-            placeholder="ej. 250 kcal"
-            value={customInput[activeMeal] || ""}
-            onChange={e => setCustomInput(p => ({ ...p, [activeMeal]: e.target.value }))}
-            onKeyDown={e => e.key === "Enter" && addCustomEntry(activeMeal)}
-            style={{ flex: 1, background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6,
-              padding: "9px 12px", fontSize: 14, fontFamily: "inherit", color: COLORS.text }}
-          />
-          <button onClick={() => addCustomEntry(activeMeal)}
-            style={{ background: mealCatColors[activeMeal], color: "#fff", border: "none", borderRadius: 6,
-              padding: "9px 18px", fontSize: 13, cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", fontWeight: 700 }}>
-            + Añadir
-          </button>
-        </div>
-        {(customEntries[activeMeal] || []).length > 0 && (
-          <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 6 }}>
-            {(customEntries[activeMeal] || []).map((kcal, idx) => (
-              <span key={idx} style={{ display: "flex", alignItems: "center", gap: 4, background: mealCatColors[activeMeal] + "18",
-                border: `1px solid ${mealCatColors[activeMeal]}30`, borderRadius: 20, padding: "3px 10px", fontSize: 11, color: mealCatColors[activeMeal] }}>
-                {kcal} kcal
-                <button onClick={() => removeCustomEntry(activeMeal, idx)}
-                  style={{ background: "none", border: "none", color: mealCatColors[activeMeal], cursor: "pointer",
-                    fontSize: 13, lineHeight: 1, padding: "0 0 0 2px", fontFamily: "inherit" }}>×</button>
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* ── MEAL CARDS ── */}
-      {meals[activeMeal].map((meal, i) => {
-        const key = `${activeMeal}_${i}`;
-        const isEaten = !!eaten[key];
-        const isExpanded = !!expanded[key];
-        const catColor = mealCatColors[activeMeal];
-        return (
-          <div key={i} style={{ background: COLORS.card, border: `1px solid ${isEaten ? catColor : COLORS.cardBorder}`,
-            borderRadius: 10, marginBottom: 10, overflow: "hidden", transition: "all 0.2s",
-            opacity: isEaten ? 0.88 : 1 }}>
-
-            {/* Card top: checkbox + name + kcal + expand */}
-            <div style={{ display: "flex", alignItems: "center", padding: "14px 16px", gap: 12 }}>
-              {/* Checkbox */}
-              <button onClick={() => toggleMeal(activeMeal, i, meal.macros.kcal)}
-                style={{ width: 30, height: 30, borderRadius: 8, border: `2px solid ${isEaten ? catColor : COLORS.cardBorder}`,
-                  background: isEaten ? catColor : "transparent", display: "flex", alignItems: "center",
-                  justifyContent: "center", cursor: "pointer", flexShrink: 0, transition: "all 0.15s" }}>
-                {isEaten && <span style={{ color: "#fff", fontSize: 15, fontWeight: 900 }}>✓</span>}
-              </button>
-
-              {/* Emoji + name */}
-              <div style={{ flex: 1, cursor: "pointer" }} onClick={() => toggleExpand(key)}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ fontSize: 22 }}>{meal.emoji}</span>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: isEaten ? COLORS.muted : COLORS.text,
-                      textDecoration: isEaten ? "line-through" : "none" }}>{meal.name}</div>
-                    <div style={{ display: "flex", gap: 6, marginTop: 3 }}>
-                      {meal.tupper && <span style={{ fontSize: 9, background: "#f0f7f2", color: COLORS.green, padding: "1px 6px", borderRadius: 4, fontStyle: "italic" }}>📦 tupper</span>}
-                      <span style={{ fontSize: 10, color: COLORS.muted }}>{meal.macros.prot}g prot · {meal.macros.carb}g carb · {meal.macros.fat}g fat</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Kcal + expand */}
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: 20, fontWeight: 900, color: isEaten ? COLORS.muted : catColor }}>{meal.macros.kcal}</div>
-                  <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1 }}>KCAL</div>
-                </div>
-                <button onClick={() => toggleExpand(key)}
-                  style={{ background: "none", border: "none", color: COLORS.muted, cursor: "pointer", fontSize: 11, padding: "4px" }}>
-                  {isExpanded ? "▲" : "▼"}
-                </button>
-              </div>
-            </div>
-
-            {/* Expanded detail */}
-            {isExpanded && (
-              <div style={{ padding: "0 16px 14px", borderTop: `1px solid ${COLORS.cardBorder}` }}>
-                <div style={{ display: "flex", gap: 8, marginTop: 12, marginBottom: 12 }}>
-                  {[{ l: "Prot", v: meal.macros.prot, c: COLORS.green }, { l: "Carb", v: meal.macros.carb, c: COLORS.blue }, { l: "Fat", v: meal.macros.fat, c: COLORS.orange }].map(m => (
-                    <div key={m.l} style={{ background: COLORS.bg, borderRadius: 6, padding: "6px 10px", flex: 1, textAlign: "center" }}>
-                      <div style={{ fontSize: 15, fontWeight: 900, color: m.c }}>{m.v}g</div>
-                      <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1 }}>{m.l}</div>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ marginBottom: 10 }}>
-                  <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 6 }}>INGREDIENTES</div>
-                  {meal.ingredients.map((ing, j) => (
-                    <div key={j} style={{ fontSize: 12, color: COLORS.text, padding: "4px 0", borderBottom: `1px solid ${COLORS.cardBorder}`, display: "flex", gap: 8 }}>
-                      <span style={{ color: catColor, fontSize: 10 }}>▸</span>{ing}
-                    </div>
-                  ))}
-                </div>
-                <div style={{ background: COLORS.bg, borderRadius: 6, padding: "10px 12px" }}>
-                  <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 4 }}>PREP</div>
-                  <div style={{ fontSize: 12, color: COLORS.text, lineHeight: 1.6, fontStyle: "italic" }}>{meal.prep}</div>
-                </div>
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-// ─── WEEK TAB ────────────────────────────────────────────────
-function WeekTab() {
-  const [expandedDay, setExpandedDay] = useState(null);
-  const [expandedEx, setExpandedEx] = useState({});
-  const [done, setDone] = useState({});
-  const [activeBlock, setActiveBlock] = useState("push");
-  const currentMonday = getCurrentMonday();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const r = await (async () => { const v = localStorage.getItem("training_done"); return v ? {value: v} : null; })();
-        if (r) {
-          const stored = JSON.parse(r.value);
-          if (stored.monday === currentMonday) setDone(stored.exercises || {});
-          else { await (async () => { localStorage.setItem("training_done", JSON.stringify({ monday: currentMonday, exercises: {} })); })(); }
-        }
-      } catch {}
-    })();
-  }, []);
-
-  async function toggleEx(blockId, exId) {
-    const key = `${blockId}_${exId}`;
-    const next = { ...done, [key]: !done[key] };
-    setDone(next);
-    try { await (async () => { localStorage.setItem("training_done", JSON.stringify({ monday: currentMonday, exercises: next })); })(); } catch {}
-  }
-
-  function toggleExpandEx(key) {
-    setExpandedEx(prev => ({ ...prev, [key]: !prev[key] }));
-  }
-
-  const equipColors = { "Barra": "#1a5c8a", "Mancuerna": "#c47a1a", "Máquina": "#7c5cbf", "Peso corporal": "#2d7a45", "Barra / Mancuerna": "#1a5c8a" };
-
-  const block = TRAINING_BLOCKS.find(b => b.id === activeBlock);
-  const blockDone = block ? block.exercises.filter(e => done[`${block.id}_${e.id}`]).length : 0;
-  const blockTotal = block ? block.exercises.length : 0;
-
-  return (
-    <div>
-      {/* Week schedule */}
-      <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 10 }}>HORARIO SEMANAL</div>
-      {weekPlan.map((day, i) => (
-        <div key={i} style={{ background: COLORS.card, border: `1px solid ${expandedDay === i ? day.color : COLORS.cardBorder}`, borderRadius: 10, marginBottom: 8, overflow: "hidden", transition: "border 0.2s" }}>
-          <button onClick={() => setExpandedDay(expandedDay === i ? null : i)}
-            style={{ width: "100%", background: "none", border: "none", padding: "13px 16px", display: "flex", alignItems: "center", gap: 14, cursor: "pointer", textAlign: "left", fontFamily: "inherit" }}>
-            <span style={{ fontSize: 13, fontWeight: 900, color: day.color, minWidth: 36 }}>{day.day}</span>
-            <span style={{ fontSize: 12, color: COLORS.text, flex: 1 }}>{day.name}</span>
-            <span style={{ color: COLORS.muted, fontSize: 11 }}>{expandedDay === i ? "▲" : "▼"}</span>
-          </button>
-          {expandedDay === i && (
-            <div style={{ padding: "0 16px 14px", borderTop: `1px solid ${COLORS.cardBorder}` }}>
-              <div style={{ marginTop: 10 }}>
-                {day.blocks.map((b, j) => (
-                  <div key={j} style={{ display: "flex", gap: 12, marginBottom: 8 }}>
-                    <span style={{ fontSize: 10, color: day.color, minWidth: 58, paddingTop: 2, fontStyle: "italic" }}>{b.time}</span>
-                    <span style={{ fontSize: 12, color: COLORS.text, lineHeight: 1.5 }}>{b.a}</span>
-                  </div>
-                ))}
-              </div>
-              <div style={{ background: COLORS.bg, borderRadius: 6, padding: "8px 12px", marginTop: 6 }}>
-                <span style={{ fontSize: 10, color: day.color, fontStyle: "italic" }}>nota → </span>
-                <span style={{ fontSize: 11, color: COLORS.muted, fontStyle: "italic" }}>{day.notes}</span>
-              </div>
-            </div>
-          )}
-        </div>
-      ))}
-
-      {/* Training blocks */}
-      <div style={{ marginTop: 28, marginBottom: 12 }}>
-        <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 12 }}>BLOQUES DE ENTRENAMIENTO</div>
-        <div style={{ background: "#fff8f0", border: `1px solid #f0e0d0`, borderRadius: 8, padding: "10px 14px", marginBottom: 16, fontSize: 12, color: COLORS.muted, fontStyle: "italic" }}>
-          🔄 Los marcadores se reinician automáticamente cada lunes. Semana: <strong style={{ color: COLORS.accent }}>{currentMonday}</strong>
-        </div>
-
-        {/* Block selector */}
-        <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
-          {TRAINING_BLOCKS.map(b => {
-            const bDone = b.exercises.filter(e => done[`${b.id}_${e.id}`]).length;
-            const isActive = activeBlock === b.id;
-            return (
-              <button key={b.id} onClick={() => setActiveBlock(b.id)}
-                style={{ flex: 1, padding: "14px 8px", borderRadius: 10, border: `2px solid ${isActive ? b.color : COLORS.cardBorder}`,
-                  background: isActive ? b.color : COLORS.card, cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s", position: "relative" }}>
-                <div style={{ fontSize: 20 }}>{b.icon}</div>
-                <div style={{ fontSize: 11, fontWeight: 900, color: isActive ? "#fff" : COLORS.text, marginTop: 4 }}>{b.label}</div>
-                <div style={{ fontSize: 9, color: isActive ? "rgba(255,255,255,0.75)" : COLORS.muted, marginTop: 2 }}>{b.day}</div>
-                <div style={{ marginTop: 6, background: isActive ? "rgba(255,255,255,0.3)" : COLORS.cardBorder, borderRadius: 4, height: 4 }}>
-                  <div style={{ width: `${(bDone/b.exercises.length)*100}%`, background: isActive ? "#fff" : b.color, height: 4, borderRadius: 4, transition: "width 0.4s" }} />
-                </div>
-                <div style={{ fontSize: 9, color: isActive ? "rgba(255,255,255,0.85)" : COLORS.muted, marginTop: 3 }}>{bDone}/{b.exercises.length}</div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Block header */}
-        {block && (
-          <div>
-            <div style={{ background: block.color, borderRadius: 10, padding: "16px 18px", marginBottom: 14, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div>
-                <div style={{ fontSize: 20, fontWeight: 900, color: "#fff" }}>{block.icon} {block.label}</div>
-                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.8)", marginTop: 2, fontStyle: "italic" }}>{block.subtitle}</div>
-              </div>
-              <div style={{ textAlign: "right" }}>
-                <div style={{ fontSize: 28, fontWeight: 900, color: "#fff" }}>{blockDone}/{blockTotal}</div>
-                <div style={{ fontSize: 9, color: "rgba(255,255,255,0.7)", letterSpacing: 1 }}>HECHOS</div>
-              </div>
-            </div>
-
-            {block.exercises.map((ex, i) => {
-              const key = `${block.id}_${ex.id}`;
-              const isDone = !!done[key];
-              const isExpanded = !!expandedEx[key];
-              return (
-                <div key={ex.id} style={{ background: COLORS.card, border: `1px solid ${isDone ? block.color : COLORS.cardBorder}`, borderRadius: 10, marginBottom: 10, overflow: "hidden", transition: "border 0.2s", opacity: isDone ? 0.85 : 1 }}>
-                  {/* Exercise header row */}
-                  <div style={{ display: "flex", alignItems: "center", padding: "14px 16px", gap: 12 }}>
-                    {/* Checkbox */}
-                    <button onClick={() => toggleEx(block.id, ex.id)}
-                      style={{ width: 28, height: 28, borderRadius: 8, border: `2px solid ${isDone ? block.color : COLORS.cardBorder}`,
-                        background: isDone ? block.color : "transparent", display: "flex", alignItems: "center", justifyContent: "center",
-                        cursor: "pointer", flexShrink: 0, transition: "all 0.15s" }}>
-                      {isDone && <span style={{ color: "#fff", fontSize: 14, fontWeight: 900 }}>✓</span>}
-                    </button>
-
-                    {/* Info */}
-                    <div style={{ flex: 1, minWidth: 0, cursor: "pointer" }} onClick={() => toggleExpandEx(key)}>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: isDone ? COLORS.muted : COLORS.text, textDecoration: isDone ? "line-through" : "none" }}>{ex.name}</div>
-                      <div style={{ display: "flex", gap: 6, marginTop: 4, flexWrap: "wrap" }}>
-                        <span style={{ fontSize: 10, background: block.color + "18", color: block.color, padding: "2px 7px", borderRadius: 4, fontWeight: 700 }}>{ex.sets} × {ex.reps}</span>
-                        <span style={{ fontSize: 10, background: COLORS.bg, color: COLORS.muted, padding: "2px 7px", borderRadius: 4 }}>⏱ {ex.rest}</span>
-                        <span style={{ fontSize: 10, background: (equipColors[ex.equipment] || COLORS.muted) + "18", color: equipColors[ex.equipment] || COLORS.muted, padding: "2px 7px", borderRadius: 4 }}>{ex.equipment}</span>
-                      </div>
-                    </div>
-
-                    {/* Expand toggle */}
-                    <button onClick={() => toggleExpandEx(key)}
-                      style={{ background: "none", border: "none", color: COLORS.muted, cursor: "pointer", fontSize: 12, padding: "4px 8px" }}>
-                      {isExpanded ? "▲" : "▼"}
-                    </button>
-                  </div>
-
-                  {/* Expanded detail */}
-                  {isExpanded && (
-                    <div style={{ padding: "0 16px 14px", borderTop: `1px solid ${COLORS.cardBorder}` }}>
-                      {/* Muscle groups */}
-                      <div style={{ display: "flex", gap: 6, marginTop: 12, flexWrap: "wrap", marginBottom: 12 }}>
-                        <span style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1, alignSelf: "center" }}>MÚSCULOS →</span>
-                        {ex.muscles.map(m => (
-                          <span key={m} style={{ fontSize: 10, background: block.color + "15", color: block.color, padding: "3px 9px", borderRadius: 20, border: `1px solid ${block.color}30` }}>{m}</span>
-                        ))}
-                      </div>
-
-                      {/* Tips */}
-                      <div style={{ background: COLORS.bg, borderRadius: 8, padding: "12px 14px", marginBottom: 10 }}>
-                        <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 8 }}>EJECUCIÓN</div>
-                        {ex.tips.map((tip, j) => (
-                          <div key={j} style={{ display: "flex", gap: 8, marginBottom: j < ex.tips.length - 1 ? 7 : 0 }}>
-                            <span style={{ color: block.color, fontSize: 10, marginTop: 2, flexShrink: 0 }}>▸</span>
-                            <span style={{ fontSize: 12, color: COLORS.text, lineHeight: 1.5 }}>{tip}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Note */}
-                      <div style={{ fontSize: 11, color: COLORS.muted, fontStyle: "italic", paddingLeft: 4 }}>
-                        💡 {ex.note}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-
-
-// ─── MEAL PLANNER ─────────────────────────────────────────────
-const DAYS = ["LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB", "DOM"];
-const DAY_NAMES = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
-const SLOTS = [
-  { key: "desayuno", label: "Desayuno", mealKey: "desayunos", emoji: "☀️" },
-  { key: "media_m", label: "Media Mañana", mealKey: "media_manana", emoji: "🍎" },
-  { key: "almuerzo", label: "Almuerzo", mealKey: "almuerzos", emoji: "🍗" },
-  { key: "pre", label: "Pre-Entreno", mealKey: "pre_entreno", emoji: "💪" },
-  { key: "cena", label: "Cena", mealKey: "cenas", emoji: "🌙" },
-];
-
-function getSundayKey() {
-  const d = new Date();
-  const day = d.getDay(); // 0=Sun
-  const diff = day === 0 ? 0 : 7 - day; // days until next sunday
-  const sunday = new Date(d);
-  sunday.setDate(d.getDate() + diff);
-  return sunday.toISOString().split("T")[0];
-}
-
-function getPlannerWeekLabel() {
-  const d = new Date();
-  const day = d.getDay();
-  // Monday of current week
-  const mon = new Date(d);
-  mon.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
-  const sun = new Date(mon);
-  sun.setDate(mon.getDate() + 6);
-  const fmt = (dt) => dt.toLocaleDateString("es-ES", { day: "numeric", month: "short" });
-  return `${fmt(mon)} – ${fmt(sun)}`;
-}
-
-function PlannerTab() {
-  const [plan, setPlan] = useState({}); // { "LUN": { desayuno: {name, kcal, prot, carb, fat, ingredients}, ... }, ... }
-  const [activeDay, setActiveDay] = useState("LUN");
-  const [picker, setPicker] = useState(null); // { day, slotKey, mealKey }
-  const [loaded, setLoaded] = useState(false);
-  const [exported, setExported] = useState(false);
-  const sundayKey = getSundayKey();
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem("meal_plan");
-      if (raw) {
-        const d = JSON.parse(raw);
-        if (d.sunday === sundayKey) setPlan(d.plan || {});
-        else localStorage.setItem("meal_plan", JSON.stringify({ sunday: sundayKey, plan: {} }));
-      }
-    } catch {}
-    setLoaded(true);
-  }, []);
 
   function savePlan(next) {
     setPlan(next);
@@ -1439,84 +720,164 @@ function PlannerTab() {
   }
 
   function selectMeal(day, slotKey, meal) {
-    const next = {
-      ...plan,
-      [day]: {
-        ...(plan[day] || {}),
-        [slotKey]: { name: meal.name, emoji: meal.emoji, kcal: meal.macros.kcal, prot: meal.macros.prot, carb: meal.macros.carb, fat: meal.macros.fat, ingredients: meal.ingredients }
-      }
-    };
+    const next = { ...plan, [day]: { ...(plan[day] || {}), [slotKey]: { name: meal.name, emoji: meal.emoji, kcal: meal.macros.kcal, prot: meal.macros.prot, carb: meal.macros.carb, fat: meal.macros.fat, ingredients: meal.ingredients } } };
     savePlan(next);
     setPicker(null);
   }
 
-  function clearSlot(day, slotKey) {
-    const next = { ...plan, [day]: { ...(plan[day] || {}), [slotKey]: null } };
-    savePlan(next);
-  }
-
-  function clearDay(day) {
-    const next = { ...plan, [day]: {} };
-    savePlan(next);
-  }
-
-  function dayKcal(day) {
-    if (!plan[day]) return 0;
-    return Object.values(plan[day]).reduce((s, m) => s + (m?.kcal || 0), 0);
-  }
-
-  function totalKcalWeek() {
-    return DAYS.reduce((s, d) => s + dayKcal(d), 0);
-  }
+  function clearSlot(day, slotKey) { savePlan({ ...plan, [day]: { ...(plan[day] || {}), [slotKey]: null } }); }
+  function clearDay(day) { savePlan({ ...plan, [day]: {} }); }
+  function dayKcal(day) { return Object.values(plan[day] || {}).reduce((s, m) => s + (m?.kcal || 0), 0); }
+  function totalKcalWeek() { return DAYS.reduce((s, d) => s + dayKcal(d), 0); }
 
   function exportToShop() {
-    // Collect all ingredients from planned meals, add as custom items in shop list
-    const allIngredients = [];
+    // Match planned meal ingredients to clean SHOP_ITEMS names
+    const plannedIngredients = new Set();
     DAYS.forEach(day => {
-      if (!plan[day]) return;
-      Object.values(plan[day]).forEach(meal => {
+      Object.values(plan[day] || {}).forEach(meal => {
         if (!meal?.ingredients) return;
-        meal.ingredients.forEach(ing => allIngredients.push(ing));
+        meal.ingredients.forEach(rawIng => {
+          // Try to find a matching SHOP_ITEM
+          const rawLow = rawIng.toLowerCase().replace(/\d+[gml]+\s*/g, '').replace(/\d+\s*/g, '').replace(/\(.*?\)/g, '').trim();
+          const match = SHOP_ITEMS.find(si => {
+            const siLow = si.name.toLowerCase();
+            return rawLow.includes(siLow) || siLow.includes(rawLow) ||
+              rawLow.split(' ').some(word => word.length > 4 && siLow.includes(word));
+          });
+          if (match) plannedIngredients.add(match.name);
+        });
       });
     });
-    // Dedupe
-    const unique = [...new Set(allIngredients)];
     try {
       const raw = localStorage.getItem("shop_list");
       const d = raw ? JSON.parse(raw) : { checked: {}, custom: [] };
-      const existingNames = new Set((d.custom || []).map(i => i.name));
-      const toAdd = unique.filter(n => !existingNames.has(n));
-      d.custom = [...(d.custom || []), ...toAdd.map(n => ({ name: n, cat: "Mis añadidos" }))];
+      const existingCheckedNames = new Set(
+        Object.keys(d.checked || {}).map(k => {
+          const idx = parseInt(k.replace('shop_', ''));
+          return SHOP_ITEMS[idx]?.name;
+        }).filter(Boolean)
+      );
+      const existingCustomNames = new Set((d.custom || []).map(i => i.name));
+      const toAdd = [...plannedIngredients].filter(n => !existingCheckedNames.has(n) && !existingCustomNames.has(n));
+      // Mark them as checked in shop list
+      const nextChecked = { ...d.checked };
+      toAdd.forEach(name => {
+        const idx = SHOP_ITEMS.findIndex(si => si.name === name);
+        if (idx >= 0) nextChecked[`shop_${idx}`] = true;
+      });
+      d.checked = nextChecked;
       localStorage.setItem("shop_list", JSON.stringify(d));
       setExported(true);
       setTimeout(() => setExported(false), 2500);
     } catch {}
   }
 
+  const TARGET = userTarget || 1700;
   const dayKcalVal = dayKcal(activeDay);
-  const TARGET = 1700;
 
-  if (!loaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>Cargando...</div>;
+  const inputStyle = { width: "100%", background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6, padding: "10px 12px", fontSize: 14, fontFamily: "inherit", color: COLORS.text, boxSizing: "border-box" };
+  const btnStyle = { background: COLORS.accent, color: "#fff", border: "none", borderRadius: 6, padding: "11px 24px", fontSize: 13, cursor: "pointer", fontFamily: "inherit", fontStyle: "italic" };
+
+  // ── CALC SECTION (top, compact if saved) ──
+  const calcSection = saved && step === 0 ? (
+    <div style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 12, padding: "14px 16px", marginBottom: 16 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+        <div style={{ fontSize: 9, color: COLORS.green, letterSpacing: 2 }}>TU PLAN ACTIVO</div>
+        <button onClick={() => setStep(1)} style={{ fontSize: 10, background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 20, padding: "3px 10px", color: COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>Recalcular</button>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 12 }}>
+        {[
+          { l: "TDEE", v: `${saved.tdee}`, unit: "kcal", c: COLORS.muted },
+          { l: "OBJETIVO", v: `${saved.target}`, unit: "kcal", c: COLORS.accent },
+          { l: "PROTEÍNA", v: `${saved.protein}g`, unit: "mín.", c: COLORS.green },
+          { l: "PÉRDIDA", v: `~${saved.weightLoss}`, unit: "kg/sem", c: COLORS.orange },
+        ].map(x => (
+          <div key={x.l} style={{ background: COLORS.bg, borderRadius: 8, padding: "10px 8px", textAlign: "center" }}>
+            <div style={{ fontSize: 8, color: COLORS.muted, letterSpacing: 1.5 }}>{x.l}</div>
+            <div style={{ fontSize: 17, fontWeight: 900, color: x.c, marginTop: 3, lineHeight: 1 }}>{x.v}</div>
+            <div style={{ fontSize: 8, color: COLORS.muted, marginTop: 2 }}>{x.unit}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+        {[
+          { l: "Descanso", kcal: Math.round(saved.target - 150), d: "Vie, Dom", c: COLORS.muted },
+          { l: "Entreno", kcal: saved.target, d: "Lun, Mar, Jue", c: COLORS.blue },
+          { l: "Carga", kcal: Math.round(saved.target + 200), d: "Mié, Sáb", c: COLORS.accent },
+        ].map(x => (
+          <div key={x.l} style={{ borderLeft: `3px solid ${x.c}`, paddingLeft: 10 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: x.c }}>{x.kcal}</div>
+            <div style={{ fontSize: 8, color: COLORS.muted, letterSpacing: 1 }}>KCAL</div>
+            <div style={{ fontSize: 10, color: COLORS.text, marginTop: 4, fontStyle: "italic" }}>{x.l}</div>
+            <div style={{ fontSize: 9, color: COLORS.muted }}>{x.d}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  ) : step === 0 ? (
+    <Card>
+      <Label>Calcula tu plan personalizado</Label>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+        <div><div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 6 }}>Peso (kg)</div><input style={inputStyle} type="number" value={form.weight} onChange={e => setF("weight", e.target.value)} placeholder="ej. 82" /></div>
+        <div><div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 6 }}>Altura (cm)</div><input style={inputStyle} type="number" value={form.height} onChange={e => setF("height", e.target.value)} placeholder="ej. 178" /></div>
+        <div><div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 6 }}>Edad</div><input style={inputStyle} type="number" value={form.age} onChange={e => setF("age", e.target.value)} placeholder="ej. 30" /></div>
+        <div><div style={{ fontSize: 11, color: COLORS.muted, marginBottom: 6 }}>Sexo</div>
+          <div style={{ display: "flex", gap: 8 }}>
+            {[["H","Hombre"],["M","Mujer"]].map(([v,l]) => (
+              <button key={v} onClick={() => setF("sex", v)} style={{ flex: 1, padding: "10px 0", borderRadius: 6, border: `1px solid ${form.sex===v?COLORS.accent:COLORS.cardBorder}`, background: form.sex===v?COLORS.accent:COLORS.bg, color: form.sex===v?"#fff":COLORS.muted, cursor: "pointer", fontFamily: "inherit", fontSize: 13, fontStyle: "italic" }}>{l}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+      <button style={btnStyle} onClick={() => form.weight && form.height && form.age && setStep(1)}>Siguiente →</button>
+    </Card>
+  ) : (
+    <Card>
+      <Label>Nivel de actividad y objetivo</Label>
+      <div style={{ marginBottom: 12 }}>
+        {[["sedentary","Sedentario","Sin ejercicio"],["light","Ligero","1-2 días/semana"],["moderate","Moderado","3-4 días (tu caso)"],["active","Activo","Entrenamiento diario"],["very_active","Muy activo","Dobles sesiones"]].map(([v,l,d]) => (
+          <button key={v} onClick={() => setF("activity", v)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", marginBottom: 6, borderRadius: 6, border: `1px solid ${form.activity===v?COLORS.accent:COLORS.cardBorder}`, background: form.activity===v?"#fff5f2":COLORS.bg, cursor: "pointer", fontFamily: "inherit", textAlign: "left" }}>
+            <div style={{ width: 12, height: 12, borderRadius: "50%", border: `2px solid ${form.activity===v?COLORS.accent:COLORS.cardBorder}`, background: form.activity===v?COLORS.accent:"transparent", flexShrink: 0 }} />
+            <div><div style={{ fontSize: 12, color: COLORS.text, fontWeight: form.activity===v?700:400 }}>{l}</div><div style={{ fontSize: 10, color: COLORS.muted, fontStyle: "italic" }}>{d}</div></div>
+          </button>
+        ))}
+      </div>
+      <div style={{ marginBottom: 14 }}>
+        {[["cut_aggressive","Corte agresivo −700 kcal","~0.8-1 kg/sem"],["cut_moderate","Corte moderado −400 kcal","~0.4-0.5 kg/sem"]].map(([v,l,d]) => (
+          <button key={v} onClick={() => setF("goal", v)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", marginBottom: 6, borderRadius: 6, border: `1px solid ${form.goal===v?COLORS.accent:COLORS.cardBorder}`, background: form.goal===v?"#fff5f2":COLORS.bg, cursor: "pointer", fontFamily: "inherit", textAlign: "left" }}>
+            <div style={{ width: 12, height: 12, borderRadius: "50%", border: `2px solid ${form.goal===v?COLORS.accent:COLORS.cardBorder}`, background: form.goal===v?COLORS.accent:"transparent", flexShrink: 0 }} />
+            <div><div style={{ fontSize: 12, color: COLORS.text, fontWeight: form.goal===v?700:400 }}>{l}</div><div style={{ fontSize: 10, color: COLORS.muted, fontStyle: "italic" }}>{d}</div></div>
+          </button>
+        ))}
+      </div>
+      <div style={{ display: "flex", gap: 8 }}>
+        <button style={{ ...btnStyle, background: COLORS.bg, color: COLORS.muted, border: `1px solid ${COLORS.cardBorder}` }} onClick={() => setStep(0)}>← Atrás</button>
+        <button style={btnStyle} onClick={compute}>Calcular →</button>
+      </div>
+    </Card>
+  );
+
+  if (!planLoaded) return <div style={{ padding: 40, textAlign: "center", color: COLORS.muted, fontStyle: "italic" }}>Cargando...</div>;
 
   return (
     <div>
-      {/* Header */}
-      <div style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, padding: "14px 16px", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      {calcSection}
+
+      {/* ── PLANNER ── */}
+      <div style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, padding: "12px 16px", marginBottom: 14, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
-          <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 4 }}>SEMANA ACTUAL</div>
-          <div style={{ fontSize: 14, fontWeight: 700, color: COLORS.text }}>{getPlannerWeekLabel()}</div>
-          <div style={{ fontSize: 11, color: COLORS.muted, fontStyle: "italic", marginTop: 2 }}>
-            {totalKcalWeek() > 0 ? `${totalKcalWeek().toLocaleString("es-ES")} kcal planificadas` : "Sin planificar aún"}
-          </div>
+          <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 3 }}>PLANIFICADOR SEMANAL</div>
+          <div style={{ fontSize: 12, color: COLORS.text }}>{getPlannerWeekLabel()}</div>
+          {totalKcalWeek() > 0 && <div style={{ fontSize: 10, color: COLORS.muted, fontStyle: "italic", marginTop: 2 }}>{totalKcalWeek().toLocaleString("es-ES")} kcal planificadas</div>}
         </div>
         <button onClick={exportToShop}
-          style={{ background: exported ? COLORS.green : COLORS.accent, color: "#fff", border: "none", borderRadius: 8, padding: "10px 14px", fontSize: 12, cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", fontWeight: 700, transition: "background 0.3s", textAlign: "center" }}>
+          style={{ background: exported ? COLORS.green : COLORS.accent, color: "#fff", border: "none", borderRadius: 8, padding: "9px 14px", fontSize: 12, cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", fontWeight: 700, transition: "background 0.3s" }}>
           {exported ? "✓ Añadido!" : "🛒 Exportar a compra"}
         </button>
       </div>
 
-      {/* Weekly kcal overview */}
-      <div style={{ display: "flex", gap: 4, marginBottom: 16, overflowX: "auto" }}>
+      {/* Day pills */}
+      <div style={{ display: "flex", gap: 4, marginBottom: 14, overflowX: "auto" }}>
         {DAYS.map((day, i) => {
           const kcal = dayKcal(day);
           const pct = Math.min(100, (kcal / TARGET) * 100);
@@ -1524,90 +885,63 @@ function PlannerTab() {
           const col = kcal === 0 ? COLORS.cardBorder : kcal > TARGET * 1.1 ? COLORS.red : kcal >= TARGET * 0.85 ? COLORS.green : COLORS.orange;
           return (
             <button key={day} onClick={() => setActiveDay(day)}
-              style={{ flex: 1, minWidth: 44, background: isActive ? COLORS.accent : COLORS.card,
-                border: `1px solid ${isActive ? COLORS.accent : COLORS.cardBorder}`, borderRadius: 8,
-                padding: "8px 4px", cursor: "pointer", fontFamily: "inherit", transition: "all 0.15s" }}>
+              style={{ flex: 1, minWidth: 42, background: isActive ? COLORS.accent : COLORS.card, border: `1px solid ${isActive ? COLORS.accent : COLORS.cardBorder}`, borderRadius: 8, padding: "8px 4px", cursor: "pointer", fontFamily: "inherit", transition: "all 0.15s" }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: isActive ? "#fff" : COLORS.muted, marginBottom: 4 }}>{day}</div>
-              <div style={{ background: isActive ? "rgba(255,255,255,0.2)" : COLORS.bg, borderRadius: 4, height: 32, display: "flex", alignItems: "flex-end", overflow: "hidden", margin: "0 4px" }}>
+              <div style={{ background: isActive ? "rgba(255,255,255,0.2)" : COLORS.bg, borderRadius: 4, height: 28, display: "flex", alignItems: "flex-end", overflow: "hidden", margin: "0 4px" }}>
                 <div style={{ width: "100%", background: isActive ? "rgba(255,255,255,0.6)" : col, height: `${Math.max(4, pct)}%`, borderRadius: 2, transition: "height 0.4s" }} />
               </div>
-              <div style={{ fontSize: 9, color: isActive ? "rgba(255,255,255,0.85)" : COLORS.muted, marginTop: 4 }}>
-                {kcal > 0 ? `${kcal}` : "—"}
-              </div>
+              <div style={{ fontSize: 9, color: isActive ? "rgba(255,255,255,0.85)" : COLORS.muted, marginTop: 3 }}>{kcal > 0 ? kcal : "—"}</div>
             </button>
           );
         })}
       </div>
 
-      {/* Day detail */}
+      {/* Day detail card */}
       <div style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 12, overflow: "hidden", marginBottom: 16 }}>
-        {/* Day header */}
-        <div style={{ background: COLORS.accent, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ background: COLORS.accent, padding: "11px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
-            <span style={{ fontSize: 16, fontWeight: 900, color: "#fff" }}>{DAY_NAMES[DAYS.indexOf(activeDay)]}</span>
-            {dayKcalVal > 0 && (
-              <span style={{ marginLeft: 10, fontSize: 12, color: "rgba(255,255,255,0.8)" }}>
-                {dayKcalVal} kcal · {Math.round(Object.values(plan[activeDay] || {}).reduce((s, m) => s + (m?.prot || 0), 0))}g prot
-              </span>
-            )}
+            <span style={{ fontSize: 15, fontWeight: 900, color: "#fff" }}>{DAY_NAMES[DAYS.indexOf(activeDay)]}</span>
+            {dayKcalVal > 0 && <span style={{ marginLeft: 10, fontSize: 11, color: "rgba(255,255,255,0.8)" }}>{dayKcalVal} kcal · {Math.round(Object.values(plan[activeDay] || {}).reduce((s, m) => s + (m?.prot || 0), 0))}g prot</span>}
           </div>
           {dayKcalVal > 0 && (
-            <button onClick={() => clearDay(activeDay)}
-              style={{ fontSize: 10, background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.3)", borderRadius: 20, padding: "4px 10px", color: "#fff", cursor: "pointer", fontFamily: "inherit" }}>
-              Borrar día ×
-            </button>
+            <button onClick={() => clearDay(activeDay)} style={{ fontSize: 10, background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.3)", borderRadius: 20, padding: "4px 10px", color: "#fff", cursor: "pointer", fontFamily: "inherit" }}>Borrar día ×</button>
           )}
         </div>
-
-        {/* Calorie bar */}
         {dayKcalVal > 0 && (
           <div style={{ padding: "8px 16px 0" }}>
-            <div style={{ background: COLORS.bg, borderRadius: 4, height: 6, overflow: "hidden" }}>
-              <div style={{ width: `${Math.min(100, (dayKcalVal / TARGET) * 100)}%`, height: 6,
-                background: dayKcalVal > TARGET * 1.1 ? COLORS.red : dayKcalVal >= TARGET * 0.85 ? COLORS.green : COLORS.orange,
-                borderRadius: 4, transition: "width 0.5s" }} />
+            <div style={{ background: COLORS.bg, borderRadius: 4, height: 5, overflow: "hidden" }}>
+              <div style={{ width: `${Math.min(100, (dayKcalVal / TARGET) * 100)}%`, height: 5, background: dayKcalVal > TARGET * 1.1 ? COLORS.red : dayKcalVal >= TARGET * 0.85 ? COLORS.green : COLORS.orange, borderRadius: 4, transition: "width 0.5s" }} />
             </div>
-            <div style={{ fontSize: 9, color: COLORS.muted, marginTop: 4, marginBottom: 8, textAlign: "right" }}>
-              {dayKcalVal > TARGET ? `+${dayKcalVal - TARGET} kcal sobre objetivo` : `${TARGET - dayKcalVal} kcal restantes`}
+            <div style={{ fontSize: 9, color: COLORS.muted, marginTop: 3, marginBottom: 6, textAlign: "right" }}>
+              {dayKcalVal > TARGET ? `+${dayKcalVal - TARGET} sobre objetivo` : `${TARGET - dayKcalVal} kcal restantes`}
             </div>
           </div>
         )}
-
-        {/* Meal slots */}
         {SLOTS.map((slot, si) => {
           const meal = plan[activeDay]?.[slot.key];
           return (
-            <div key={slot.key} style={{ borderTop: si > 0 ? `1px solid ${COLORS.cardBorder}` : "none" }}>
-              <div style={{ padding: "12px 16px" }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
-                    <span style={{ fontSize: 18, flexShrink: 0 }}>{slot.emoji}</span>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1, marginBottom: 2 }}>{slot.label.toUpperCase()}</div>
-                      {meal ? (
-                        <div>
-                          <div style={{ fontSize: 13, color: COLORS.text, fontWeight: 600 }}>{meal.emoji} {meal.name}</div>
-                          <div style={{ fontSize: 10, color: COLORS.muted, marginTop: 2 }}>
-                            {meal.kcal} kcal · {meal.prot}g P · {meal.carb}g C · {meal.fat}g G
-                          </div>
-                        </div>
-                      ) : (
-                        <div style={{ fontSize: 12, color: COLORS.muted, fontStyle: "italic" }}>Sin planificar</div>
-                      )}
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                    {meal && (
-                      <button onClick={() => clearSlot(activeDay, slot.key)}
-                        style={{ background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6, padding: "5px 8px", fontSize: 11, color: COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>
-                        ×
-                      </button>
+            <div key={slot.key} style={{ borderTop: si > 0 ? `1px solid ${COLORS.cardBorder}` : "none", padding: "11px 16px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
+                  <span style={{ fontSize: 16, flexShrink: 0 }}>{slot.emoji}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1, marginBottom: 2 }}>{slot.label.toUpperCase()}</div>
+                    {meal ? (
+                      <div>
+                        <div style={{ fontSize: 13, color: COLORS.text, fontWeight: 600 }}>{meal.emoji} {meal.name}</div>
+                        <div style={{ fontSize: 10, color: COLORS.muted, marginTop: 2 }}>{meal.kcal} kcal · {meal.prot}g P · {meal.carb}g C · {meal.fat}g G</div>
+                      </div>
+                    ) : (
+                      <div style={{ fontSize: 12, color: COLORS.muted, fontStyle: "italic" }}>Sin planificar</div>
                     )}
-                    <button onClick={() => setPicker({ day: activeDay, slotKey: slot.key, mealKey: slot.mealKey, label: slot.label })}
-                      style={{ background: COLORS.accent, border: "none", borderRadius: 6, padding: "6px 12px", fontSize: 11, color: "#fff", cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", fontWeight: 700 }}>
-                      {meal ? "Cambiar" : "+ Elegir"}
-                    </button>
                   </div>
+                </div>
+                <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                  {meal && <button onClick={() => clearSlot(activeDay, slot.key)} style={{ background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6, padding: "5px 8px", fontSize: 11, color: COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>×</button>}
+                  <button onClick={() => setPicker({ day: activeDay, slotKey: slot.key, mealKey: slot.mealKey, label: slot.label })}
+                    style={{ background: COLORS.accent, border: "none", borderRadius: 6, padding: "6px 12px", fontSize: 11, color: "#fff", cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", fontWeight: 700 }}>
+                    {meal ? "Cambiar" : "+ Elegir"}
+                  </button>
                 </div>
               </div>
             </div>
@@ -1620,32 +954,23 @@ function PlannerTab() {
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 100, display: "flex", alignItems: "flex-end", justifyContent: "center" }}
           onClick={(e) => e.target === e.currentTarget && setPicker(null)}>
           <div style={{ background: COLORS.bg, borderRadius: "16px 16px 0 0", width: "100%", maxWidth: 720, maxHeight: "75vh", overflow: "hidden", display: "flex", flexDirection: "column" }}>
-            {/* Picker header */}
             <div style={{ padding: "16px 20px 12px", background: COLORS.card, borderBottom: `1px solid ${COLORS.cardBorder}`, display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
               <div>
                 <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2 }}>ELEGIR PARA</div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: COLORS.text, marginTop: 2 }}>{picker.label} · {DAY_NAMES[DAYS.indexOf(picker.day)]}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: COLORS.text, marginTop: 2 }}>{picker.label} · {DAY_NAMES[DAYS.indexOf(picker.day)]}</div>
               </div>
-              <button onClick={() => setPicker(null)}
-                style={{ background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "6px 12px", fontSize: 13, cursor: "pointer", color: COLORS.muted, fontFamily: "inherit" }}>
-                Cerrar
-              </button>
+              <button onClick={() => setPicker(null)} style={{ background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "6px 12px", fontSize: 13, cursor: "pointer", color: COLORS.muted, fontFamily: "inherit" }}>Cerrar</button>
             </div>
-            {/* Meal options */}
             <div style={{ overflowY: "auto", flex: 1, padding: "12px 16px" }}>
               {meals[picker.mealKey]?.map((meal, i) => (
                 <button key={i} onClick={() => selectMeal(picker.day, picker.slotKey, meal)}
-                  style={{ width: "100%", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10,
-                    padding: "12px 14px", marginBottom: 8, cursor: "pointer", fontFamily: "inherit", textAlign: "left", display: "flex", alignItems: "center", gap: 12 }}>
-                  <span style={{ fontSize: 22, flexShrink: 0 }}>{meal.emoji}</span>
+                  style={{ width: "100%", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, padding: "12px 14px", marginBottom: 8, cursor: "pointer", fontFamily: "inherit", textAlign: "left", display: "flex", alignItems: "center", gap: 12 }}>
+                  <span style={{ fontSize: 20, flexShrink: 0 }}>{meal.emoji}</span>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: COLORS.text }}>{meal.name}</div>
-                    <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 3 }}>
-                      {meal.macros.kcal} kcal · {meal.macros.prot}g prot · {meal.macros.carb}g carb
-                      {meal.tupper && <span style={{ marginLeft: 6, color: COLORS.green }}>📦</span>}
-                    </div>
+                    <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 3 }}>{meal.macros.kcal} kcal · {meal.macros.prot}g prot{meal.tupper ? " · 📦" : ""}</div>
                   </div>
-                  <span style={{ fontSize: 18, color: COLORS.accent, flexShrink: 0 }}>›</span>
+                  <span style={{ fontSize: 18, color: COLORS.accent }}>›</span>
                 </button>
               ))}
             </div>
@@ -2084,13 +1409,97 @@ export default function CutPlan() {
 
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "24px 20px" }}>
         {activeTab === 0 && <HabitsTracker />}
-        {activeTab === 1 && <CalcPlan onUpdate={(d) => setUserTarget(d.target || null)} />}
-        {activeTab === 2 && <MealsTab targetKcal={userTarget} />}
-        {activeTab === 3 && <ShoppingTab />}
-        {activeTab === 4 && <PlannerTab />}
-        {activeTab === 5 && <WeekTab />}
-        {activeTab === 6 && <DosDonts />}
+        {activeTab === 1 && <MiPlanTab onUpdate={(d) => setUserTarget(d.target || null)} userTarget={userTarget} />}
+        {activeTab === 2 && <ShoppingTab />}
+        {activeTab === 3 && <WeekTab />}
+        {activeTab === 4 && <DosDonts />}
+        {activeTab === 5 && <RecetasTab />}
       </div>
     </div>
   );
+}// ─── RECETAS TAB (simple browser, no tracker) ────────────────
+function RecetasTab() {
+  const [activeMeal, setActiveMeal] = useState("desayunos");
+  const [expanded, setExpanded] = useState({});
+  const [search, setSearch] = useState("");
+  const labels = { desayunos: "Desayunos", almuerzos: "Almuerzos", cenas: "Cenas", media_manana: "Media Mañana", pre_entreno: "Pre-Entreno" };
+  const mealCatColors = { desayunos: "#c47a1a", almuerzos: COLORS.blue, cenas: "#7c5cbf", media_manana: COLORS.green, pre_entreno: COLORS.accent };
+
+  function toggleExpand(key) { setExpanded(p => ({ ...p, [key]: !p[key] })); }
+
+  const catColor = mealCatColors[activeMeal];
+  const currentMeals = meals[activeMeal] || [];
+  const filtered = search
+    ? currentMeals.filter(m => m.name.toLowerCase().includes(search.toLowerCase()) || m.ingredients.some(i => i.toLowerCase().includes(search.toLowerCase())))
+    : currentMeals;
+
+  return (
+    <div>
+      {/* Search */}
+      <div style={{ position: "relative", marginBottom: 12 }}>
+        <span style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", fontSize: 14, color: COLORS.muted, pointerEvents: "none" }}>🔍</span>
+        <input type="text" placeholder="Buscar receta o ingrediente..." value={search} onChange={e => setSearch(e.target.value)}
+          style={{ width: "100%", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "10px 12px 10px 36px", fontSize: 13, fontFamily: "inherit", color: COLORS.text, boxSizing: "border-box" }} />
+        {search && <button onClick={() => setSearch("")} style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: COLORS.muted, fontSize: 18 }}>×</button>}
+      </div>
+
+      {/* Category tabs */}
+      <div style={{ display: "flex", gap: 6, marginBottom: 16, flexWrap: "wrap" }}>
+        {Object.keys(meals).map(k => (
+          <button key={k} onClick={() => { setActiveMeal(k); setSearch(""); }}
+            style={{ background: activeMeal === k ? mealCatColors[k] : COLORS.card, color: activeMeal === k ? "#fff" : COLORS.muted,
+              border: `1px solid ${activeMeal === k ? mealCatColors[k] : COLORS.cardBorder}`, borderRadius: 6, padding: "7px 14px",
+              fontSize: 11, cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", transition: "all 0.15s" }}>
+            {labels[k]}
+          </button>
+        ))}
+      </div>
+
+      {/* Count */}
+      <div style={{ fontSize: 11, color: COLORS.muted, fontStyle: "italic", marginBottom: 12 }}>
+        {filtered.length} receta{filtered.length !== 1 ? "s" : ""}{search ? ` para "${search}"` : ""}
+      </div>
+
+      {/* Recipe cards */}
+      {filtered.map((meal, i) => {
+        const key = `${activeMeal}_${i}`;
+        const isExpanded = !!expanded[key];
+        return (
+          <div key={i} style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, marginBottom: 10, overflow: "hidden" }}>
+            <div style={{ display: "flex", alignItems: "center", padding: "13px 16px", gap: 12, cursor: "pointer" }} onClick={() => toggleExpand(key)}>
+              <span style={{ fontSize: 22 }}>{meal.emoji}</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: COLORS.text }}>{meal.name}</div>
+                <div style={{ display: "flex", gap: 8, marginTop: 4, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: catColor }}>{meal.macros.kcal} kcal</span>
+                  <span style={{ fontSize: 10, color: COLORS.muted }}>{meal.macros.prot}g P · {meal.macros.carb}g C · {meal.macros.fat}g G</span>
+                  {meal.tupper && <span style={{ fontSize: 9, background: "#f0f7f2", color: COLORS.green, padding: "1px 6px", borderRadius: 4, fontStyle: "italic" }}>📦 tupper</span>}
+                </div>
+              </div>
+              <span style={{ color: COLORS.muted, fontSize: 11 }}>{isExpanded ? "▲" : "▼"}</span>
+            </div>
+            {isExpanded && (
+              <div style={{ padding: "0 16px 14px", borderTop: `1px solid ${COLORS.cardBorder}` }}>
+                <div style={{ marginTop: 10, marginBottom: 8 }}>
+                  <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 6 }}>INGREDIENTES</div>
+                  {meal.ingredients.map((ing, j) => (
+                    <div key={j} style={{ fontSize: 12, color: COLORS.text, padding: "3px 0", borderBottom: `1px solid ${COLORS.cardBorder}`, display: "flex", gap: 8 }}>
+                      <span style={{ color: catColor, fontSize: 10 }}>▸</span>{ing}
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background: COLORS.bg, borderRadius: 6, padding: "10px 12px" }}>
+                  <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 4 }}>PREP</div>
+                  <div style={{ fontSize: 12, color: COLORS.text, lineHeight: 1.6, fontStyle: "italic" }}>{meal.prep}</div>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
+      {filtered.length === 0 && <div style={{ textAlign: "center", padding: 40, color: COLORS.muted, fontStyle: "italic" }}>Sin resultados</div>}
+    </div>
+  );
 }
+
+
