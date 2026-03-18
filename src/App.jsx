@@ -6,6 +6,39 @@ const COLORS = {
   red: "#c0392b", green: "#2d7a45", orange: "#c47a1a", blue: "#1a5c8a",
 };
 
+// ─── SVG ICONS ────────────────────────────────────────────────
+const Icon = ({ name, size = 20, color = "currentColor", style = {} }) => {
+  const s = { width: size, height: size, display: "inline-block", flexShrink: 0, ...style };
+  const paths = {
+    habits:    <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>,
+    plan:      <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
+    shop:      <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>,
+    schedule:  <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+    rules:     <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+    recipes:   <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 2h18v7a9 9 0 01-18 0V2z"/><line x1="12" y1="9" x2="12" y2="22"/><line x1="6" y1="22" x2="18" y2="22"/></svg>,
+    edit:      <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
+    check:     <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+    plus:      <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
+    minus:     <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>,
+    trash:     <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>,
+    close:     <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+    refresh:   <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>,
+    export:    <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>,
+    sun:       <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>,
+    apple:     <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a4 4 0 00-4 4v1H6a6 6 0 000 12h12a6 6 0 000-12h-2V6a4 4 0 00-4-4z"/></svg>,
+    chicken:   <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 11l-4-8-4 8"/><path d="M7 16c0 2.5 2 4 5 4s5-1.5 5-4v-5H7v5z"/></svg>,
+    bolt:      <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+    moon:      <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>,
+    wallet:    <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12V7H5a2 2 0 010-4h14v4"/><path d="M3 5v14a2 2 0 002 2h16v-5"/><path d="M18 12a2 2 0 000 4h4v-4z"/></svg>,
+    arrowup:   <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>,
+    arrowdown: <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>,
+    warning:   <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
+    search:    <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
+    tupper:    <svg style={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>,
+  };
+  return paths[name] || null;
+};
+
 // ─── MEALS DATA ───────────────────────────────────────────────
 const meals = {
   desayunos: [
@@ -630,11 +663,11 @@ const STEPS = ["datos", "actividad", "resultado"];
 const DAYS = ["LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB", "DOM"];
 const DAY_NAMES = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 const SLOTS = [
-  { key: "desayuno",  label: "Desayuno",      mealKey: "desayunos",    emoji: "☀️" },
-  { key: "media_m",  label: "Media Mañana",   mealKey: "media_manana", emoji: "🍎" },
-  { key: "almuerzo", label: "Almuerzo",        mealKey: "almuerzos",   emoji: "🍗" },
-  { key: "pre",      label: "Pre-Entreno",     mealKey: "pre_entreno", emoji: "💪" },
-  { key: "cena",     label: "Cena",            mealKey: "cenas",       emoji: "🌙" },
+  { key: "desayuno",  label: "Desayuno",      mealKey: "desayunos",    icon: "sun" },
+  { key: "media_m",  label: "Media Mañana",   mealKey: "media_manana", icon: "apple" },
+  { key: "almuerzo", label: "Almuerzo",        mealKey: "almuerzos",   icon: "chicken" },
+  { key: "pre",      label: "Pre-Entreno",     mealKey: "pre_entreno", icon: "bolt" },
+  { key: "cena",     label: "Cena",            mealKey: "cenas",       icon: "moon" },
 ];
 
 function getSundayKey() {
@@ -933,7 +966,7 @@ function MiPlanTab({ onUpdate, userTarget }) {
         </div>
         <button onClick={exportToShop}
           style={{ background: exported ? COLORS.green : COLORS.accent, color: "#fff", border: "none", borderRadius: 8, padding: "9px 14px", fontSize: 12, cursor: "pointer", fontFamily: "inherit", fontStyle: "italic", fontWeight: 700, transition: "background 0.3s" }}>
-          {exported ? "✓ Añadido!" : "🛒 Exportar a compra"}
+          {exported ? "✓ Añadido!" : "Exportar a compra"}
         </button>
       </div>
 
@@ -984,7 +1017,7 @@ function MiPlanTab({ onUpdate, userTarget }) {
             <div key={slot.key} style={{ borderTop: si > 0 ? `1px solid ${COLORS.cardBorder}` : "none", padding: "11px 16px" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
-                  <span style={{ fontSize: 16, flexShrink: 0 }}>{slot.emoji}</span>
+                  <Icon name={slot.icon} size={18} color={COLORS.muted} style={{ flexShrink: 0 }} />
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1, marginBottom: 2 }}>{slot.label.toUpperCase()}</div>
                     {meal ? (
@@ -1708,13 +1741,13 @@ export default function CutPlan() {
 
       {/* ── BOTTOM NAV ── */}
       <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: COLORS.card, borderTop: `1px solid ${COLORS.cardBorder}`, display: "flex", paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 16px)" }}>
-        {TAB_ICONS.map((icon, i) => (
+        {["habits","plan","shop","schedule","rules","recipes"].map((iconName, i) => (
           <button key={i} onClick={() => { setActiveTab(i); window.scrollTo({ top: 0, behavior: "instant" }); }}
             style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
               gap: 4, padding: "10px 4px 10px", background: "none", border: "none", cursor: "pointer",
               fontFamily: "inherit", borderTop: `2px solid ${activeTab === i ? COLORS.accent : "transparent"}`,
               transition: "border-color 0.15s" }}>
-            <span style={{ fontSize: 20, lineHeight: 1 }}>{icon}</span>
+            <Icon name={iconName} size={20} color={activeTab === i ? COLORS.accent : COLORS.muted} />
             <span style={{ fontSize: 9, fontWeight: activeTab === i ? 700 : 400,
               color: activeTab === i ? COLORS.accent : COLORS.muted,
               letterSpacing: 0.3, lineHeight: 1 }}>
@@ -2020,14 +2053,14 @@ function BudgetTracker() {
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
         <div>
-          <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 3, textTransform: "uppercase" }}>💶 Presupuesto — {monthName}</div>
+          <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 3, textTransform: "uppercase" }}>PRESUPUESTO — {monthName}</div>
           <div style={{ fontSize: 11, color: COLORS.muted }}>{dayOfMonth} de {daysInMonth} · quedan {daysLeft} días</div>
         </div>
         <div style={{ display: "flex", gap: 6 }}>
           <button onClick={() => { setEditingBudget(!editingBudget); setNewBudgetVal(""); }}
             style={{ fontSize: 10, background: editingBudget ? COLORS.accent : "none", border: `1px solid ${editingBudget ? COLORS.accent : COLORS.cardBorder}`,
               borderRadius: 20, padding: "3px 10px", color: editingBudget ? "#fff" : COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>
-            {editingBudget ? "× Cancelar" : "✏️ Editar"}
+            {editingBudget ? "× Cancelar" : "Editar"}
           </button>
           <button onClick={resetMonth} style={{ fontSize: 10, background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 20, padding: "3px 10px", color: COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>Resetear</button>
         </div>
@@ -2093,26 +2126,144 @@ function BudgetTracker() {
         </div>
       </div>
 
-      {/* Sparkline */}
-      {entries.length > 0 && (() => {
-        const hasSpend = cumByDay.some(v => v > 0);
-        const pts = hasSpend ? cumByDay.map((v, i) => `${i + 0.5},${chartH - Math.max(0, v) / maxVal * (chartH - 6)}`).join(" ") : "";
-        const lx = cumByDay.length - 0.5;
-        const ly = chartH - Math.max(0, cumByDay[cumByDay.length - 1]) / maxVal * (chartH - 6);
+      {/* Monthly chart */}
+      {(() => {
+        // Chart dimensions
+        const W = daysInMonth;
+        const H = chartH;
+        const pad = 6;
+
+        // Budget ceiling = effectiveBudget, floor = 0
+        const chartMax = effectiveBudget > 0 ? effectiveBudget * 1.05 : Math.max(...cumByDay, 1) * 1.1;
+        const toY = v => H - pad - (Math.max(0, v) / chartMax) * (H - pad * 2);
+        const toX = d => d - 0.5; // day index (1-based) → x
+
+        // Actual spend line — only days up to today
+        const actualPts = Array.from({ length: dayOfMonth }, (_, i) => {
+          const x = toX(i + 1);
+          const y = toY(cumByDay[i]);
+          return `${x},${y}`;
+        }).join(" ");
+
+        // Trend projection — linear regression on actual data → extend to end of month
+        // Only show if we have at least 2 data points and are not in the last week
+        const daysWithData = entries.filter(e => e.type === "gasto").length > 0 ? dayOfMonth : 0;
+        const showTrend = daysWithData >= 1 && dayOfMonth <= daysInMonth - 3;
+        const dailyRate = daysWithData > 0 ? totalSpent / dayOfMonth : 0;
+        // Trend line: from today's point → projected end-of-month
+        const trendStartX = toX(dayOfMonth);
+        const trendStartY = toY(totalSpent);
+        const projectedEnd = totalSpent + dailyRate * daysLeft;
+        const trendEndX = toX(daysInMonth);
+        const trendEndY = toY(projectedEnd);
+
+        // Ideal budget line (diagonal): 0 at day 1 → full budget at day daysInMonth
+        const idealPts = [
+          `0,${toY(0)}`,
+          `${toX(daysInMonth)},${toY(effectiveBudget)}`
+        ].join(" ");
+
+        // Budget ceiling line y position
+        const budgetY = toY(effectiveBudget);
+
+        // Is projected end over budget?
+        const overProjected = projectedEnd > effectiveBudget;
+
+        const hasSpend = totalSpent > 0;
+        const todayX = toX(dayOfMonth);
+        const todayY = toY(cumByDay[dayOfMonth - 1] || 0);
+
         return (
-          <div style={{ marginBottom: 14 }}>
-            <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1.5, marginBottom: 6 }}>EVOLUCIÓN DEL MES</div>
-            <svg viewBox={`0 0 ${daysInMonth} ${chartH}`} style={{ width: "100%", height: 64 }} preserveAspectRatio="none">
-              <line x1="0" y1="2" x2={daysInMonth} y2="2" stroke={COLORS.cardBorder} strokeWidth="0.5" strokeDasharray="2,2"/>
-              <line x1="0" y1={chartH} x2={daysInMonth} y2="2" stroke={COLORS.muted} strokeWidth="0.5" strokeDasharray="2,2" opacity="0.4"/>
-              {hasSpend && <polyline points={pts} fill="none" stroke={barColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>}
-              {hasSpend && <circle cx={lx} cy={ly} r="2.5" fill={barColor}/>}
-              <line x1={dayOfMonth - 0.5} y1="0" x2={dayOfMonth - 0.5} y2={chartH} stroke={COLORS.accent} strokeWidth="0.6" opacity="0.7"/>
-            </svg>
-            <div style={{ display: "flex", gap: 14, marginTop: 2 }}>
-              {[{ c: COLORS.muted, l: "Gasto ideal" }, { c: barColor, l: "Gasto real" }, { c: COLORS.accent, l: "Hoy" }].map(x => (
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+              <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1.5 }}>EVOLUCIÓN DEL MES</div>
+              {showTrend && (
+                <div style={{ fontSize: 9, color: overProjected ? COLORS.red : COLORS.green, fontWeight: 700 }}>
+                  {overProjected ? `tendencia: ${projectedEnd.toFixed(0)}€` : `tendencia: ${projectedEnd.toFixed(0)}€`}
+                </div>
+              )}
+            </div>
+
+            <div style={{ background: COLORS.bg, borderRadius: 8, padding: "8px 4px 4px", border: `1px solid ${COLORS.cardBorder}` }}>
+              {/* Y-axis labels */}
+              <div style={{ display: "flex", alignItems: "stretch", gap: 4 }}>
+                <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", paddingBottom: 16, minWidth: 32, textAlign: "right" }}>
+                  <span style={{ fontSize: 8, color: COLORS.muted }}>{effectiveBudget > 0 ? `${effectiveBudget.toFixed(0)}€` : ""}</span>
+                  <span style={{ fontSize: 8, color: COLORS.muted }}>{effectiveBudget > 0 ? `${(effectiveBudget/2).toFixed(0)}€` : ""}</span>
+                  <span style={{ fontSize: 8, color: COLORS.muted }}>0€</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: 90, display: "block" }} preserveAspectRatio="none">
+
+                    {/* Grid lines */}
+                    <line x1="0" y1={budgetY} x2={W} y2={budgetY} stroke={COLORS.cardBorder} strokeWidth="0.6" strokeDasharray="3,3"/>
+                    <line x1="0" y1={H/2} x2={W} y2={H/2} stroke={COLORS.cardBorder} strokeWidth="0.4" strokeDasharray="2,4"/>
+
+                    {/* Ideal spend diagonal */}
+                    {effectiveBudget > 0 && (
+                      <polyline points={idealPts} fill="none" stroke={COLORS.muted} strokeWidth="0.8" strokeDasharray="3,3" opacity="0.5"/>
+                    )}
+
+                    {/* Actual spend area fill */}
+                    {hasSpend && (
+                      <polygon
+                        points={`0,${toY(0)} ${actualPts} ${trendStartX},${H - pad}`}
+                        fill={barColor} opacity="0.08"/>
+                    )}
+
+                    {/* Actual spend line */}
+                    {hasSpend && (
+                      <polyline points={actualPts} fill="none" stroke={barColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    )}
+
+                    {/* Trend projection dashed line */}
+                    {showTrend && hasSpend && (
+                      <line
+                        x1={trendStartX} y1={trendStartY}
+                        x2={trendEndX} y2={trendEndY}
+                        stroke={overProjected ? COLORS.red : COLORS.green}
+                        strokeWidth="1.2" strokeDasharray="3,3" opacity="0.85"/>
+                    )}
+
+                    {/* Projected end dot */}
+                    {showTrend && hasSpend && (
+                      <circle cx={trendEndX} cy={trendEndY} r="2.5"
+                        fill={overProjected ? COLORS.red : COLORS.green} opacity="0.7"/>
+                    )}
+
+                    {/* Today vertical marker */}
+                    <line x1={todayX} y1="0" x2={todayX} y2={H} stroke={COLORS.accent} strokeWidth="0.8" opacity="0.5"/>
+
+                    {/* Today dot */}
+                    {hasSpend && (
+                      <circle cx={todayX} cy={todayY} r="3" fill={barColor} stroke={COLORS.card} strokeWidth="1.5"/>
+                    )}
+                  </svg>
+
+                  {/* X-axis day labels */}
+                  <div style={{ display: "flex", justifyContent: "space-between", padding: "2px 0", marginTop: 2 }}>
+                    {[1, 8, 15, 22, daysInMonth].map(d => (
+                      <span key={d} style={{ fontSize: 8, color: d === dayOfMonth ? COLORS.accent : COLORS.muted, fontWeight: d === dayOfMonth ? 700 : 400 }}>
+                        {d}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Legend */}
+            <div style={{ display: "flex", gap: 14, marginTop: 6, flexWrap: "wrap" }}>
+              {[
+                { c: COLORS.muted, l: "Presupuesto ideal", dashed: true },
+                { c: barColor, l: "Gasto acumulado", dashed: false },
+                ...(showTrend ? [{ c: overProjected ? COLORS.red : COLORS.green, l: "Tendencia proyectada", dashed: true }] : []),
+                { c: COLORS.accent, l: "Hoy", dashed: false },
+              ].map(x => (
                 <div key={x.l} style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                  <div style={{ width: 10, height: 2, background: x.c, borderRadius: 1 }}/><span style={{ fontSize: 9, color: COLORS.muted }}>{x.l}</span>
+                  <div style={{ width: 12, height: x.dashed ? 1 : 2, background: x.c, borderRadius: 1,
+                    borderTop: x.dashed ? `1px dashed ${x.c}` : "none", opacity: x.dashed ? 0.7 : 1 }}/>
+                  <span style={{ fontSize: 9, color: COLORS.muted }}>{x.l}</span>
                 </div>
               ))}
             </div>
@@ -2135,7 +2286,7 @@ function BudgetTracker() {
       ) : (
         <div style={{ background: COLORS.bg, borderRadius: 10, padding: 14, marginBottom: 12, border: `1px solid ${entryType === "ingreso" ? COLORS.green + "60" : COLORS.red + "60"}` }}>
           <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, marginBottom: 10, color: entryType === "ingreso" ? COLORS.green : COLORS.red }}>
-            {entryType === "ingreso" ? "➕ NUEVO INGRESO" : "➖ NUEVO GASTO"}
+            {entryType === "ingreso" ? "NUEVO INGRESO" : "NUEVO GASTO"}
           </div>
           <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
             <input value={entryLabel} onChange={e => setEntryLabel(e.target.value)}
@@ -2161,7 +2312,7 @@ function BudgetTracker() {
           <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1.5, marginBottom: 8 }}>MOVIMIENTOS</div>
           {shownEntries.map(e => (
             <div key={e.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: `1px solid ${COLORS.cardBorder}` }}>
-              <span style={{ fontSize: 16 }}>{e.type === "ingreso" ? "↑" : "↓"}</span>
+              <Icon name={e.type === "ingreso" ? "arrowup" : "arrowdown"} size={16} color={e.type === "ingreso" ? COLORS.green : COLORS.red} />
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 13, color: COLORS.text, fontWeight: 500 }}>{e.label}</div>
                 <div style={{ fontSize: 10, color: COLORS.muted }}>día {e.day}</div>
@@ -2288,7 +2439,7 @@ function HabitsTracker() {
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 20, fontWeight: 900 }}>{done}/{total} hábitos</div>
           <div style={{ fontSize: 12, color: COLORS.muted, fontStyle: "italic", marginTop: 4 }}>
-            {pct === 100 ? "🎉 Día perfecto. Así se construyen resultados." : pct >= 70 ? "Buen día, sigue así." : "Quedan hábitos por marcar."}
+            {pct === 100 ? "Día perfecto. Así se construyen resultados." : pct >= 70 ? "Buen día, sigue así." : "Quedan hábitos por marcar."}
           </div>
           <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 4 }}>{new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" })}</div>
         </div>
@@ -2311,7 +2462,7 @@ function HabitsTracker() {
                 border: `1px solid ${editMode ? COLORS.accent : COLORS.cardBorder}`,
                 borderRadius: 20, padding: "3px 10px",
                 color: editMode ? "#fff" : COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>
-              {editMode ? "✓ Listo" : "✏️ Editar"}
+              {editMode ? "Listo" : "Editar"}
             </button>
           </div>
         </div>
