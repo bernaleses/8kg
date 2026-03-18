@@ -1751,7 +1751,7 @@ export default function CutPlan() {
   }, []);
 
   const TAB_ICONS  = ["📋","📆","🛒","📅","✅","🍽️"];
-  const TAB_LABELS = ["Hábitos","Mi Plan","Compra","Semana","Normas","Recetas"];
+  const TAB_LABELS = ["Hábitos","Mi Plan","Compra","Entreno","Normas","Recetas"];
 
   return (
     <div style={{ background: COLORS.bg, minHeight: "100vh", fontFamily: "'Playfair Display', Georgia, serif", color: COLORS.text, paddingBottom: 110 }}>
