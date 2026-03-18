@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 
 const COLORS = {
-  bg: "#f5f2eb", card: "#ffffff", cardBorder: "#e8e2d9",
-  accent: "#c8440a", text: "#1a1a1a", muted: "#8a7f72",
-  red: "#c8440a", green: "#2d7a45", orange: "#c47a1a", blue: "#1a5c8a",
+  bg: "#e8e0d0", card: "#f5f0e8", cardBorder: "#d4c9b5",
+  accent: "#3a7d5a", text: "#1a1a1a", muted: "#8a7f72",
+  red: "#c0392b", green: "#2d7a45", orange: "#c47a1a", blue: "#1a5c8a",
 };
 
 // ─── MEALS DATA ───────────────────────────────────────────────
@@ -1693,13 +1693,7 @@ export default function CutPlan() {
     <div style={{ background: COLORS.bg, minHeight: "100vh", fontFamily: "'Playfair Display', Georgia, serif", color: COLORS.text, paddingBottom: 110 }}>
       {/* ── TOP HEADER ── */}
       <div style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, background: COLORS.card, borderBottom: `1px solid ${COLORS.cardBorder}`, paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)", paddingBottom: "10px", paddingLeft: 16, paddingRight: 16, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
-        <div style={{ width: 32, height: 32, borderRadius: 8, background: COLORS.accent, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 2px 6px rgba(200,68,10,0.25)" }}>
-          <svg width="19" height="19" viewBox="0 0 28 28" fill="none">
-            <text x="4" y="22" fontSize="22" fontWeight="900" fill="white" fontFamily="Georgia, serif">F</text>
-            <path d="M16 18 L19 12 L22 16 L25 10" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.85"/>
-          </svg>
-        </div>
-        <span style={{ fontSize: 17, fontWeight: 900, letterSpacing: -0.5, color: COLORS.text, lineHeight: 1 }}>FORMA</span>
+        <span style={{ fontSize: 17, fontWeight: 900, letterSpacing: 1, color: COLORS.text, lineHeight: 1 }}>FORMA</span>
       </div>
 
       {/* ── CONTENT ── */}
@@ -2178,6 +2172,7 @@ function HabitsTracker() {
           ))}
         </div>
       </Card>
+      <BudgetTracker />
     </div>
   );
 }
