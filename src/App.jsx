@@ -2126,144 +2126,172 @@ function BudgetTracker() {
         </div>
       </div>
 
-      {/* Monthly chart */}
+      {/* Monthly chart — rewritten for clarity */}
       {(() => {
-        // Chart dimensions
-        const W = daysInMonth;
-        const H = chartH;
-        const pad = 6;
-
-        // Budget ceiling = effectiveBudget, floor = 0
-        const chartMax = effectiveBudget > 0 ? effectiveBudget * 1.05 : Math.max(...cumByDay, 1) * 1.1;
-        const toY = v => H - pad - (Math.max(0, v) / chartMax) * (H - pad * 2);
-        const toX = d => d - 0.5; // day index (1-based) → x
-
-        // Actual spend line — only days up to today
-        const actualPts = Array.from({ length: dayOfMonth }, (_, i) => {
-          const x = toX(i + 1);
-          const y = toY(cumByDay[i]);
-          return `${x},${y}`;
-        }).join(" ");
-
-        // Trend projection — linear regression on actual data → extend to end of month
-        // Only show if we have at least 2 data points and are not in the last week
-        const daysWithData = entries.filter(e => e.type === "gasto").length > 0 ? dayOfMonth : 0;
-        const showTrend = daysWithData >= 1 && dayOfMonth <= daysInMonth - 3;
-        const dailyRate = daysWithData > 0 ? totalSpent / dayOfMonth : 0;
-        // Trend line: from today's point → projected end-of-month
-        const trendStartX = toX(dayOfMonth);
-        const trendStartY = toY(totalSpent);
-        const projectedEnd = totalSpent + dailyRate * daysLeft;
-        const trendEndX = toX(daysInMonth);
-        const trendEndY = toY(projectedEnd);
-
-        // Ideal budget line (diagonal): 0 at day 1 → full budget at day daysInMonth
-        const idealPts = [
-          `0,${toY(0)}`,
-          `${toX(daysInMonth)},${toY(effectiveBudget)}`
-        ].join(" ");
-
-        // Budget ceiling line y position
-        const budgetY = toY(effectiveBudget);
-
-        // Is projected end over budget?
-        const overProjected = projectedEnd > effectiveBudget;
+        const W = 100;   // viewBox units = percentage (0–100)
+        const H = 60;    // viewBox height units
+        const padT = 4, padB = 4, padL = 0, padR = 0;
+        const plotH = H - padT - padB;
 
         const hasSpend = totalSpent > 0;
+        const dailyRate = hasSpend ? totalSpent / dayOfMonth : 0;
+        const projectedEnd = totalSpent + dailyRate * daysLeft;
+        const showTrend = hasSpend && dayOfMonth <= daysInMonth - 3;
+        const overProjected = projectedEnd > effectiveBudget;
+        const trendColor = overProjected ? COLORS.red : COLORS.green;
+
+        // Dynamic Y scale: use max of (budget, projected, actual) with 10% headroom
+        const yMax = Math.max(effectiveBudget, projectedEnd, totalSpent) * 1.12 || 100;
+        const toY = v => padT + plotH - (Math.max(0, v) / yMax) * plotH;
+        const toX = dayIdx => padL + (dayIdx / daysInMonth) * (W - padL - padR);
+
+        // Build actual spend points (day 0 = start of month at 0, then cumulative per day)
+        const actualPoints = [
+          `${toX(0)},${toY(0)}`,
+          ...Array.from({ length: dayOfMonth }, (_, i) => `${toX(i + 1)},${toY(cumByDay[i])}`)
+        ].join(" ");
+
+        // Area fill (close path back to baseline)
+        const areaPoints = `${toX(0)},${toY(0)} ${
+          Array.from({ length: dayOfMonth }, (_, i) => `${toX(i + 1)},${toY(cumByDay[i])}`).join(" ")
+        } ${toX(dayOfMonth)},${toY(0)}`;
+
+        // Ideal spend: linear 0 → effectiveBudget over full month
+        const idealX1 = toX(0), idealY1 = toY(0);
+        const idealX2 = toX(daysInMonth), idealY2 = toY(effectiveBudget);
+
+        // Trend: from today's cumulative → projected end
+        const trendX1 = toX(dayOfMonth), trendY1 = toY(totalSpent);
+        const trendX2 = toX(daysInMonth), trendY2 = toY(projectedEnd);
+
+        // Budget ceiling
+        const budgetY = toY(effectiveBudget);
+
+        // Today position
         const todayX = toX(dayOfMonth);
-        const todayY = toY(cumByDay[dayOfMonth - 1] || 0);
+        const todayY = toY(totalSpent);
+
+        // Y-axis labels (nice round numbers)
+        const yLabels = effectiveBudget > 0
+          ? [0, Math.round(effectiveBudget / 2), effectiveBudget]
+          : [0];
 
         return (
           <div style={{ marginBottom: 16 }}>
+            {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
               <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1.5 }}>EVOLUCIÓN DEL MES</div>
               {showTrend && (
-                <div style={{ fontSize: 9, color: overProjected ? COLORS.red : COLORS.green, fontWeight: 700 }}>
-                  {overProjected ? `tendencia: ${projectedEnd.toFixed(0)}€` : `tendencia: ${projectedEnd.toFixed(0)}€`}
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <div style={{ width: 16, height: 1, borderTop: `2px dashed ${trendColor}`, opacity: 0.8 }} />
+                  <span style={{ fontSize: 10, color: trendColor, fontWeight: 700 }}>
+                    fin de mes: {projectedEnd.toFixed(0)}€
+                  </span>
                 </div>
               )}
             </div>
 
-            <div style={{ background: COLORS.bg, borderRadius: 8, padding: "8px 4px 4px", border: `1px solid ${COLORS.cardBorder}` }}>
-              {/* Y-axis labels */}
-              <div style={{ display: "flex", alignItems: "stretch", gap: 4 }}>
-                <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", paddingBottom: 16, minWidth: 32, textAlign: "right" }}>
-                  <span style={{ fontSize: 8, color: COLORS.muted }}>{effectiveBudget > 0 ? `${effectiveBudget.toFixed(0)}€` : ""}</span>
-                  <span style={{ fontSize: 8, color: COLORS.muted }}>{effectiveBudget > 0 ? `${(effectiveBudget/2).toFixed(0)}€` : ""}</span>
-                  <span style={{ fontSize: 8, color: COLORS.muted }}>0€</span>
+            {/* Chart wrapper */}
+            <div style={{ background: COLORS.bg, borderRadius: 8, border: `1px solid ${COLORS.cardBorder}`, padding: "10px 8px 6px" }}>
+              <div style={{ display: "flex", gap: 6 }}>
+
+                {/* Y-axis */}
+                <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", width: 36, textAlign: "right", flexShrink: 0 }}>
+                  {[...yLabels].reverse().map(v => (
+                    <span key={v} style={{ fontSize: 8, color: COLORS.muted, lineHeight: 1 }}>
+                      {v >= 1000 ? `${(v/1000).toFixed(1)}k€` : `${v}€`}
+                    </span>
+                  ))}
                 </div>
-                <div style={{ flex: 1 }}>
-                  <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: 90, display: "block" }} preserveAspectRatio="none">
 
-                    {/* Grid lines */}
-                    <line x1="0" y1={budgetY} x2={W} y2={budgetY} stroke={COLORS.cardBorder} strokeWidth="0.6" strokeDasharray="3,3"/>
-                    <line x1="0" y1={H/2} x2={W} y2={H/2} stroke={COLORS.cardBorder} strokeWidth="0.4" strokeDasharray="2,4"/>
+                {/* SVG plot */}
+                <div style={{ flex: 1, position: "relative" }}>
+                  <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: 110, display: "block", overflow: "visible" }}
+                    preserveAspectRatio="none">
 
-                    {/* Ideal spend diagonal */}
+                    {/* Budget ceiling horizontal line */}
                     {effectiveBudget > 0 && (
-                      <polyline points={idealPts} fill="none" stroke={COLORS.muted} strokeWidth="0.8" strokeDasharray="3,3" opacity="0.5"/>
+                      <line x1="0" y1={budgetY} x2={W} y2={budgetY}
+                        stroke={COLORS.cardBorder} strokeWidth="0.4" strokeDasharray="2,3"/>
                     )}
 
-                    {/* Actual spend area fill */}
+                    {/* Mid gridline */}
+                    {effectiveBudget > 0 && (
+                      <line x1="0" y1={toY(effectiveBudget / 2)} x2={W} y2={toY(effectiveBudget / 2)}
+                        stroke={COLORS.cardBorder} strokeWidth="0.3" strokeDasharray="2,4" opacity="0.6"/>
+                    )}
+
+                    {/* Ideal spend line: thin grey diagonal */}
+                    {effectiveBudget > 0 && (
+                      <line x1={idealX1} y1={idealY1} x2={idealX2} y2={idealY2}
+                        stroke={COLORS.muted} strokeWidth="0.8" strokeDasharray="2,3" opacity="0.5"/>
+                    )}
+
+                    {/* Area fill under actual spend */}
                     {hasSpend && (
-                      <polygon
-                        points={`0,${toY(0)} ${actualPts} ${trendStartX},${H - pad}`}
-                        fill={barColor} opacity="0.08"/>
+                      <polygon points={areaPoints} fill={barColor} opacity="0.1"/>
                     )}
 
-                    {/* Actual spend line */}
+                    {/* Actual spend line — solid, prominent */}
                     {hasSpend && (
-                      <polyline points={actualPts} fill="none" stroke={barColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <polyline points={actualPoints} fill="none" stroke={barColor}
+                        strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
                     )}
 
-                    {/* Trend projection dashed line */}
+                    {/* Trend projection: dashed from today → end of month */}
                     {showTrend && hasSpend && (
-                      <line
-                        x1={trendStartX} y1={trendStartY}
-                        x2={trendEndX} y2={trendEndY}
-                        stroke={overProjected ? COLORS.red : COLORS.green}
-                        strokeWidth="1.2" strokeDasharray="3,3" opacity="0.85"/>
+                      <>
+                        <line x1={trendX1} y1={trendY1} x2={trendX2} y2={trendY2}
+                          stroke={trendColor} strokeWidth="1.2" strokeDasharray="2.5,2.5" opacity="0.9"/>
+                        <circle cx={trendX2} cy={trendY2} r="1.5" fill={trendColor} opacity="0.9"/>
+                      </>
                     )}
 
-                    {/* Projected end dot */}
-                    {showTrend && hasSpend && (
-                      <circle cx={trendEndX} cy={trendEndY} r="2.5"
-                        fill={overProjected ? COLORS.red : COLORS.green} opacity="0.7"/>
-                    )}
+                    {/* Today: thin vertical line only */}
+                    <line x1={todayX} y1={padT} x2={todayX} y2={H - padB}
+                      stroke={COLORS.accent} strokeWidth="0.7" opacity="0.5"/>
 
-                    {/* Today vertical marker */}
-                    <line x1={todayX} y1="0" x2={todayX} y2={H} stroke={COLORS.accent} strokeWidth="0.8" opacity="0.5"/>
-
-                    {/* Today dot */}
+                    {/* Today dot on spend line */}
                     {hasSpend && (
-                      <circle cx={todayX} cy={todayY} r="3" fill={barColor} stroke={COLORS.card} strokeWidth="1.5"/>
+                      <circle cx={todayX} cy={todayY} r="2.2"
+                        fill={barColor} stroke="white" strokeWidth="1"/>
                     )}
+
+                    {/* "Hoy" label above today line */}
+                    <text x={todayX} y={padT - 1} textAnchor="middle"
+                      fontSize="3.5" fill={COLORS.accent} fontWeight="600">hoy</text>
+
                   </svg>
 
-                  {/* X-axis day labels */}
-                  <div style={{ display: "flex", justifyContent: "space-between", padding: "2px 0", marginTop: 2 }}>
-                    {[1, 8, 15, 22, daysInMonth].map(d => (
-                      <span key={d} style={{ fontSize: 8, color: d === dayOfMonth ? COLORS.accent : COLORS.muted, fontWeight: d === dayOfMonth ? 700 : 400 }}>
-                        {d}
-                      </span>
+                  {/* X-axis: start / quarters / end */}
+                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: 3 }}>
+                    {[1, Math.round(daysInMonth * 0.25), Math.round(daysInMonth * 0.5), Math.round(daysInMonth * 0.75), daysInMonth].map(d => (
+                      <span key={d} style={{
+                        fontSize: 8,
+                        color: Math.abs(d - dayOfMonth) <= 1 ? COLORS.accent : COLORS.muted,
+                        fontWeight: Math.abs(d - dayOfMonth) <= 1 ? 700 : 400
+                      }}>{d}</span>
                     ))}
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Legend */}
-            <div style={{ display: "flex", gap: 14, marginTop: 6, flexWrap: "wrap" }}>
+            {/* Legend — minimal */}
+            <div style={{ display: "flex", gap: 12, marginTop: 6, flexWrap: "wrap" }}>
               {[
-                { c: COLORS.muted, l: "Presupuesto ideal", dashed: true },
-                { c: barColor, l: "Gasto acumulado", dashed: false },
-                ...(showTrend ? [{ c: overProjected ? COLORS.red : COLORS.green, l: "Tendencia proyectada", dashed: true }] : []),
-                { c: COLORS.accent, l: "Hoy", dashed: false },
+                { color: COLORS.muted, label: "Ritmo ideal", dashed: true },
+                { color: barColor, label: "Gasto real", dashed: false },
+                ...(showTrend ? [{ color: trendColor, label: `Proyección fin de mes`, dashed: true }] : []),
               ].map(x => (
-                <div key={x.l} style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                  <div style={{ width: 12, height: x.dashed ? 1 : 2, background: x.c, borderRadius: 1,
-                    borderTop: x.dashed ? `1px dashed ${x.c}` : "none", opacity: x.dashed ? 0.7 : 1 }}/>
-                  <span style={{ fontSize: 9, color: COLORS.muted }}>{x.l}</span>
+                <div key={x.label} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                  <svg width="14" height="8" style={{ flexShrink: 0 }}>
+                    {x.dashed
+                      ? <line x1="0" y1="4" x2="14" y2="4" stroke={x.color} strokeWidth="1.5" strokeDasharray="3,2"/>
+                      : <line x1="0" y1="4" x2="14" y2="4" stroke={x.color} strokeWidth="2"/>
+                    }
+                  </svg>
+                  <span style={{ fontSize: 9, color: COLORS.muted }}>{x.label}</span>
                 </div>
               ))}
             </div>
