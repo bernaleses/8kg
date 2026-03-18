@@ -1921,6 +1921,269 @@ const DEFAULT_HABITS = [
 
 const EMOJI_OPTIONS = ["👟","💧","😴","🥩","🚫","💪","⚖️","🧘","🏃","🚴","🎯","📵","🥦","☀️","🛌","🧂","📖","🚶","💊","🧠","🥗","🍵","🏋️","🤸"];
 
+// ─── BUDGET TRACKER ──────────────────────────────────────────
+function BudgetTracker() {
+  const today = new Date();
+  const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  const dayOfMonth = today.getDate();
+  const daysLeft = daysInMonth - dayOfMonth + 1;
+  const [budget, setBudget] = useState("");
+  const [savedBudget, setSavedBudget] = useState(null);
+  const [entries, setEntries] = useState([]);
+  const [entryLabel, setEntryLabel] = useState("");
+  const [entryAmount, setEntryAmount] = useState("");
+  const [entryType, setEntryType] = useState("gasto");
+  const [loaded, setLoaded] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+  const [editingBudget, setEditingBudget] = useState(false);
+  const [newBudgetVal, setNewBudgetVal] = useState("");
+  const monthKey = `${today.getFullYear()}-${today.getMonth()}`;
+  const monthName = today.toLocaleDateString("es-ES", { month: "long" });
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("budget_data");
+      if (raw) {
+        const d = JSON.parse(raw);
+        if (d.monthKey === monthKey) { setSavedBudget(d.budget); setEntries(d.entries || []); }
+      }
+    } catch {}
+    setLoaded(true);
+  }, []);
+
+  function persist(b, ents) {
+    try { localStorage.setItem("budget_data", JSON.stringify({ monthKey, budget: b, entries: ents })); } catch {}
+  }
+  function initBudget() {
+    const b = parseFloat(budget);
+    if (!b || b <= 0) return;
+    setSavedBudget(b); persist(b, entries); setBudget("");
+  }
+  function updateBudget() {
+    const b = parseFloat(newBudgetVal);
+    if (!b || b <= 0) return;
+    setSavedBudget(b); persist(b, entries); setNewBudgetVal(""); setEditingBudget(false);
+  }
+  function addEntry() {
+    if (!entryAmount || isNaN(parseFloat(entryAmount))) return;
+    const entry = { id: Date.now(), label: entryLabel.trim() || (entryType === "ingreso" ? "Ingreso" : "Gasto"),
+      amount: parseFloat(entryAmount), type: entryType, date: today.toISOString().split("T")[0], day: dayOfMonth };
+    const next = [...entries, entry];
+    setEntries(next); persist(savedBudget, next);
+    setEntryLabel(""); setEntryAmount(""); setShowForm(false);
+  }
+  function deleteEntry(id) {
+    const next = entries.filter(e => e.id !== id);
+    setEntries(next); persist(savedBudget, next);
+  }
+  function resetMonth() {
+    setSavedBudget(null); setEntries([]);
+    try { localStorage.removeItem("budget_data"); } catch {}
+  }
+
+  if (!loaded) return null;
+
+  const totalSpent = entries.filter(e => e.type === "gasto").reduce((s, e) => s + e.amount, 0);
+  const totalIncome = entries.filter(e => e.type === "ingreso").reduce((s, e) => s + e.amount, 0);
+  const effectiveBudget = (savedBudget || 0) + totalIncome;
+  const remaining = effectiveBudget - totalSpent;
+  const dailyNow = remaining / daysLeft;
+  const idealDaily = savedBudget ? savedBudget / daysInMonth : 0;
+  const spentPct = effectiveBudget > 0 ? Math.min(100, (totalSpent / effectiveBudget) * 100) : 0;
+  const barColor = spentPct > 90 ? COLORS.red : spentPct > 70 ? COLORS.orange : COLORS.green;
+  const cumByDay = Array.from({ length: daysInMonth }, (_, i) => i + 1).map(d =>
+    entries.filter(e => e.type === "gasto" && e.day <= d).reduce((s, e) => s + e.amount, 0) -
+    entries.filter(e => e.type === "ingreso" && e.day <= d).reduce((s, e) => s + e.amount, 0)
+  );
+  const maxVal = effectiveBudget || Math.max(...cumByDay, 1);
+  const chartH = 80;
+  const shownEntries = showAll ? entries.slice().reverse() : entries.slice(-4).reverse();
+
+  if (!savedBudget) return (
+    <div style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, padding: 18, marginBottom: 12 }}>
+      <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 10, textTransform: "uppercase" }}>💶 Presupuesto del mes</div>
+      <div style={{ fontSize: 13, color: COLORS.muted, marginBottom: 14, fontStyle: "italic" }}>¿Cuánto tienes disponible en {monthName}?</div>
+      <div style={{ display: "flex", gap: 8 }}>
+        <div style={{ flex: 1, position: "relative" }}>
+          <span style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", fontSize: 14, color: COLORS.muted }}>€</span>
+          <input type="number" value={budget} onChange={e => setBudget(e.target.value)} onKeyDown={e => e.key === "Enter" && initBudget()} placeholder="ej. 1500"
+            style={{ width: "100%", background: COLORS.bg, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "11px 12px 11px 28px", fontSize: 15, fontFamily: "inherit", color: COLORS.text, boxSizing: "border-box" }} />
+        </div>
+        <button onClick={initBudget} style={{ background: COLORS.accent, color: "#fff", border: "none", borderRadius: 8, padding: "11px 20px", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Fijar →</button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{ background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, padding: 18, marginBottom: 12 }}>
+      {/* Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
+        <div>
+          <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 2, marginBottom: 3, textTransform: "uppercase" }}>💶 Presupuesto — {monthName}</div>
+          <div style={{ fontSize: 11, color: COLORS.muted }}>{dayOfMonth} de {daysInMonth} · quedan {daysLeft} días</div>
+        </div>
+        <div style={{ display: "flex", gap: 6 }}>
+          <button onClick={() => { setEditingBudget(!editingBudget); setNewBudgetVal(""); }}
+            style={{ fontSize: 10, background: editingBudget ? COLORS.accent : "none", border: `1px solid ${editingBudget ? COLORS.accent : COLORS.cardBorder}`,
+              borderRadius: 20, padding: "3px 10px", color: editingBudget ? "#fff" : COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>
+            {editingBudget ? "× Cancelar" : "✏️ Editar"}
+          </button>
+          <button onClick={resetMonth} style={{ fontSize: 10, background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 20, padding: "3px 10px", color: COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>Resetear</button>
+        </div>
+      </div>
+
+      {/* Edit budget */}
+      {editingBudget && (
+        <div style={{ background: COLORS.bg, borderRadius: 8, padding: 12, marginBottom: 14, border: `1px solid ${COLORS.cardBorder}` }}>
+          <div style={{ fontSize: 10, color: COLORS.muted, marginBottom: 8 }}>Actualiza el presupuesto base. Los ingresos registrados se suman encima.</div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <div style={{ flex: 1, position: "relative" }}>
+              <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", fontSize: 13, color: COLORS.muted }}>€</span>
+              <input type="number" value={newBudgetVal} onChange={e => setNewBudgetVal(e.target.value)} onKeyDown={e => e.key === "Enter" && updateBudget()} placeholder={`Actual: ${savedBudget}€`}
+                style={{ width: "100%", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "9px 12px 9px 26px", fontSize: 13, fontFamily: "inherit", color: COLORS.text, boxSizing: "border-box" }} />
+            </div>
+            <button onClick={updateBudget} style={{ background: COLORS.accent, color: "#fff", border: "none", borderRadius: 8, padding: "9px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Guardar</button>
+          </div>
+        </div>
+      )}
+
+      {/* Stats */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 7, marginBottom: 14 }}>
+        {[{ l: "BASE", v: `${savedBudget.toFixed(0)}€`, c: COLORS.text },
+          { l: "INGRESOS", v: totalIncome > 0 ? `+${totalIncome.toFixed(0)}€` : "—", c: COLORS.green },
+          { l: "GASTADO", v: `${totalSpent.toFixed(0)}€`, c: barColor },
+          { l: "QUEDA", v: `${remaining.toFixed(0)}€`, c: remaining < 0 ? COLORS.red : COLORS.green }
+        ].map(x => (
+          <div key={x.l} style={{ background: COLORS.bg, borderRadius: 8, padding: "9px 6px", textAlign: "center" }}>
+            <div style={{ fontSize: 7, color: COLORS.muted, letterSpacing: 1.2 }}>{x.l}</div>
+            <div style={{ fontSize: 15, fontWeight: 900, color: x.c, marginTop: 2, lineHeight: 1 }}>{x.v}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Daily allowance */}
+      <div style={{ borderRadius: 10, padding: "12px 14px", marginBottom: 12, background: COLORS.bg,
+        borderLeft: `3px solid ${dailyNow < 0 ? COLORS.red : dailyNow < idealDaily * 0.5 ? COLORS.orange : COLORS.accent}` }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1.5, marginBottom: 2 }}>PUEDES GASTAR HOY</div>
+            <div style={{ fontSize: 26, fontWeight: 900, lineHeight: 1, color: dailyNow < 0 ? COLORS.red : COLORS.text }}>
+              {dailyNow < 0 ? "0€" : `${dailyNow.toFixed(1)}€`}
+            </div>
+            <div style={{ fontSize: 10, color: COLORS.muted, marginTop: 3, fontStyle: "italic" }}>
+              {dailyNow < 0 ? `⚠️ Excedido ${Math.abs(remaining).toFixed(0)}€` : `Base: ${idealDaily.toFixed(1)}€/día`}
+            </div>
+          </div>
+          <div style={{ textAlign: "right" }}>
+            <div style={{ fontSize: 11, color: COLORS.muted }}>para {daysLeft} días</div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: barColor, marginTop: 3 }}>{spentPct.toFixed(0)}% usado</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Progress bar */}
+      <div style={{ marginBottom: 14 }}>
+        <div style={{ background: COLORS.cardBorder, borderRadius: 6, height: 7, overflow: "hidden" }}>
+          <div style={{ width: `${spentPct}%`, height: 7, background: barColor, borderRadius: 6, transition: "width 0.5s" }} />
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 3 }}>
+          <span style={{ fontSize: 9, color: COLORS.muted }}>0€</span>
+          <span style={{ fontSize: 9, color: COLORS.muted }}>{effectiveBudget.toFixed(0)}€</span>
+        </div>
+      </div>
+
+      {/* Sparkline */}
+      {entries.length > 0 && (() => {
+        const hasSpend = cumByDay.some(v => v > 0);
+        const pts = hasSpend ? cumByDay.map((v, i) => `${i + 0.5},${chartH - Math.max(0, v) / maxVal * (chartH - 6)}`).join(" ") : "";
+        const lx = cumByDay.length - 0.5;
+        const ly = chartH - Math.max(0, cumByDay[cumByDay.length - 1]) / maxVal * (chartH - 6);
+        return (
+          <div style={{ marginBottom: 14 }}>
+            <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1.5, marginBottom: 6 }}>EVOLUCIÓN DEL MES</div>
+            <svg viewBox={`0 0 ${daysInMonth} ${chartH}`} style={{ width: "100%", height: 64 }} preserveAspectRatio="none">
+              <line x1="0" y1="2" x2={daysInMonth} y2="2" stroke={COLORS.cardBorder} strokeWidth="0.5" strokeDasharray="2,2"/>
+              <line x1="0" y1={chartH} x2={daysInMonth} y2="2" stroke={COLORS.muted} strokeWidth="0.5" strokeDasharray="2,2" opacity="0.4"/>
+              {hasSpend && <polyline points={pts} fill="none" stroke={barColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>}
+              {hasSpend && <circle cx={lx} cy={ly} r="2.5" fill={barColor}/>}
+              <line x1={dayOfMonth - 0.5} y1="0" x2={dayOfMonth - 0.5} y2={chartH} stroke={COLORS.accent} strokeWidth="0.6" opacity="0.7"/>
+            </svg>
+            <div style={{ display: "flex", gap: 14, marginTop: 2 }}>
+              {[{ c: COLORS.muted, l: "Gasto ideal" }, { c: barColor, l: "Gasto real" }, { c: COLORS.accent, l: "Hoy" }].map(x => (
+                <div key={x.l} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                  <div style={{ width: 10, height: 2, background: x.c, borderRadius: 1 }}/><span style={{ fontSize: 9, color: COLORS.muted }}>{x.l}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* Add entry */}
+      {!showForm ? (
+        <div style={{ display: "flex", gap: 8, marginBottom: entries.length > 0 ? 12 : 0 }}>
+          <button onClick={() => { setEntryType("gasto"); setShowForm(true); }}
+            style={{ flex: 1, padding: "9px 0", background: COLORS.bg, border: `1px dashed ${COLORS.red}`, borderRadius: 8, color: COLORS.red, cursor: "pointer", fontSize: 12, fontFamily: "inherit", fontWeight: 600 }}>
+            − Gasto
+          </button>
+          <button onClick={() => { setEntryType("ingreso"); setShowForm(true); }}
+            style={{ flex: 1, padding: "9px 0", background: COLORS.bg, border: `1px dashed ${COLORS.green}`, borderRadius: 8, color: COLORS.green, cursor: "pointer", fontSize: 12, fontFamily: "inherit", fontWeight: 600 }}>
+            + Ingreso
+          </button>
+        </div>
+      ) : (
+        <div style={{ background: COLORS.bg, borderRadius: 10, padding: 14, marginBottom: 12, border: `1px solid ${entryType === "ingreso" ? COLORS.green + "60" : COLORS.red + "60"}` }}>
+          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, marginBottom: 10, color: entryType === "ingreso" ? COLORS.green : COLORS.red }}>
+            {entryType === "ingreso" ? "➕ NUEVO INGRESO" : "➖ NUEVO GASTO"}
+          </div>
+          <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+            <input value={entryLabel} onChange={e => setEntryLabel(e.target.value)}
+              placeholder={entryType === "ingreso" ? "ej. Nómina, freelance..." : "ej. Supermercado, restaurante..."}
+              style={{ flex: 2, background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "9px 12px", fontSize: 13, fontFamily: "inherit", color: COLORS.text, boxSizing: "border-box" }} />
+            <div style={{ flex: 1, position: "relative" }}>
+              <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", fontSize: 13, color: COLORS.muted }}>€</span>
+              <input type="number" value={entryAmount} onChange={e => setEntryAmount(e.target.value)} onKeyDown={e => e.key === "Enter" && addEntry()} placeholder="0"
+                style={{ width: "100%", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "9px 12px 9px 26px", fontSize: 13, fontFamily: "inherit", color: COLORS.text, boxSizing: "border-box" }} />
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button onClick={addEntry} style={{ background: entryType === "ingreso" ? COLORS.green : COLORS.red, color: "#fff", border: "none", borderRadius: 8, padding: "9px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Añadir ✓</button>
+            <button onClick={() => { setShowForm(false); setEntryLabel(""); setEntryAmount(""); }}
+              style={{ background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "9px 14px", fontSize: 13, color: COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>Cancelar</button>
+          </div>
+        </div>
+      )}
+
+      {/* Entries list */}
+      {entries.length > 0 && (
+        <div>
+          <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1.5, marginBottom: 8 }}>MOVIMIENTOS</div>
+          {shownEntries.map(e => (
+            <div key={e.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: `1px solid ${COLORS.cardBorder}` }}>
+              <span style={{ fontSize: 16 }}>{e.type === "ingreso" ? "↑" : "↓"}</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 13, color: COLORS.text, fontWeight: 500 }}>{e.label}</div>
+                <div style={{ fontSize: 10, color: COLORS.muted }}>día {e.day}</div>
+              </div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: e.type === "ingreso" ? COLORS.green : COLORS.text }}>
+                {e.type === "ingreso" ? "+" : "−"}{e.amount.toFixed(2)}€
+              </div>
+              <button onClick={() => deleteEntry(e.id)}
+                style={{ width: 24, height: 24, borderRadius: "50%", background: COLORS.red + "18", border: `1px solid ${COLORS.red}30`, color: COLORS.red, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>×</button>
+            </div>
+          ))}
+          {entries.length > 4 && (
+            <button onClick={() => setShowAll(!showAll)} style={{ width: "100%", marginTop: 8, padding: "7px 0", background: "none", border: "none", color: COLORS.accent, fontSize: 12, cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
+              {showAll ? "Ver menos ↑" : `Ver todos (${entries.length}) ↓`}
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function HabitsTracker() {
   const [habits, setHabits] = useState(DEFAULT_HABITS);
   const [checked, setChecked] = useState({});
@@ -2083,7 +2346,7 @@ function HabitsTracker() {
         {/* Add new habit */}
         {editMode && !showForm && (
           <button onClick={() => setShowForm(true)}
-            style={{ width: "100%", marginTop: 12, padding: "10px 0", background: COLORS.accentGlow || COLORS.bg,
+            style={{ width: "100%", marginTop: 12, padding: "10px 0", background: COLORS.bg,
               border: `1px dashed ${COLORS.accent}`, borderRadius: 8, color: COLORS.accent,
               cursor: "pointer", fontSize: 13, fontFamily: "inherit", fontWeight: 600 }}>
             + Añadir hábito
