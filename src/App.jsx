@@ -39,6 +39,37 @@ const Icon = ({ name, size = 20, color = "currentColor", style = {} }) => {
   return paths[name] || null;
 };
 
+
+// ─── EXPENSE CATEGORIES ───────────────────────────────────────
+const EXPENSE_CATS = [
+  { id: "alquiler",     label: "Alquiler",          group: "Fijos",     color: "#5c6bc0" },
+  { id: "suscripciones",label: "Suscripciones",     group: "Fijos",     color: "#7986cb" },
+  { id: "gimnasio",     label: "Gimnasio",           group: "Fijos",     color: "#7986cb" },
+  { id: "estudios",     label: "Estudios",           group: "Fijos",     color: "#7986cb" },
+  { id: "ropa",         label: "Ropa",               group: "Variables", color: "#ef6c00" },
+  { id: "comidas_fuera",label: "Comidas / Cenas fuera",group:"Variables",color: "#ef6c00" },
+  { id: "super",        label: "Supermercado",       group: "Variables", color: "#ef6c00" },
+  { id: "glovo",        label: "Glovo / Delivery",   group: "Variables", color: "#f57c00" },
+  { id: "transporte",   label: "Trenes / Vuelos",    group: "Variables", color: "#ef6c00" },
+  { id: "taxi",         label: "Taxis / Uber",       group: "Variables", color: "#ef6c00" },
+  { id: "ocio",         label: "Ocio / Entradas",    group: "Variables", color: "#ef6c00" },
+  { id: "gasolina",     label: "Gasolina",           group: "Variables", color: "#ef6c00" },
+  { id: "farmacia",     label: "Farmacia / Salud",   group: "Variables", color: "#ef6c00" },
+  { id: "salidas",      label: "Discoteca / Copas",  group: "Variables", color: "#e53935" },
+  { id: "regalos",      label: "Regalos",            group: "Variables", color: "#ef6c00" },
+  { id: "empresa",      label: "Gastos Empresa",     group: "Variables", color: "#ef6c00" },
+  { id: "tintoreria",   label: "Tintorería",         group: "Variables", color: "#ef6c00" },
+  { id: "deco",         label: "Decoración / Muebles",group:"Variables", color: "#ef6c00" },
+  { id: "tabaco",       label: "Tabaco",             group: "Variables", color: "#ef6c00" },
+  { id: "aloj_viaje",   label: "Alojamiento Viajes", group: "Viajes",    color: "#00897b" },
+  { id: "rest_viaje",   label: "Restaurantes Viajes",group: "Viajes",    color: "#00897b" },
+  { id: "taxi_viaje",   label: "Taxis Viajes",       group: "Viajes",    color: "#00897b" },
+  { id: "regalo_viaje", label: "Regalos Viajes",     group: "Viajes",    color: "#00897b" },
+  { id: "fiesta_viaje", label: "Fiesta Viajes",      group: "Viajes",    color: "#00897b" },
+  { id: "vuelos_viaje", label: "Vuelos / Transporte Viajes", group: "Viajes", color: "#00897b" },
+  { id: "bodas",        label: "Regalo Bodas",       group: "Eventos",   color: "#8e24aa" },
+  { id: "otro",         label: "Otro",               group: "Variables", color: "#8a7f72" },
+];
 // ─── MEALS DATA ───────────────────────────────────────────────
 const meals = {
   desayunos: [
@@ -1966,11 +1997,16 @@ function BudgetTracker() {
   const [entryLabel, setEntryLabel] = useState("");
   const [entryAmount, setEntryAmount] = useState("");
   const [entryType, setEntryType] = useState("gasto");
+  const [entryCategory, setEntryCategory] = useState("");
   const [loaded, setLoaded] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [showAll, setShowAll] = useState(false);
+  const [showBreakdown, setShowBreakdown] = useState(false);
   const [editingBudget, setEditingBudget] = useState(false);
   const [newBudgetVal, setNewBudgetVal] = useState("");
+  const [catTargets, setCatTargets] = useState({});
+  const [editingTarget, setEditingTarget] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(null);
   const monthKey = `${today.getFullYear()}-${today.getMonth()}`;
   const monthName = today.toLocaleDateString("es-ES", { month: "long" });
 
@@ -1979,14 +2015,19 @@ function BudgetTracker() {
       const raw = localStorage.getItem("budget_data");
       if (raw) {
         const d = JSON.parse(raw);
-        if (d.monthKey === monthKey) { setSavedBudget(d.budget); setEntries(d.entries || []); }
+        if (d.monthKey === monthKey) { setSavedBudget(d.budget); setEntries(d.entries || []); setCatTargets(d.catTargets || {}); }
       }
     } catch {}
     setLoaded(true);
   }, []);
 
-  function persist(b, ents) {
-    try { localStorage.setItem("budget_data", JSON.stringify({ monthKey, budget: b, entries: ents })); } catch {}
+  function persist(b, ents, targets) {
+    try { localStorage.setItem("budget_data", JSON.stringify({ monthKey, budget: b, entries: ents, catTargets: targets !== undefined ? targets : catTargets })); } catch {}
+  }
+  function saveCatTarget(catId, val) {
+    const next = { ...catTargets, [catId]: parseFloat(val) || 0 };
+    setCatTargets(next);
+    persist(savedBudget, entries, next);
   }
   function initBudget() {
     const b = parseFloat(budget);
@@ -2001,10 +2042,11 @@ function BudgetTracker() {
   function addEntry() {
     if (!entryAmount || isNaN(parseFloat(entryAmount))) return;
     const entry = { id: Date.now(), label: entryLabel.trim() || (entryType === "ingreso" ? "Ingreso" : "Gasto"),
-      amount: parseFloat(entryAmount), type: entryType, date: today.toISOString().split("T")[0], day: dayOfMonth };
+      amount: parseFloat(entryAmount), type: entryType, category: entryCategory,
+      date: today.toISOString().split("T")[0], day: dayOfMonth };
     const next = [...entries, entry];
     setEntries(next); persist(savedBudget, next);
-    setEntryLabel(""); setEntryAmount(""); setShowForm(false);
+    setEntryLabel(""); setEntryAmount(""); setEntryCategory(""); setShowForm(false);
   }
   function deleteEntry(id) {
     const next = entries.filter(e => e.id !== id);
@@ -2316,9 +2358,10 @@ function BudgetTracker() {
           <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, marginBottom: 10, color: entryType === "ingreso" ? COLORS.green : COLORS.red }}>
             {entryType === "ingreso" ? "NUEVO INGRESO" : "NUEVO GASTO"}
           </div>
-          <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+          {/* Label + amount */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
             <input value={entryLabel} onChange={e => setEntryLabel(e.target.value)}
-              placeholder={entryType === "ingreso" ? "ej. Nómina, freelance..." : "ej. Supermercado, restaurante..."}
+              placeholder={entryType === "ingreso" ? "ej. Nómina, freelance..." : "ej. Cena con amigos..."}
               style={{ flex: 2, background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "9px 12px", fontSize: 13, fontFamily: "inherit", color: COLORS.text, boxSizing: "border-box" }} />
             <div style={{ flex: 1, position: "relative" }}>
               <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", fontSize: 13, color: COLORS.muted }}>€</span>
@@ -2326,9 +2369,35 @@ function BudgetTracker() {
                 style={{ width: "100%", background: COLORS.card, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "9px 12px 9px 26px", fontSize: 13, fontFamily: "inherit", color: COLORS.text, boxSizing: "border-box" }} />
             </div>
           </div>
+          {/* Category picker — only for gastos */}
+          {entryType === "gasto" && (
+            <div style={{ marginBottom: 10 }}>
+              <div style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1.5, marginBottom: 6 }}>CATEGORÍA</div>
+              {["Fijos","Variables","Viajes","Eventos"].map(group => {
+                const cats = EXPENSE_CATS.filter(c => c.group === group);
+                return (
+                  <div key={group} style={{ marginBottom: 6 }}>
+                    <div style={{ fontSize: 8, color: COLORS.muted, letterSpacing: 1, marginBottom: 3 }}>{group.toUpperCase()}</div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                      {cats.map(cat => (
+                        <button key={cat.id} onClick={() => setEntryCategory(entryCategory === cat.id ? "" : cat.id)}
+                          style={{ fontSize: 11, padding: "4px 10px", borderRadius: 20,
+                            background: entryCategory === cat.id ? cat.color : COLORS.card,
+                            color: entryCategory === cat.id ? "#fff" : COLORS.muted,
+                            border: `1px solid ${entryCategory === cat.id ? cat.color : COLORS.cardBorder}`,
+                            cursor: "pointer", fontFamily: "inherit", transition: "all 0.12s" }}>
+                          {cat.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
           <div style={{ display: "flex", gap: 8 }}>
-            <button onClick={addEntry} style={{ background: entryType === "ingreso" ? COLORS.green : COLORS.red, color: "#fff", border: "none", borderRadius: 8, padding: "9px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Añadir ✓</button>
-            <button onClick={() => { setShowForm(false); setEntryLabel(""); setEntryAmount(""); }}
+            <button onClick={addEntry} style={{ background: entryType === "ingreso" ? COLORS.green : COLORS.red, color: "#fff", border: "none", borderRadius: 8, padding: "9px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Añadir</button>
+            <button onClick={() => { setShowForm(false); setEntryLabel(""); setEntryAmount(""); setEntryCategory(""); }}
               style={{ background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, padding: "9px 14px", fontSize: 13, color: COLORS.muted, cursor: "pointer", fontFamily: "inherit" }}>Cancelar</button>
           </div>
         </div>
@@ -2343,13 +2412,36 @@ function BudgetTracker() {
               <Icon name={e.type === "ingreso" ? "arrowup" : "arrowdown"} size={16} color={e.type === "ingreso" ? COLORS.green : COLORS.red} />
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 13, color: COLORS.text, fontWeight: 500 }}>{e.label}</div>
-                <div style={{ fontSize: 10, color: COLORS.muted }}>día {e.day}</div>
+                <div style={{ display: "flex", gap: 6, alignItems: "center", marginTop: 2 }}>
+                  <span style={{ fontSize: 10, color: COLORS.muted }}>día {e.day}</span>
+                  {e.category && (() => {
+                    const cat = EXPENSE_CATS.find(c => c.id === e.category);
+                    return cat ? <span style={{ fontSize: 9, background: cat.color + "20", color: cat.color, padding: "1px 7px", borderRadius: 10 }}>{cat.label}</span> : null;
+                  })()}
+                </div>
               </div>
               <div style={{ fontSize: 14, fontWeight: 700, color: e.type === "ingreso" ? COLORS.green : COLORS.text }}>
                 {e.type === "ingreso" ? "+" : "−"}{e.amount.toFixed(2)}€
               </div>
-              <button onClick={() => deleteEntry(e.id)}
-                style={{ width: 24, height: 24, borderRadius: "50%", background: COLORS.red + "18", border: `1px solid ${COLORS.red}30`, color: COLORS.red, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>×</button>
+              {confirmDelete === e.id ? (
+                <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                  <button onClick={() => { deleteEntry(e.id); setConfirmDelete(null); }}
+                    style={{ fontSize: 10, fontWeight: 700, background: COLORS.red, color: "#fff", border: "none",
+                      borderRadius: 6, padding: "4px 8px", cursor: "pointer", fontFamily: "inherit" }}>
+                    Borrar
+                  </button>
+                  <button onClick={() => setConfirmDelete(null)}
+                    style={{ fontSize: 10, background: "none", border: `1px solid ${COLORS.cardBorder}`,
+                      borderRadius: 6, padding: "4px 8px", cursor: "pointer", color: COLORS.muted, fontFamily: "inherit" }}>
+                    No
+                  </button>
+                </div>
+              ) : (
+                <button onClick={() => setConfirmDelete(e.id)}
+                  style={{ width: 24, height: 24, borderRadius: "50%", background: COLORS.red + "18",
+                    border: `1px solid ${COLORS.red}30`, color: COLORS.red, fontSize: 13,
+                    cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>×</button>
+              )}
             </div>
           ))}
           {entries.length > 4 && (
@@ -2357,6 +2449,122 @@ function BudgetTracker() {
               {showAll ? "Ver menos ↑" : `Ver todos (${entries.length}) ↓`}
             </button>
           )}
+        </div>
+      )}
+
+      {/* Category breakdown */}
+      {savedBudget && (
+        <div style={{ marginTop: 4 }}>
+          <button onClick={() => setShowBreakdown(!showBreakdown)}
+            style={{ width: "100%", padding: "10px 14px", background: COLORS.bg,
+              border: `1px solid ${COLORS.cardBorder}`, borderRadius: 8, cursor: "pointer",
+              fontFamily: "inherit", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: 9, color: COLORS.muted, letterSpacing: 1.5 }}>DESGLOSE POR CATEGORÍA</span>
+            <span style={{ fontSize: 11, color: COLORS.muted }}>{showBreakdown ? "▲" : "▼"}</span>
+          </button>
+
+          {showBreakdown && (() => {
+            // Compute spent per category
+            const spentByCat = {};
+            entries.filter(e => e.type === "gasto").forEach(e => {
+              const key = e.category || "otro";
+              spentByCat[key] = (spentByCat[key] || 0) + e.amount;
+            });
+            // Build rows: all cats with spend OR target, sorted by spend desc
+            const allCatIds = [...new Set([
+              ...Object.keys(spentByCat),
+              ...Object.keys(catTargets).filter(k => catTargets[k] > 0)
+            ])];
+            const rows = allCatIds.map(id => {
+              const cat = EXPENSE_CATS.find(c => c.id === id) || { id, label: "Otro", color: COLORS.muted, group: "Variables" };
+              const spent = spentByCat[id] || 0;
+              const target = catTargets[id] || 0;
+              return { ...cat, spent, target };
+            }).sort((a, b) => b.spent - a.spent);
+
+            if (rows.length === 0) {
+              return (
+                <div style={{ padding: "14px 0", textAlign: "center", color: COLORS.muted, fontSize: 12, fontStyle: "italic" }}>
+                  Añade gastos con categoría para ver el desglose
+                </div>
+              );
+            }
+
+            return (
+              <div style={{ marginTop: 8 }}>
+                {/* Group headers */}
+                {["Fijos","Variables","Viajes","Eventos"].map(group => {
+                  const groupRows = rows.filter(r => r.group === group);
+                  if (groupRows.length === 0) return null;
+                  const groupSpent = groupRows.reduce((s, r) => s + r.spent, 0);
+                  const groupTarget = groupRows.reduce((s, r) => s + r.target, 0);
+                  return (
+                    <div key={group} style={{ marginBottom: 12 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
+                        borderBottom: `1px solid ${COLORS.cardBorder}`, paddingBottom: 5, marginBottom: 6 }}>
+                        <span style={{ fontSize: 9, fontWeight: 700, color: COLORS.muted, letterSpacing: 1.5 }}>{group.toUpperCase()}</span>
+                        <span style={{ fontSize: 10, color: groupTarget > 0 && groupSpent > groupTarget ? COLORS.red : COLORS.muted }}>
+                          {groupSpent.toFixed(0)}€{groupTarget > 0 ? ` / ${groupTarget.toFixed(0)}€` : ""}
+                        </span>
+                      </div>
+                      {groupRows.map(row => {
+                        const pct = row.target > 0 ? Math.min(100, (row.spent / row.target) * 100) : null;
+                        const over = row.target > 0 && row.spent > row.target;
+                        return (
+                          <div key={row.id} style={{ marginBottom: 8 }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
+                                <span style={{ fontSize: 12, color: COLORS.text }}>{row.label}</span>
+                                {row.spent === 0 && row.target > 0 && (
+                                  <span style={{ fontSize: 9, color: COLORS.green }}>sin gastos</span>
+                                )}
+                              </div>
+                              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                <span style={{ fontSize: 12, fontWeight: 600, color: over ? COLORS.red : COLORS.text }}>
+                                  {row.spent.toFixed(0)}€
+                                </span>
+                                {editingTarget === row.id ? (
+                                  <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                                    <span style={{ fontSize: 11, color: COLORS.muted }}>/</span>
+                                    <input
+                                      autoFocus
+                                      type="number"
+                                      defaultValue={row.target || ""}
+                                      placeholder="objetivo"
+                                      onBlur={e => { saveCatTarget(row.id, e.target.value); setEditingTarget(null); }}
+                                      onKeyDown={e => { if (e.key === "Enter") { saveCatTarget(row.id, e.target.value); setEditingTarget(null); } if (e.key === "Escape") setEditingTarget(null); }}
+                                      style={{ width: 58, background: COLORS.bg, border: `1px solid ${COLORS.accent}`,
+                                        borderRadius: 6, padding: "3px 6px", fontSize: 11, fontFamily: "inherit",
+                                        color: COLORS.text, textAlign: "right" }}
+                                    />
+                                    <span style={{ fontSize: 11, color: COLORS.muted }}>€</span>
+                                  </div>
+                                ) : (
+                                  <button onClick={() => setEditingTarget(row.id)}
+                                    style={{ fontSize: 10, color: row.target > 0 ? COLORS.muted : COLORS.accent,
+                                      background: "none", border: `1px solid ${COLORS.cardBorder}`, borderRadius: 6,
+                                      padding: "2px 8px", cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap" }}>
+                                    {row.target > 0 ? `/ ${row.target.toFixed(0)}€` : "+ objetivo"}
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                            {pct !== null && (
+                              <div style={{ background: COLORS.cardBorder, borderRadius: 4, height: 4, overflow: "hidden" }}>
+                                <div style={{ width: `${pct}%`, height: 4,
+                                  background: pct >= 100 ? COLORS.red : pct >= 80 ? COLORS.orange : row.color,
+                                  borderRadius: 4, transition: "width 0.4s" }} />
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })()}
         </div>
       )}
     </div>
